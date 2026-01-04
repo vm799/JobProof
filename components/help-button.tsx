@@ -32,7 +32,6 @@ const helpTopics = [
     title: "Support",
     icon: MessageCircle,
     items: [
-      { title: "Contact support", href: "mailto:admin@getboardingpass.app" },
       { title: "Feature requests", href: "/help/support#feature-requests" },
       { title: "Report a bug", href: "/help/support#bug-report" },
     ],
@@ -113,7 +112,7 @@ export function HelpButton() {
                 <div>
                   <h4 className="font-semibold mb-1">Still need help?</h4>
                   <p className="text-sm text-muted-foreground mb-3">Our support team is here to help you succeed</p>
-                  <a href="mailto:admin@getboardingpass.app">
+                  <a href="mailto:admin@getboardingpass.app" rel="noopener noreferrer">
                     <Button size="sm">Contact Support</Button>
                   </a>
                 </div>

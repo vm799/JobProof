@@ -298,7 +298,9 @@ export default function FAQPage() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button asChild>
-              <a href="mailto:admin@getboardingpass.app">Contact Support</a>
+              <a href="mailto:admin@getboardingpass.app" rel="noopener noreferrer">
+                Contact Support
+              </a>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/help">Browse Help Center</Link>
