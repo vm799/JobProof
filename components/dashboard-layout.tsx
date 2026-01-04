@@ -17,6 +17,7 @@ import {
   Menu,
   X,
   HelpCircle,
+  Shield,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -108,6 +109,27 @@ export function DashboardLayout({
           })}
         </nav>
 
+        <div className="border-t border-border bg-card px-4 py-3">
+          <div className="text-xs font-semibold text-muted-foreground mb-2 px-3 flex items-center gap-2">
+            <Shield className="h-3 w-3" />
+            Legal
+          </div>
+          <div className="flex flex-col gap-1">
+            <Link
+              href="/privacy"
+              className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms"
+              className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+
         <div className="border-t border-border bg-card p-4 space-y-2">
           <Link
             href="/help"
@@ -190,6 +212,28 @@ export function DashboardLayout({
                   <HelpCircle className="h-4 w-4" />
                   Help & Support
                 </Link>
+                <div className="mt-2 border-t border-border pt-4">
+                  <div className="text-xs font-semibold text-muted-foreground mb-2 px-3 flex items-center gap-2">
+                    <Shield className="h-3 w-3" />
+                    Legal
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Link
+                      href="/privacy"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    >
+                      Privacy Policy
+                    </Link>
+                    <Link
+                      href="/terms"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    >
+                      Terms of Service
+                    </Link>
+                  </div>
+                </div>
               </nav>
 
               <div className="absolute bottom-0 w-full border-t border-border bg-card p-4">

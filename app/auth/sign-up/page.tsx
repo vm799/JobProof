@@ -44,7 +44,7 @@ export default function SignUpPage() {
         email,
         password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/`,
+          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/dashboard`,
           data: {
             name: name,
           },
@@ -127,6 +127,16 @@ export default function SignUpPage() {
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
             </form>
+            <div className="mt-4 text-center text-xs text-muted-foreground">
+              By creating an account, you agree to our{" "}
+              <Link href="/terms" className="text-primary underline-offset-4 hover:underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="text-primary underline-offset-4 hover:underline">
+                Privacy Policy
+              </Link>
+            </div>
             <div className="mt-4 text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link href="/auth/login" className="text-primary underline-offset-4 hover:underline">

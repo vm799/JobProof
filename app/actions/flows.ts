@@ -3,14 +3,25 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
+async function verifyFlowAccess(flowId: string, workspaceId: string) {
+  const supabase = await createClient()
+  const { data: flow } = await supabase.from("onboarding_flows").select("workspace_id").eq("id", flowId).single()
+
+  if (!flow || flow.workspace_id !== workspaceId) {
+    throw new Error("Unauthorized: Flow does not belong to your workspace")
+  }
+}
+
 export async function updateFlow(
   flowId: string,
+  workspaceId: string,
   data: {
     name?: string
     description?: string
     status?: string
   },
 ) {
+  await verifyFlowAccess(flowId, workspaceId)
   const supabase = await createClient()
 
   const { error } = await supabase
@@ -20,6 +31,7 @@ export async function updateFlow(
       updated_at: new Date().toISOString(),
     })
     .eq("id", flowId)
+    .eq("workspace_id", workspaceId) // Double-lock workspace isolation
 
   if (error) {
     throw new Error(error.message)
@@ -32,6 +44,7 @@ export async function updateFlow(
 
 export async function createStep(
   flowId: string,
+  workspaceId: string,
   data: {
     type: string
     title: string
@@ -39,6 +52,7 @@ export async function createStep(
     stepOrder: number
   },
 ) {
+  await verifyFlowAccess(flowId, workspaceId)
   const supabase = await createClient()
 
   const { data: newStep, error } = await supabase
@@ -64,12 +78,15 @@ export async function createStep(
 
 export async function updateStep(
   stepId: string,
+  flowId: string,
+  workspaceId: string,
   data: {
     title?: string
     description?: string
     config?: any
   },
 ) {
+  await verifyFlowAccess(flowId, workspaceId)
   const supabase = await createClient()
 
   const { error } = await supabase.from("onboarding_steps").update(data).eq("id", stepId)
@@ -82,7 +99,8 @@ export async function updateStep(
   return { success: true }
 }
 
-export async function deleteStep(stepId: string, flowId: string) {
+export async function deleteStep(stepId: string, flowId: string, workspaceId: string) {
+  await verifyFlowAccess(flowId, workspaceId)
   const supabase = await createClient()
 
   const { error } = await supabase.from("onboarding_steps").delete().eq("id", stepId)

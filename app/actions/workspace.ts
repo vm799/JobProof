@@ -3,6 +3,28 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
+async function verifyWorkspaceOwnership(workspaceId: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error("Unauthorized: No user session")
+  }
+
+  const { data: membership } = await supabase
+    .from("workspace_members")
+    .select("role")
+    .eq("workspace_id", workspaceId)
+    .eq("user_id", user.id)
+    .single()
+
+  if (!membership || (membership.role !== "owner" && membership.role !== "admin")) {
+    throw new Error("Unauthorized: Only workspace owners and admins can update settings")
+  }
+}
+
 export async function updateWorkspaceSettings(
   workspaceId: string,
   data: {
@@ -12,6 +34,7 @@ export async function updateWorkspaceSettings(
     removeBranding: boolean
   },
 ) {
+  await verifyWorkspaceOwnership(workspaceId)
   const supabase = await createClient()
 
   const { error } = await supabase
@@ -34,6 +57,7 @@ export async function updateWorkspaceSettings(
 }
 
 export async function uploadWorkspaceLogo(workspaceId: string, formData: FormData) {
+  await verifyWorkspaceOwnership(workspaceId)
   const supabase = await createClient()
   const file = formData.get("logo") as File
 

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No workspace found" }, { status: 404 })
     }
 
-    // Get template with steps
+    // Get template with steps - ONLY public templates
     const { data: template } = await supabase
       .from("flow_templates")
       .select(
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       `,
       )
       .eq("id", templateId)
+      .eq("is_public", true) // Security: Only allow public templates
       .single()
 
     if (!template) {

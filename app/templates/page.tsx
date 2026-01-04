@@ -1,5 +1,5 @@
 import { TemplatesLibrary } from "@/components/templates-library"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 
 export const metadata = {
   title: "Templates - BoardingPass",
@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 export default async function TemplatesPage() {
-  const supabase = await createServerClient()
+  const supabase = await createClient()
 
   const { data: templates } = await supabase
     .from("flow_templates")
@@ -17,6 +17,7 @@ export default async function TemplatesPage() {
       steps:flow_template_steps(*)
     `,
     )
+    .eq("is_public", true) // Only show public templates
     .order("is_featured", { ascending: false })
     .order("name")
 

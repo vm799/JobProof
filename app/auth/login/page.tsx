@@ -86,6 +86,16 @@ export default function LoginPage() {
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
+            <div className="mt-4 text-center text-xs text-muted-foreground">
+              By signing in, you agree to our{" "}
+              <Link href="/terms" className="text-primary underline-offset-4 hover:underline">
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="text-primary underline-offset-4 hover:underline">
+                Privacy Policy
+              </Link>
+            </div>
             <div className="mt-4 text-center text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Link href="/auth/sign-up" className="text-primary underline-offset-4 hover:underline">
