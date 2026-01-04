@@ -1,0 +1,255 @@
+"use client"
+
+import type * as React from "react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
+import {
+  LayoutDashboard,
+  Users,
+  Workflow,
+  UsersRound,
+  Settings,
+  CreditCard,
+  LogOut,
+  BarChart3,
+  Sparkles,
+  Menu,
+  X,
+  Moon,
+  Sun,
+  HelpCircle,
+} from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useTheme } from "next-themes"
+import { useState } from "react"
+
+const navigation = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Clients", href: "/clients", icon: Users },
+  { name: "Onboarding Flows", href: "/flows", icon: Workflow },
+  { name: "Templates", href: "/templates", icon: Sparkles },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Team", href: "/team", icon: UsersRound },
+  { name: "Billing", href: "/billing", icon: CreditCard },
+  { name: "Settings", href: "/settings", icon: Settings },
+]
+
+export function DashboardLayout({
+  children,
+  user,
+  profile,
+}: {
+  children: React.ReactNode
+  user?: { email?: string }
+  profile?: { name?: string; avatar_url?: string | null }
+}) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
+  const { theme, setTheme } = useTheme()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push("/auth/login")
+    router.refresh()
+  }
+
+  const getInitials = () => {
+    if (profile?.name) {
+      return profile.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    }
+    return user?.email?.[0]?.toUpperCase() || "U"
+  }
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 border-r border-border bg-card flex-col">
+        <div className="flex h-16 items-center justify-between border-b border-border px-6">
+          <h1 className="text-xl font-semibold">BoardingPass</h1>
+        </div>
+        <nav className="flex-1 flex flex-col gap-1 p-4 overflow-y-auto">
+          {navigation.map((item) => {
+            const isActive = pathname === item.href
+            const Icon = item.icon
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {item.name}
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div className="border-t border-border bg-card p-4 space-y-2">
+          <Link
+            href="/help"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <HelpCircle className="h-4 w-4" />
+            Help & Support
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="w-full justify-start gap-3 px-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs">{getInitials()}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col items-start text-sm">
+                  <span className="font-medium">{profile?.name || "User"}</span>
+                  <span className="text-xs text-muted-foreground">{user?.email}</span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                {theme === "dark" ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </aside>
+
+      {/* Mobile Layout */}
+      <div className="flex-1 flex flex-col lg:hidden">
+        {/* Mobile Header */}
+        <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-card px-4">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <div className="flex h-16 items-center border-b border-border px-6">
+                <h1 className="text-xl font-semibold">BoardingPass</h1>
+              </div>
+              <nav className="flex flex-col gap-1 p-4">
+                {navigation.map((item) => {
+                  const isActive = pathname === item.href
+                  const Icon = item.icon
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-secondary text-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+                <Link
+                  href="/help"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors mt-2 border-t border-border pt-4"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  Help & Support
+                </Link>
+              </nav>
+
+              <div className="absolute bottom-0 w-full border-t border-border bg-card p-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start gap-3 px-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs">{getInitials()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col items-start text-sm">
+                        <span className="font-medium">{profile?.name || "User"}</span>
+                        <span className="text-xs text-muted-foreground">{user?.email}</span>
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                      {theme === "dark" ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                      {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/settings">Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          <div className="flex-1">
+            <h1 className="text-lg font-semibold">BoardingPass</h1>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="h-9 w-9"
+          >
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </header>
+
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto p-4 sm:p-6 lg:p-8">{children}</div>
+        </main>
+      </div>
+
+      {/* Desktop Main Content */}
+      <main className="hidden lg:block flex-1 overflow-auto">
+        <div className="container mx-auto p-8">{children}</div>
+      </main>
+    </div>
+  )
+}
