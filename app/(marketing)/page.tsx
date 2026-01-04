@@ -275,15 +275,15 @@ export default function LandingPage() {
             <div>
               <h4 className="font-semibold mb-3">Company</h4>
               <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-                <Link href="#" className="hover:text-foreground">
-                  About
+                <Link href="/faq" className="hover:text-foreground">
+                  FAQ
                 </Link>
-                <Link href="#" className="hover:text-foreground">
-                  Blog
+                <Link href="/help" className="hover:text-foreground">
+                  Help Center
                 </Link>
-                <Link href="#" className="hover:text-foreground">
-                  Support
-                </Link>
+                <a href="mailto:support@yourdomain.com" className="hover:text-foreground">
+                  Contact
+                </a>
               </div>
             </div>
 
