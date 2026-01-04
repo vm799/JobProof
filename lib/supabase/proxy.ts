@@ -49,7 +49,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect to dashboard if already logged in and trying to access auth pages
   if (request.nextUrl.pathname.startsWith("/auth") && user) {
     const url = request.nextUrl.clone()
-    url.pathname = "/"
+    url.pathname = "/dashboard"
     return NextResponse.redirect(url)
   }
 

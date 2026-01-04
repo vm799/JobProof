@@ -55,16 +55,16 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-1">
+      <section className="container mx-auto px-4 pt-0 pb-8">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo showcase */}
-          <div className="flex justify-center">
+          <div className="flex justify-center -mt-4">
             <Image
               src="/boardingpass-logo.png"
               alt="BoardingPass"
-              width={800}
-              height={800}
-              className="w-[50rem] h-[50rem] object-contain"
+              width={500}
+              height={500}
+              className="w-[30rem] h-[30rem] object-contain"
               priority
             />
           </div>
@@ -223,6 +223,138 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="container mx-auto px-4 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Simple, transparent pricing</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Professional onboarding infrastructure for teams of all sizes
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {/* Starter Plan */}
+          <div className="p-8 rounded-lg border-2 border-border bg-card hover:border-primary/50 transition-all">
+            <h3 className="text-2xl font-bold mb-2">Starter</h3>
+            <div className="mb-6">
+              <span className="text-4xl font-bold">$49</span>
+              <span className="text-muted-foreground">/month</span>
+            </div>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Up to 50 active clients</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Unlimited onboarding flows</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Custom branding</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Email reminders</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Basic analytics</span>
+              </li>
+            </ul>
+            <Link href="/auth/sign-up" className="block">
+              <Button variant="outline" className="w-full bg-transparent">
+                Start Free Trial
+              </Button>
+            </Link>
+          </div>
+
+          {/* Professional Plan */}
+          <div className="p-8 rounded-lg border-2 border-primary bg-card relative shadow-lg scale-105">
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+              Most Popular
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Professional</h3>
+            <div className="mb-6">
+              <span className="text-4xl font-bold">$149</span>
+              <span className="text-muted-foreground">/month</span>
+            </div>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Up to 200 active clients</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Everything in Starter</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Team collaboration (up to 5)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Advanced analytics</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Priority support</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Custom integrations</span>
+              </li>
+            </ul>
+            <Link href="/auth/sign-up" className="block">
+              <Button className="w-full">Start Free Trial</Button>
+            </Link>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="p-8 rounded-lg border-2 border-border bg-card hover:border-primary/50 transition-all">
+            <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
+            <div className="mb-6">
+              <span className="text-4xl font-bold">Custom</span>
+            </div>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Unlimited clients</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Everything in Professional</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Unlimited team members</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Dedicated account manager</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">Custom SLA & support</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm">On-premise deployment option</span>
+              </li>
+            </ul>
+            <a href="mailto:admin@getboardingpass.app?subject=Enterprise%20Inquiry" className="block">
+              <Button variant="outline" className="w-full bg-transparent">
+                Contact Sales
+              </Button>
+            </a>
+          </div>
+        </div>
+
+        <p className="text-center text-sm text-muted-foreground mt-8">
+          All plans include 14-day free trial • No credit card required • Cancel anytime
+        </p>
+      </section>
+
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-12 border border-primary/20">
@@ -265,6 +397,9 @@ export default function LandingPage() {
                 </Link>
                 <Link href="#templates" className="hover:text-foreground">
                   Templates
+                </Link>
+                <Link href="#pricing" className="hover:text-foreground">
+                  Pricing
                 </Link>
                 <Link href="/demo" className="hover:text-foreground">
                   Demo

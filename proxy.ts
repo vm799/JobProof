@@ -12,6 +12,9 @@ export async function proxy(request: NextRequest) {
     "/auth/login",
     "/auth/sign-up",
     "/auth/check-email",
+    "/faq",
+    "/privacy",
+    "/terms",
   ]
   const path = request.nextUrl.pathname
 

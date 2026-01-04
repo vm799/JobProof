@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 export function WorkspaceLoader() {
   const [error, setError] = useState<string | null>(null)
   const [isChecking, setIsChecking] = useState(true)
+  const [timeoutReached, setTimeoutReached] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -38,30 +40,32 @@ export function WorkspaceLoader() {
 
         if (profileError) {
           console.error("[v0] Profile fetch error:", profileError)
-          setError("Failed to load workspace. Please refresh the page.")
+          setError("Failed to load workspace. Please try again.")
           setIsChecking(false)
+          setTimeoutReached(true)
           return
         }
 
         if (profile?.current_workspace_id) {
-          // Workspace exists, redirect to dashboard
-          router.push("/dashboard")
-          router.refresh()
+          if (mounted) {
+            router.push("/dashboard")
+            router.refresh()
+          }
         } else {
           pollCount++
           if (pollCount < maxPolls) {
             setTimeout(checkWorkspace, 500)
           } else {
-            setError(
-              "Workspace setup is taking longer than expected. Please refresh the page or contact admin@getboardingpass.app for support.",
-            )
+            setError("Workspace setup is taking longer than expected.")
             setIsChecking(false)
+            setTimeoutReached(true)
           }
         }
       } catch (err) {
         console.error("[v0] Workspace check error:", err)
-        setError("An unexpected error occurred. Please refresh the page.")
+        setError("An unexpected error occurred.")
         setIsChecking(false)
+        setTimeoutReached(true)
       }
     }
 
@@ -71,6 +75,22 @@ export function WorkspaceLoader() {
       mounted = false
     }
   }, [router, supabase])
+
+  const handleRetry = () => {
+    setError(null)
+    setIsChecking(true)
+    setTimeoutReached(false)
+    window.location.reload()
+  }
+
+  const handleForceDashboard = () => {
+    router.push("/dashboard")
+  }
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push("/auth/login")
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
@@ -95,9 +115,28 @@ export function WorkspaceLoader() {
               : "Creating your BoardingPass workspace. This will only take a moment."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="text-center">
+        <CardContent className="text-center space-y-4">
           {error ? (
-            <div className="rounded-lg bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
+            <>
+              <div className="rounded-lg bg-destructive/10 p-4 text-sm text-destructive mb-4">{error}</div>
+              <div className="flex flex-col gap-2">
+                <Button onClick={handleRetry} className="w-full">
+                  Retry Setup
+                </Button>
+                <Button onClick={handleForceDashboard} variant="outline" className="w-full bg-transparent">
+                  Go to Dashboard Anyway
+                </Button>
+                <Button onClick={handleLogout} variant="ghost" className="w-full text-muted-foreground">
+                  Log Out
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                Still having issues? Contact{" "}
+                <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                  admin@getboardingpass.app
+                </a>
+              </p>
+            </>
           ) : (
             <>
               <div className="mb-6 flex justify-center">
