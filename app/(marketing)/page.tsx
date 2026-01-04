@@ -10,9 +10,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 h-24 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <ThemeLogo width={300} height={70} className="h-16 w-auto" priority />
+            <ThemeLogo width={900} height={210} className="h-48 w-auto" priority />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -55,10 +55,10 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 sm:py-24 md:py-32">
+      <section className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo showcase */}
-          <div className="mb-8 flex justify-center">
+          <div className="mb-4 flex justify-center">
             <Image
               src="/boardingpass-logo.png"
               alt="BoardingPass"
