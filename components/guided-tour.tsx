@@ -139,16 +139,19 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         }}
       />
 
-      {/* Animated pointer for clickable elements */}
       {step.action && (
         <div
-          className="fixed z-50 pointer-events-none animate-bounce"
+          className="fixed z-50 pointer-events-none"
           style={{
             top: targetRect.top + targetRect.height / 2 - 12,
-            left: targetRect.right + 12,
+            left: targetRect.left + targetRect.width / 2 - 12,
+            animation: "bounce 1s infinite",
           }}
         >
-          <MousePointerClick className="h-6 w-6 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
+          <div className="relative">
+            <MousePointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_12px_rgba(234,179,8,0.9)] animate-pulse" />
+            <div className="absolute inset-0 h-8 w-8 bg-yellow-400 rounded-full blur-xl opacity-50 animate-pulse" />
+          </div>
         </div>
       )}
 
@@ -162,8 +165,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         {/* Glowing border effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-500 rounded-2xl blur-lg opacity-40 animate-pulse pointer-events-none" />
 
-        {/* Main tour card with gradient */}
-        <div className="relative bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30 backdrop-blur-xl border-2 border-yellow-500/50 rounded-2xl p-6 shadow-2xl">
+        <div className="relative bg-gradient-to-br from-yellow-100 to-amber-100 dark:from-yellow-950/50 dark:to-amber-950/50 backdrop-blur-xl border-2 border-yellow-500/50 rounded-2xl p-6 shadow-2xl">
           {/* Demo badge */}
           <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5 animate-bounce">
             <Lightbulb className="h-3.5 w-3.5" />
@@ -176,35 +178,34 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               <div className="p-1.5 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-bold bg-gradient-to-r from-yellow-600 to-amber-600 dark:from-yellow-400 dark:to-amber-400 bg-clip-text text-transparent">
+              <span className="text-sm font-bold text-yellow-900 dark:text-yellow-200">
                 Step {currentStep + 1} of {steps.length}
               </span>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-full"
+              className="h-7 w-7 hover:bg-yellow-200 dark:hover:bg-yellow-900/30 rounded-full"
               onClick={handleSkip}
             >
-              <X className="h-4 w-4 text-yellow-700 dark:text-yellow-400" />
+              <X className="h-4 w-4 text-yellow-900 dark:text-yellow-200" />
             </Button>
           </div>
 
           {/* Progress bar */}
-          <div className="mb-5 h-2 bg-yellow-200/50 dark:bg-yellow-900/30 rounded-full overflow-hidden shadow-inner">
+          <div className="mb-5 h-2 bg-yellow-200 dark:bg-yellow-900/30 rounded-full overflow-hidden shadow-inner">
             <div
               className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(234,179,8,0.5)]"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
 
-          {/* Content */}
-          <h3 className="text-lg font-bold mb-2 text-yellow-900 dark:text-yellow-100">{step.title}</h3>
-          <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-5 leading-relaxed">{step.description}</p>
+          <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-yellow-100">{step.title}</h3>
+          <p className="text-sm text-gray-800 dark:text-yellow-200 mb-5 leading-relaxed">{step.description}</p>
 
           {step.action && (
-            <div className="mb-5 p-3 bg-gradient-to-br from-yellow-100 to-amber-100 dark:from-yellow-900/50 dark:to-amber-900/50 border-2 border-yellow-400/50 rounded-xl shadow-inner">
-              <p className="text-sm font-bold text-yellow-900 dark:text-yellow-100 flex items-center gap-2">
+            <div className="mb-5 p-3 bg-gradient-to-br from-yellow-200 to-amber-200 dark:from-yellow-900/50 dark:to-amber-900/50 border-2 border-yellow-500/50 rounded-xl shadow-inner">
+              <p className="text-sm font-bold text-gray-900 dark:text-yellow-100 flex items-center gap-2">
                 <div className="p-1 bg-yellow-500 rounded-md">
                   <MousePointerClick className="h-3.5 w-3.5 text-white" />
                 </div>
@@ -219,7 +220,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               variant="ghost"
               size="sm"
               onClick={handleSkip}
-              className="text-yellow-700 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 font-medium"
+              className="text-gray-800 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-900/30 font-medium"
             >
               Skip Tour
             </Button>

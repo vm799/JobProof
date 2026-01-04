@@ -101,6 +101,15 @@ export function DemoMode() {
         "Switch to the Interactive Client Portal to see exactly what your clients experience during onboarding.",
       position: "top" as const,
       action: "Click to experience the client portal",
+      onShow: () => {
+        setTimeout(() => {
+          setView("portal")
+          setCurrentStepIndex(0)
+          setCompletedSteps([])
+          setFormData({})
+          setUploadedFiles([])
+        }, 1500)
+      },
     },
   ]
 
@@ -337,20 +346,8 @@ export function DemoMode() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {showTour && !tourCompleted && (
-        <GuidedTour
-          steps={view === "dashboard" ? dashboardTourSteps : portalTourSteps}
-          onComplete={() => {
-            setTourCompleted(true)
-            setShowTour(false)
-          }}
-          onSkip={() => setShowTour(false)}
-        />
-      )}
-
-      <CelebrationModal open={showCelebration} onOpenChange={setShowCelebration} type={celebrationType} />
-
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Header */}
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/30">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -388,6 +385,28 @@ export function DemoMode() {
           </div>
         </div>
       </div>
+
+      {showTour && (
+        <GuidedTour
+          steps={view === "dashboard" ? dashboardTourSteps : portalTourSteps}
+          onComplete={() => {
+            setShowTour(false)
+            setTourCompleted(true)
+            if (view === "dashboard") {
+              setTimeout(() => {
+                setView("portal")
+                setShowTour(true)
+              }, 500)
+            }
+          }}
+          onSkip={() => {
+            setShowTour(false)
+            setTourCompleted(true)
+          }}
+        />
+      )}
+
+      <CelebrationModal open={showCelebration} onOpenChange={setShowCelebration} type={celebrationType} />
 
       <div className="bg-muted/30 border-b border-border">
         <div className="container mx-auto px-4 py-4">
