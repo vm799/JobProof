@@ -120,6 +120,42 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
 
   const position = getModalPosition()
 
+  const getPointerPosition = () => {
+    switch (step.position) {
+      case "top":
+        // Pointer below modal, pointing up
+        return {
+          top: position.top + 260,
+          left: position.left + 190 - 12,
+        }
+      case "bottom":
+        // Pointer above modal, pointing down
+        return {
+          top: position.top - 40,
+          left: position.left + 190 - 12,
+        }
+      case "left":
+        // Pointer to the right of modal, pointing left
+        return {
+          top: position.top + 120,
+          left: position.left + 380 + 20,
+        }
+      case "right":
+        // Pointer to the left of modal, pointing right
+        return {
+          top: position.top + 120,
+          left: position.left - 40,
+        }
+      default:
+        return {
+          top: position.top - 40,
+          left: position.left + 190 - 12,
+        }
+    }
+  }
+
+  const pointerPosition = getPointerPosition()
+
   return (
     <>
       {/* Backdrop overlay */}
@@ -141,16 +177,16 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
 
       {step.action && (
         <div
-          className="fixed z-50 pointer-events-none"
+          className="fixed z-[60] pointer-events-none"
           style={{
-            top: targetRect.top + targetRect.height / 2 - 12,
-            left: targetRect.left + targetRect.width / 2 - 12,
+            top: `${pointerPosition.top}px`,
+            left: `${pointerPosition.left}px`,
             animation: "bounce 1s infinite",
           }}
         >
           <div className="relative">
-            <MousePointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_12px_rgba(234,179,8,0.9)] animate-pulse" />
-            <div className="absolute inset-0 h-8 w-8 bg-yellow-400 rounded-full blur-xl opacity-50 animate-pulse" />
+            <MousePointerClick className="h-10 w-10 text-yellow-400 drop-shadow-[0_0_16px_rgba(234,179,8,1)] animate-pulse" />
+            <div className="absolute inset-0 h-10 w-10 bg-yellow-400 rounded-full blur-xl opacity-60 animate-pulse" />
           </div>
         </div>
       )}
@@ -253,6 +289,15 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           }
           100% {
             box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+          }
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
           }
         }
       `}</style>
