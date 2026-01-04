@@ -385,6 +385,9 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                             </span>
                           </span>
                           <span className="ml-4 flex min-w-0 flex-col">
+                            <span className="text-xs text-muted-foreground mb-0.5">
+                              Step {idx + 1} of {totalSteps}
+                            </span>
                             <span
                               className={cn(
                                 "text-sm font-medium",
@@ -416,6 +419,9 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-2">
+                  {completedSteps} of {totalSteps} completed
+                </p>
               </div>
             </Card>
           </div>

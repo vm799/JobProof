@@ -83,7 +83,7 @@ export function DashboardLayout({
       <aside className="hidden lg:flex w-64 border-r border-border bg-card flex-col">
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <ThemeLogo width={350} height={80} className="h-20 w-auto" priority />
+            <ThemeLogo width={350} height={80} className="h-24 w-auto" priority />
           </Link>
           <ThemeToggleSlider />
         </div>
@@ -180,7 +180,7 @@ export function DashboardLayout({
             <SheetContent side="left" className="w-64 p-0">
               <div className="flex h-16 items-center border-b border-border px-6">
                 <Link href="/dashboard">
-                  <ThemeLogo width={350} height={80} className="h-20 w-auto" />
+                  <ThemeLogo width={350} height={80} className="h-24 w-auto" />
                 </Link>
               </div>
               <nav className="flex flex-col gap-1 p-4">
@@ -212,7 +212,7 @@ export function DashboardLayout({
                   <HelpCircle className="h-4 w-4" />
                   Help & Support
                 </Link>
-                <div className="mt-2 border-t border-border pt-4">
+                <div className="mt-2 border-t border-border bg-card p-4">
                   <div className="text-xs font-semibold text-muted-foreground mb-2 px-3 flex items-center gap-2">
                     <Shield className="h-3 w-3" />
                     Legal
@@ -268,7 +268,7 @@ export function DashboardLayout({
 
           <div className="flex-1">
             <Link href="/dashboard">
-              <ThemeLogo width={300} height={70} className="h-[4.375rem] w-auto" />
+              <ThemeLogo width={300} height={70} className="h-20 w-auto" />
             </Link>
           </div>
 
