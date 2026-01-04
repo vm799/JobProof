@@ -9,7 +9,6 @@ export function ThemeToggleSlider() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Avoid hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -17,7 +16,7 @@ export function ThemeToggleSlider() {
   if (!mounted) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-12 h-6 bg-muted rounded-full" />
+        <div className="w-14 h-7 bg-muted border-2 border-border rounded-full" />
       </div>
     )
   }
@@ -29,10 +28,11 @@ export function ThemeToggleSlider() {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
         "relative flex items-center gap-2 rounded-full p-1 transition-all duration-300",
-        "w-14 h-7 bg-gradient-to-r",
-        isDark ? "from-blue-600 to-purple-600" : "from-amber-400 to-orange-500",
+        "w-14 h-7 bg-gradient-to-r border-2 shadow-md hover:shadow-lg",
+        isDark ? "from-blue-600 to-purple-600 border-blue-400" : "from-amber-400 to-orange-500 border-amber-300",
       )}
-      aria-label="Toggle theme"
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      title={`Currently ${isDark ? "dark" : "light"} mode. Click to switch.`}
     >
       <span
         className={cn(
@@ -41,17 +41,16 @@ export function ThemeToggleSlider() {
         )}
       />
 
-      {/* Icons */}
       <Sun
         className={cn(
-          "absolute left-1.5 w-3 h-3 transition-opacity duration-300",
-          isDark ? "opacity-0" : "opacity-100 text-white",
+          "absolute left-1.5 w-3.5 h-3.5 transition-opacity duration-300",
+          isDark ? "opacity-0" : "opacity-100 text-white drop-shadow-sm",
         )}
       />
       <Moon
         className={cn(
-          "absolute right-1.5 w-3 h-3 transition-opacity duration-300",
-          isDark ? "opacity-100 text-white" : "opacity-0",
+          "absolute right-1.5 w-3.5 h-3.5 transition-opacity duration-300",
+          isDark ? "opacity-100 text-white drop-shadow-sm" : "opacity-0",
         )}
       />
     </button>

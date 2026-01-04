@@ -263,7 +263,17 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg" style={{ backgroundColor: workspace.brand_color || "#000" }} />
+              {workspace.logo_url ? (
+                <img
+                  src={workspace.logo_url || "/placeholder.svg"}
+                  alt={workspace.name}
+                  className="h-8 w-auto rounded-lg"
+                />
+              ) : (
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">{workspace.name[0]}</span>
+                </div>
+              )}
               <span className="text-sm font-medium">{workspace.name}</span>
             </div>
             <div className="flex items-center gap-3">
@@ -293,7 +303,7 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                           <div
                             className={cn(
                               "absolute left-4 top-10 -ml-px h-full w-0.5",
-                              status === "complete" ? "bg-primary" : "bg-border",
+                              status === "complete" ? "bg-gradient-to-b from-primary to-accent" : "bg-border",
                             )}
                           />
                         )}
@@ -303,7 +313,7 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                               className={cn(
                                 "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all",
                                 status === "complete"
-                                  ? "border-primary bg-primary text-primary-foreground"
+                                  ? "border-primary bg-gradient-to-br from-primary to-accent text-white"
                                   : status === "current"
                                     ? "border-primary bg-card animate-pulse"
                                     : "border-border bg-card",
@@ -349,7 +359,7 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary transition-all duration-500 ease-out"
+                    className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500 ease-out"
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>

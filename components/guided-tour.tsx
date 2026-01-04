@@ -181,12 +181,11 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           style={{
             top: `${pointerPosition.top}px`,
             left: `${pointerPosition.left}px`,
-            animation: "bounce 1s infinite",
           }}
         >
           <div className="relative">
-            <MousePointerClick className="h-10 w-10 text-yellow-400 drop-shadow-[0_0_16px_rgba(234,179,8,1)] animate-pulse" />
-            <div className="absolute inset-0 h-10 w-10 bg-yellow-400 rounded-full blur-xl opacity-60 animate-pulse" />
+            <MousePointerClick className="h-8 w-8 text-yellow-500 drop-shadow-[0_0_12px_rgba(234,179,8,0.8)]" />
+            <div className="absolute inset-0 h-8 w-8 bg-yellow-400 rounded-full blur-md opacity-40" />
           </div>
         </div>
       )}
@@ -198,12 +197,10 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           left: `${position.left}px`,
         }}
       >
-        {/* Glowing border effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-500 rounded-2xl blur-lg opacity-40 animate-pulse pointer-events-none" />
+        <div className="absolute inset-0 bg-yellow-500 rounded-2xl blur-md opacity-30 pointer-events-none" />
 
-        <div className="relative bg-gradient-to-br from-yellow-100 to-amber-100 dark:from-yellow-950/50 dark:to-amber-950/50 backdrop-blur-xl border-2 border-yellow-500/50 rounded-2xl p-6 shadow-2xl">
-          {/* Demo badge */}
-          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5 animate-bounce">
+        <div className="relative bg-white dark:bg-gray-900 backdrop-blur-xl border-4 border-yellow-500 rounded-2xl p-6 shadow-2xl">
+          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
             <Lightbulb className="h-3.5 w-3.5" />
             DEMO TOUR
           </div>
@@ -214,34 +211,34 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               <div className="p-1.5 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-bold text-yellow-900 dark:text-yellow-200">
+              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                 Step {currentStep + 1} of {steps.length}
               </span>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 hover:bg-yellow-200 dark:hover:bg-yellow-900/30 rounded-full"
+              className="h-7 w-7 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
               onClick={handleSkip}
             >
-              <X className="h-4 w-4 text-yellow-900 dark:text-yellow-200" />
+              <X className="h-4 w-4 text-gray-900 dark:text-gray-100" />
             </Button>
           </div>
 
           {/* Progress bar */}
-          <div className="mb-5 h-2 bg-yellow-200 dark:bg-yellow-900/30 rounded-full overflow-hidden shadow-inner">
+          <div className="mb-5 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(234,179,8,0.5)]"
+              className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500 ease-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
 
-          <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-yellow-100">{step.title}</h3>
-          <p className="text-sm text-gray-800 dark:text-yellow-200 mb-5 leading-relaxed">{step.description}</p>
+          <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">{step.title}</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-5 leading-relaxed">{step.description}</p>
 
           {step.action && (
-            <div className="mb-5 p-3 bg-gradient-to-br from-yellow-200 to-amber-200 dark:from-yellow-900/50 dark:to-amber-900/50 border-2 border-yellow-500/50 rounded-xl shadow-inner">
-              <p className="text-sm font-bold text-gray-900 dark:text-yellow-100 flex items-center gap-2">
+            <div className="mb-5 p-3 bg-yellow-50 dark:bg-yellow-950/30 border-2 border-yellow-500 rounded-xl">
+              <p className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                 <div className="p-1 bg-yellow-500 rounded-md">
                   <MousePointerClick className="h-3.5 w-3.5 text-white" />
                 </div>
@@ -256,7 +253,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               variant="ghost"
               size="sm"
               onClick={handleSkip}
-              className="text-gray-800 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-900/30 font-medium"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
             >
               Skip Tour
             </Button>
@@ -272,33 +269,13 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         </div>
       </div>
 
-      {/* Global styles for highlighting */}
       <style jsx global>{`
         .tour-highlight {
           position: relative;
           z-index: 45 !important;
-          animation: pulse-ring 2s infinite;
-        }
-
-        @keyframes pulse-ring {
-          0% {
-            box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.8);
-          }
-          50% {
-            box-shadow: 0 0 0 8px rgba(234, 179, 8, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
-          }
-        }
-        
-        @keyframes bounce {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
+          box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.5);
+          border-radius: 8px;
+          transition: box-shadow 0.3s ease;
         }
       `}</style>
     </>

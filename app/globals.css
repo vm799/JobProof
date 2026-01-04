@@ -3,42 +3,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Updated to BoardingPass brand colors - cyan blue to coral orange gradient */
 /* WCAG AA compliant color scheme - Light mode with pure white backgrounds */
 :root {
-  /* Light Mode - Clean white with high contrast text */
+  /* Light Mode - Clean white with BoardingPass brand colors */
   --background: oklch(1 0 0); /* Pure white #FFFFFF */
   --foreground: oklch(0.2 0 0); /* Near black for WCAG AAA contrast (21:1) */
   --card: oklch(1 0 0); /* Pure white cards */
   --card-foreground: oklch(0.2 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0 0);
-  --primary: oklch(0.45 0.18 260); /* Vibrant blue-purple */
-  --primary-foreground: oklch(1 0 0); /* White text on primary (11.3:1) */
+  --primary: oklch(0.55 0.15 220); /* Cyan blue from logo */
+  --primary-foreground: oklch(1 0 0); /* White text on primary */
   --secondary: oklch(0.97 0 0); /* Very light gray */
   --secondary-foreground: oklch(0.2 0 0);
   --muted: oklch(0.96 0 0); /* Subtle gray for muted sections */
   --muted-foreground: oklch(0.45 0 0); /* Medium gray (7.2:1 contrast) */
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.2 0 0);
+  --accent: oklch(0.65 0.18 40); /* Coral orange accent from logo */
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.55 0.22 27); /* Red for errors */
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.9 0 0); /* Visible borders */
   --input: oklch(0.9 0 0);
-  --ring: oklch(0.45 0.18 260); /* Focus ring matches primary */
-  --chart-1: oklch(0.45 0.18 260);
-  --chart-2: oklch(0.5 0.18 180);
-  --chart-3: oklch(0.55 0.16 150);
-  --chart-4: oklch(0.5 0.2 320);
-  --chart-5: oklch(0.55 0.18 80);
+  --ring: oklch(0.55 0.15 220); /* Focus ring matches primary */
+  --chart-1: oklch(0.55 0.15 220); /* Cyan blue */
+  --chart-2: oklch(0.65 0.18 40); /* Coral orange */
+  --chart-3: oklch(0.6 0.15 180); /* Teal */
+  --chart-4: oklch(0.5 0.2 320); /* Purple */
+  --chart-5: oklch(0.55 0.18 80); /* Yellow */
   --radius: 0.75rem;
   --sidebar: oklch(1 0 0); /* Pure white sidebar */
   --sidebar-foreground: oklch(0.2 0 0);
-  --sidebar-primary: oklch(0.45 0.18 260);
+  --sidebar-primary: oklch(0.55 0.15 220);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.2 0 0);
   --sidebar-border: oklch(0.9 0 0);
-  --sidebar-ring: oklch(0.45 0.18 260);
+  --sidebar-ring: oklch(0.55 0.15 220);
 }
 
 /* Dark Mode - Deep charcoal blue with WCAG AA compliance */
@@ -49,32 +50,32 @@
   --card-foreground: oklch(0.97 0 0);
   --popover: oklch(0.18 0.02 250);
   --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.6 0.2 260); /* Brighter blue-purple for dark mode */
-  --primary-foreground: oklch(0.98 0 0); /* White text (9.8:1 contrast) */
+  --primary: oklch(0.65 0.15 220); /* Brighter cyan blue for dark mode */
+  --primary-foreground: oklch(0.98 0 0); /* White text */
   --secondary: oklch(0.25 0.02 250); /* Medium charcoal */
   --secondary-foreground: oklch(0.97 0 0);
   --muted: oklch(0.25 0.02 250); /* Muted sections */
   --muted-foreground: oklch(0.65 0 0); /* Light gray text (6.1:1 contrast) */
-  --accent: oklch(0.25 0.02 250);
-  --accent-foreground: oklch(0.97 0 0);
+  --accent: oklch(0.7 0.18 40); /* Brighter coral orange for dark mode */
+  --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.5 0.2 27); /* Softer red for dark mode */
   --destructive-foreground: oklch(0.97 0 0);
   --border: oklch(0.3 0.02 250); /* Subtle borders */
   --input: oklch(0.3 0.02 250);
-  --ring: oklch(0.6 0.2 260);
-  --chart-1: oklch(0.6 0.2 260);
-  --chart-2: oklch(0.65 0.18 180);
-  --chart-3: oklch(0.7 0.16 150);
-  --chart-4: oklch(0.6 0.2 320);
-  --chart-5: oklch(0.65 0.18 80);
+  --ring: oklch(0.65 0.15 220);
+  --chart-1: oklch(0.65 0.15 220); /* Cyan blue */
+  --chart-2: oklch(0.7 0.18 40); /* Coral orange */
+  --chart-3: oklch(0.7 0.16 180); /* Teal */
+  --chart-4: oklch(0.6 0.2 320); /* Purple */
+  --chart-5: oklch(0.65 0.18 80); /* Yellow */
   --sidebar: oklch(0.18 0.02 250); /* Charcoal blue sidebar */
   --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.6 0.2 260);
+  --sidebar-primary: oklch(0.65 0.15 220);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.25 0.02 250);
   --sidebar-accent-foreground: oklch(0.97 0 0);
   --sidebar-border: oklch(0.3 0.02 250);
-  --sidebar-ring: oklch(0.6 0.2 260);
+  --sidebar-ring: oklch(0.65 0.15 220);
 }
 
 @theme inline {

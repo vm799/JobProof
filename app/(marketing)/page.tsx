@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, Zap, Users, TrendingUp, Clock, Shield } from "lucide-react"
+import Image from "next/image"
 
 export default function LandingPage() {
   return (
@@ -8,11 +9,15 @@ export default function LandingPage() {
       {/* Header */}
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary/60 rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">B</span>
-            </div>
-            <span className="font-semibold text-xl">BoardingPass</span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/boardingpass-logo.png"
+              alt="BoardingPass"
+              width={160}
+              height={36}
+              className="h-9 w-auto"
+              priority
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -56,14 +61,17 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 sm:py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
             <Sparkles className="h-4 w-4" />
             White-label client onboarding made delightful
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 text-balance">
             Client onboarding that feels like
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"> magic</span>
+            <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              {" "}
+              magic
+            </span>
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
@@ -232,11 +240,8 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary/60 rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-lg">B</span>
-                </div>
-                <span className="font-semibold">BoardingPass</span>
+              <Link href="/" className="flex items-center mb-4">
+                <Image src="/boardingpass-logo.png" alt="BoardingPass" width={140} height={32} className="h-8 w-auto" />
               </Link>
               <p className="text-sm text-muted-foreground">White-label client onboarding made delightful</p>
             </div>

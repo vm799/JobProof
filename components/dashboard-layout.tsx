@@ -32,6 +32,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggleSlider } from "@/components/theme-toggle-slider"
 import { useState } from "react"
+import Image from "next/image"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -80,7 +81,16 @@ export function DashboardLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-64 border-r border-border bg-card flex-col">
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
-          <h1 className="text-xl font-semibold">BoardingPass</h1>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <Image
+              src="/boardingpass-logo.png"
+              alt="BoardingPass"
+              width={140}
+              height={32}
+              className="h-8 w-auto"
+              priority
+            />
+          </Link>
           <ThemeToggleSlider />
         </div>
         <nav className="flex-1 flex flex-col gap-1 p-4 overflow-y-auto">
@@ -154,7 +164,15 @@ export function DashboardLayout({
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
               <div className="flex h-16 items-center border-b border-border px-6">
-                <h1 className="text-xl font-semibold">BoardingPass</h1>
+                <Link href="/dashboard">
+                  <Image
+                    src="/boardingpass-logo.png"
+                    alt="BoardingPass"
+                    width={140}
+                    height={32}
+                    className="h-8 w-auto"
+                  />
+                </Link>
               </div>
               <nav className="flex flex-col gap-1 p-4">
                 {navigation.map((item) => {
@@ -218,7 +236,9 @@ export function DashboardLayout({
           </Sheet>
 
           <div className="flex-1">
-            <h1 className="text-lg font-semibold">BoardingPass</h1>
+            <Link href="/dashboard">
+              <Image src="/boardingpass-logo.png" alt="BoardingPass" width={120} height={28} className="h-7 w-auto" />
+            </Link>
           </div>
 
           <ThemeToggleSlider />
