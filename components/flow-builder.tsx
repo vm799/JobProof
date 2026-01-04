@@ -7,18 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  Plus,
-  GripVertical,
-  FileText,
-  Upload,
-  FileSignature,
-  Video,
-  Trash2,
-  Settings,
-  ArrowLeft,
-  Save,
-} from "lucide-react"
+import { Plus, FileText, Upload, FileSignature, Video, Trash2, Settings, ArrowLeft, Save } from "lucide-react"
 import { useState, useTransition } from "react"
 import Link from "next/link"
 import { updateFlow, createStep, updateStep, deleteStep } from "@/app/actions/flows"
@@ -162,9 +151,8 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
                   const isEditing = editingStep === step.id
 
                   return (
-                    <Card key={step.id} className="cursor-move p-4 transition-colors hover:border-primary/50">
+                    <Card key={step.id} className="p-4 transition-colors hover:border-primary/50">
                       <div className="flex items-start gap-3">
-                        <GripVertical className="mt-1 h-5 w-5 flex-shrink-0 text-muted-foreground" />
                         <div
                           className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${stepTypeConfig[step.type].color}`}
                         >

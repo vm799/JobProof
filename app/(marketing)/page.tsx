@@ -288,13 +288,13 @@ export default function LandingPage() {
             <div>
               <h4 className="font-semibold mb-3">Legal</h4>
               <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/privacy" className="hover:text-foreground">
                   Privacy
                 </Link>
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/terms" className="hover:text-foreground">
                   Terms
                 </Link>
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/privacy#security" className="hover:text-foreground">
                   Security
                 </Link>
               </div>

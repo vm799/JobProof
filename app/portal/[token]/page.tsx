@@ -47,7 +47,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
   const now = new Date()
   const diffDays = Math.ceil(Math.abs(now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))
 
-  if (diffDays > 90) {
+  if (diffDays > 7) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-6">
         <div className="max-w-md text-center space-y-4">
@@ -68,7 +68,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
           </div>
           <h1 className="text-2xl font-semibold">This Link Has Expired</h1>
           <p className="text-muted-foreground">
-            For security reasons, onboarding links expire after 90 days. Please contact{" "}
+            For security reasons, onboarding links expire after 7 days. Please contact{" "}
             <strong>{onboarding.onboarding_flows.workspaces.name}</strong> to request a new link.
           </p>
           <p className="text-sm text-muted-foreground pt-4">Link created: {createdDate.toLocaleDateString()}</p>

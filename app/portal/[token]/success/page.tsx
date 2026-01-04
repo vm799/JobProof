@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Check, Calendar, Mail } from "lucide-react"
 import Image from "next/image"
 
-export default async function SuccessPage({ params }: { params: Promise<{ token: string }> }) {
-  const { token } = await params
+export default async function SuccessPage({ params }: { params: { token: string } }) {
+  const { token } = params
   const supabase = await createClient()
 
   // Verify the onboarding exists and is completed
