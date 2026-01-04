@@ -156,8 +156,8 @@ export default function PrivacyPage() {
                   We retain your data for as long as your account is active. If you close your account, we will delete
                   your data within 30 days unless we are required to retain it for legal compliance. You can request
                   data deletion at any time by contacting{" "}
-                  <a href="mailto:privacy@getboardingpass.app" className="text-primary hover:underline">
-                    privacy@getboardingpass.app
+                  <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                    admin@getboardingpass.app
                   </a>
                   .
                 </p>
@@ -195,8 +195,8 @@ export default function PrivacyPage() {
             </ul>
             <p className="text-muted-foreground mt-4">
               To exercise any of these rights, contact us at{" "}
-              <a href="mailto:privacy@getboardingpass.app" className="text-primary hover:underline">
-                privacy@getboardingpass.app
+              <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                admin@getboardingpass.app
               </a>
               .
             </p>
@@ -254,8 +254,8 @@ export default function PrivacyPage() {
             <div className="bg-muted/50 p-6 rounded-lg border border-border">
               <p className="text-muted-foreground">
                 <strong>Email:</strong>{" "}
-                <a href="mailto:privacy@getboardingpass.app" className="text-primary hover:underline">
-                  privacy@getboardingpass.app
+                <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                  admin@getboardingpass.app
                 </a>
               </p>
               <p className="text-muted-foreground mt-2">

@@ -281,7 +281,7 @@ export default function LandingPage() {
                 <Link href="/help" className="hover:text-foreground">
                   Help Center
                 </Link>
-                <a href="mailto:support@yourdomain.com" className="hover:text-foreground">
+                <a href="mailto:admin@getboardingpass.app" className="hover:text-foreground">
                   Contact
                 </a>
               </div>

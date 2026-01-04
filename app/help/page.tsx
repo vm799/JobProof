@@ -132,7 +132,7 @@ export default function HelpPage() {
                   Our support team typically responds within 2 hours during business hours
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="mailto:support@getboardingpass.app">
+                  <a href="mailto:admin@getboardingpass.app">
                     <Button className="w-full sm:w-auto">Email Support</Button>
                   </a>
                   <Button variant="outline" className="w-full sm:w-auto bg-transparent">

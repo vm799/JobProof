@@ -270,14 +270,14 @@ export default function TermsPage() {
             <div className="bg-muted/50 p-6 rounded-lg border border-border">
               <p className="text-muted-foreground">
                 <strong>General Inquiries:</strong>{" "}
-                <a href="mailto:support@getboardingpass.app" className="text-primary hover:underline">
-                  support@getboardingpass.app
+                <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                  admin@getboardingpass.app
                 </a>
               </p>
               <p className="text-muted-foreground mt-2">
                 <strong>Legal:</strong>{" "}
-                <a href="mailto:legal@getboardingpass.app" className="text-primary hover:underline">
-                  legal@getboardingpass.app
+                <a href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                  admin@getboardingpass.app
                 </a>
               </p>
               <p className="text-muted-foreground mt-2">

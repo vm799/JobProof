@@ -31,7 +31,7 @@ export async function sendEmail({
       return { success: true, data: null, skipped: true }
     }
 
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "admin@getboardingpass.app"
 
     const { data, error } = await resend.emails.send({
       from: `BoardingPass <${fromEmail}>`,

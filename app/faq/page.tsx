@@ -294,11 +294,11 @@ export default function FAQPage() {
         <Card className="mt-12 p-8 text-center bg-primary/5">
           <h2 className="text-2xl font-bold mb-2">Still have questions?</h2>
           <p className="text-muted-foreground mb-6">
-            Email us at support@getboardingpass.app - we respond within 24 hours.
+            Email us at admin@getboardingpass.app - we respond within 24 hours.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button asChild>
-              <a href="mailto:support@getboardingpass.app">Contact Support</a>
+              <a href="mailto:admin@getboardingpass.app">Contact Support</a>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/help">Browse Help Center</Link>
@@ -309,16 +309,11 @@ export default function FAQPage() {
         {/* Documentation Links */}
         <div className="mt-8 text-center text-sm text-muted-foreground">
           <p>
-            For developers: See{" "}
-            <a
-              href="https://github.com/yourusername/boardingpass/blob/main/FAQ.md"
-              className="underline hover:text-foreground"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              complete FAQ.md
-            </a>{" "}
-            with evidence files and technical details.
+            For developers: Additional technical details available in the{" "}
+            <Link href="/help" className="underline hover:text-foreground">
+              Help Center
+            </Link>
+            .
           </p>
         </div>
       </div>

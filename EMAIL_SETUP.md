@@ -3,33 +3,34 @@
 ## Current Status
 Your app uses **Resend** for email delivery with `RESEND_API_KEY` configured.
 
-## Issue
-The app references `@getboardingpass.app` email addresses, but this domain needs to be verified in Resend first.
+## Default Email Address
+The app now defaults to **`admin@getboardingpass.app`** for all sender and contact addresses.
 
 ## Setup Steps
 
-### Option 1: Use Resend's Test Domain (Quick Start)
-1. No additional setup needed
-2. Emails will come from `onboarding@resend.dev`
-3. **Limitation**: May land in spam, not branded
+### Option 1: Use Default Domain (Quick Start)
+1. Verify `getboardingpass.app` domain in Resend
+2. Set environment variable:
+   ```
+   RESEND_FROM_EMAIL=admin@getboardingpass.app
+   ```
+3. All emails will send from this address
 
-### Option 2: Verify Your Domain (Production)
+### Option 2: Use Your Custom Domain (Recommended for White-Label)
 1. Go to [Resend Dashboard](https://resend.com/domains)
-2. Add your domain (e.g., `getboardingpass.app` or `yourdomain.com`)
+2. Add your domain (e.g., `youragency.com`)
 3. Add the DNS records Resend provides (SPF, DKIM, DMARC)
 4. Wait for verification (usually 5-15 minutes)
 5. Add environment variable:
    ```
-   RESEND_FROM_EMAIL=onboarding@yourdomain.com
+   RESEND_FROM_EMAIL=admin@yourdomain.com
    ```
 
-### Option 3: Use Existing Verified Domain
-If you already have a verified domain in Resend:
-1. Find your verified domain in Resend dashboard
-2. Add environment variable:
-   ```
-   RESEND_FROM_EMAIL=onboarding@yourverifieddomain.com
-   ```
+### Option 3: Use Resend's Test Domain (Development Only)
+1. No additional setup needed
+2. Emails will come from `admin@resend.dev`
+3. **Limitation**: May land in spam, not branded
+4. The app will automatically fall back to this if `RESEND_FROM_EMAIL` is not set
 
 ## Testing Email Delivery
 
@@ -39,31 +40,41 @@ If you already have a verified domain in Resend:
 ```
 
 ### Common issues:
-- **No emails received**: Check RESEND_API_KEY is set
+- **No emails received**: Check RESEND_API_KEY is set in environment variables
 - **Emails in spam**: Domain not verified, using test domain
-- **"Domain not verified" error**: Complete Option 2 above
+- **"Domain not verified" error**: Complete domain verification in Resend dashboard
 
 ## Email Addresses Used in App
 
-The following email addresses are referenced and should be updated to your domain:
-- `onboarding@getboardingpass.app` - Automated onboarding emails
-- `support@getboardingpass.app` - Support contact (footer, help pages)
-- `privacy@getboardingpass.app` - Privacy policy contact
-- `legal@getboardingpass.app` - Terms of service contact
-- `security@getboardingpass.app` - Security issues contact
+All contact references now point to **`admin@getboardingpass.app`**:
+- Automated onboarding emails
+- Support contact (footer, help pages)
+- Privacy policy contact
+- Terms of service contact
+- All mailto: links
 
 ## Quick Fix for Testing
 
 To test emails immediately without domain setup:
-1. Use Resend's test domain (no action needed)
+1. Leave `RESEND_FROM_EMAIL` unset - app will use `admin@getboardingpass.app` as default
 2. Check your Resend dashboard logs to confirm delivery
-3. Emails will work but come from `@resend.dev`
+3. For immediate testing with Resend test domain, emails work but come from `@resend.dev`
 
-## Production Readiness
+## Production Readiness Checklist
 
 Before AppSumo launch:
-1. ✅ Verify your domain in Resend
-2. ✅ Set `RESEND_FROM_EMAIL` environment variable
-3. ✅ Update email addresses throughout app to use your domain
-4. ✅ Test email delivery to multiple providers (Gmail, Outlook, etc.)
-5. ✅ Monitor Resend logs for delivery issues
+1. ✅ Verify `getboardingpass.app` domain in Resend (or your custom domain)
+2. ✅ Set `RESEND_FROM_EMAIL=admin@getboardingpass.app` environment variable
+3. ✅ Test email delivery to multiple providers (Gmail, Outlook, Yahoo, etc.)
+4. ✅ Monitor Resend logs for delivery issues and bounce rates
+5. ✅ Ensure SPF, DKIM, and DMARC records are properly configured
+
+## Environment Variable Configuration
+
+Add this to your Vercel project environment variables:
+
+```bash
+RESEND_FROM_EMAIL=admin@getboardingpass.app
+```
+
+**Where to add:** Vars section in the v0 in-chat sidebar, or directly in Vercel project settings.
