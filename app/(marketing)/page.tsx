@@ -88,38 +88,23 @@ export default function LandingPage() {
             No credit card required • 14-day free trial • Cancel anytime
           </p>
         </div>
-
-        {/* Trust Bar */}
-        <div className="mt-16 pt-16 border-t border-border">
-          <p className="text-center text-sm text-muted-foreground mb-8">Trusted by 2,000+ agencies and consultants</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center opacity-60">
-            <div className="text-xl sm:text-2xl font-bold">Agency A</div>
-            <div className="text-xl sm:text-2xl font-bold">Studio B</div>
-            <div className="text-xl sm:text-2xl font-bold">Firm C</div>
-            <div className="text-xl sm:text-2xl font-bold">Co. D</div>
-          </div>
-        </div>
       </section>
 
       {/* Stats Section */}
       <section className="bg-muted/30 py-12 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">92%</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Faster onboarding</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            <div className="text-center p-6 rounded-lg bg-card border border-border">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">5 min</div>
+              <div className="text-sm text-muted-foreground">To build your first flow</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">3.5hrs</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Time saved per client</div>
+            <div className="text-center p-6 rounded-lg bg-card border border-border">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">10+</div>
+              <div className="text-sm text-muted-foreground">Pre-built templates included</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">98%</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Completion rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">$50k+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Revenue per user</div>
+            <div className="text-center p-6 rounded-lg bg-card border border-border">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">Zero</div>
+              <div className="text-sm text-muted-foreground">Code required to launch</div>
             </div>
           </div>
         </div>
@@ -138,33 +123,33 @@ export default function LandingPage() {
           {[
             {
               icon: Zap,
-              title: "Lightning Fast Setup",
-              desc: "Create branded onboarding flows in 5 minutes with our drag-and-drop builder",
+              title: "5-Minute Setup",
+              desc: "Create branded onboarding flows in minutes with our intuitive flow builder",
             },
             {
               icon: Users,
-              title: "White-Label Everything",
-              desc: "Your logo, colors, and domain. Clients never see our brand.",
+              title: "White-Label Branding",
+              desc: "Add your logo and brand colors. Make it yours.",
             },
             {
               icon: TrendingUp,
-              title: "Real-Time Analytics",
-              desc: "Track completion rates, bottlenecks, and client engagement live",
+              title: "Progress Analytics",
+              desc: "Track completion rates, bottlenecks, and identify where clients get stuck",
             },
             {
               icon: Clock,
               title: "Smart Reminders",
-              desc: "Automated emails keep clients moving without you lifting a finger",
+              desc: "Automated email reminders keep clients moving forward without manual follow-ups",
             },
             {
               icon: Shield,
-              title: "Enterprise Security",
-              desc: "SOC 2 compliant, GDPR ready, with SSO and advanced permissions",
+              title: "Secure & Reliable",
+              desc: "Supabase-powered database, email verification, and secure file uploads included",
             },
             {
               icon: Sparkles,
               title: "Celebration Moments",
-              desc: "Delight clients with progress milestones and completion confetti",
+              desc: "Delight clients with progress milestones, confetti, and completion celebrations",
             },
           ].map((feature, i) => (
             <div
@@ -198,13 +183,17 @@ export default function LandingPage() {
               { name: "Real Estate Client Intake", steps: 7, color: "from-indigo-500/20 to-violet-500/20" },
               { name: "Legal Client Setup", steps: 9, color: "from-amber-500/20 to-yellow-500/20" },
             ].map((template, i) => (
-              <div
-                key={i}
-                className={`p-6 rounded-lg border border-border bg-gradient-to-br ${template.color} hover:scale-105 transition-transform cursor-pointer`}
-              >
-                <h3 className="font-semibold mb-2">{template.name}</h3>
-                <p className="text-sm text-muted-foreground">{template.steps} steps • Ready to use</p>
-              </div>
+              <Link href="/demo" key={i}>
+                <div
+                  className={`p-6 rounded-lg border border-border bg-gradient-to-br ${template.color} hover:scale-105 hover:border-primary/50 transition-all cursor-pointer`}
+                >
+                  <h3 className="font-semibold mb-2">{template.name}</h3>
+                  <p className="text-sm text-muted-foreground">{template.steps} steps • Ready to use</p>
+                  <div className="mt-3 flex items-center gap-1 text-sm text-primary font-medium">
+                    Preview template <ArrowRight className="h-4 w-4" />
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
 
@@ -222,9 +211,7 @@ export default function LandingPage() {
       <section className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-12 border border-primary/20">
           <h2 className="text-4xl font-bold mb-4">Ready to transform your onboarding?</h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Join 2,000+ agencies delivering premium client experiences
-          </p>
+          <p className="text-xl text-muted-foreground mb-8">Start delivering premium client experiences today</p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link href="/demo">
               <Button size="lg" className="gap-2 h-12 px-8">
