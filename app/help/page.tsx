@@ -1,15 +1,34 @@
+"use client"
+
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Book, Video, MessageCircle, Sparkles, Search, ArrowRight } from "lucide-react"
+import { Book, MessageCircle, Sparkles, Search, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-
-export const metadata = {
-  title: "Help Center - BoardingPass",
-  description: "Get help with BoardingPass",
-}
+import { useState } from "react"
 
 export default function HelpPage() {
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const allArticles = [
+    { title: "Create your first onboarding flow", category: "Getting Started", href: "/faq#create-flow" },
+    { title: "Invite your first client", category: "Getting Started", href: "/faq#invite-client" },
+    { title: "Customize your workspace branding", category: "Getting Started", href: "/faq#branding" },
+    { title: "Set up email notifications", category: "Getting Started", href: "/faq#notifications" },
+    { title: "Using flow templates", category: "Advanced", href: "/faq#templates" },
+    { title: "Setting up automated reminders", category: "Advanced", href: "/faq#reminders" },
+    { title: "Understanding analytics and insights", category: "Advanced", href: "/analytics" },
+    { title: "Team collaboration and permissions", category: "Advanced", href: "/team" },
+  ]
+
+  const filteredArticles = searchQuery
+    ? allArticles.filter(
+        (article) =>
+          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          article.category.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : allArticles
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
@@ -19,104 +38,151 @@ export default function HelpPage() {
           <p className="text-xl text-muted-foreground mb-8">Search our help center or browse categories below</p>
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input placeholder="Search help articles..." className="pl-12 h-14 text-base" />
+            <Input
+              placeholder="Search help articles..."
+              className="pl-12 h-14 text-base"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
+          {searchQuery && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Found {filteredArticles.length} article{filteredArticles.length !== 1 ? "s" : ""}
+            </p>
+          )}
         </div>
 
-        {/* Popular Topics */}
-        <div className="max-w-5xl mx-auto mb-16">
-          <h2 className="text-2xl font-bold mb-6">Popular Topics</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Sparkles,
-                title: "Getting Started",
-                desc: "Learn the basics of BoardingPass",
-                articles: 8,
-                href: "/help/getting-started",
-              },
-              {
-                icon: Book,
-                title: "Creating Flows",
-                desc: "Build custom onboarding flows",
-                articles: 12,
-                href: "/help/flows",
-              },
-              {
-                icon: Video,
-                title: "Video Tutorials",
-                desc: "Watch step-by-step guides",
-                articles: 6,
-                href: "/help/videos",
-              },
-            ].map((topic, i) => {
-              const Icon = topic.icon
-              return (
-                <Link key={i} href={topic.href}>
-                  <Card className="p-6 hover:border-primary/50 transition-all h-full group cursor-pointer">
-                    <Icon className="h-10 w-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                    <h3 className="text-lg font-semibold mb-2">{topic.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{topic.desc}</p>
-                    <div className="flex items-center gap-2 text-sm text-primary">
-                      {topic.articles} articles <ArrowRight className="h-4 w-4" />
-                    </div>
-                  </Card>
-                </Link>
-              )
-            })}
+        {!searchQuery && (
+          <div className="max-w-5xl mx-auto mb-16">
+            <h2 className="text-2xl font-bold mb-6">Popular Topics</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: Sparkles,
+                  title: "Getting Started",
+                  desc: "Learn the basics of BoardingPass",
+                  articles: 4,
+                  href: "/faq",
+                },
+                {
+                  icon: Book,
+                  title: "FAQ",
+                  desc: "Frequently asked questions",
+                  articles: 4,
+                  href: "/faq",
+                },
+                {
+                  icon: MessageCircle,
+                  title: "Contact Support",
+                  desc: "Get help from our team",
+                  articles: null,
+                  href: "mailto:admin@getboardingpass.app",
+                },
+              ].map((topic, i) => {
+                const Icon = topic.icon
+                return (
+                  <Link
+                    key={i}
+                    href={topic.href}
+                    rel={topic.href.startsWith("mailto:") ? "noopener noreferrer" : undefined}
+                  >
+                    <Card className="p-6 hover:border-primary/50 transition-all h-full group cursor-pointer">
+                      <Icon className="h-10 w-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
+                      <h3 className="text-lg font-semibold mb-2">{topic.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4">{topic.desc}</p>
+                      {topic.articles !== null && (
+                        <div className="flex items-center gap-2 text-sm text-primary">
+                          {topic.articles} articles <ArrowRight className="h-4 w-4" />
+                        </div>
+                      )}
+                      {topic.articles === null && (
+                        <div className="flex items-center gap-2 text-sm text-primary">
+                          Email us <ArrowRight className="h-4 w-4" />
+                        </div>
+                      )}
+                    </Card>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Documentation Sections */}
         <div className="max-w-5xl mx-auto space-y-12">
-          <section>
-            <h2 className="text-2xl font-bold mb-6">Getting Started</h2>
-            <div className="space-y-4">
-              {[
-                { title: "Create your first onboarding flow", time: "5 min read" },
-                { title: "Invite your first client", time: "3 min read" },
-                { title: "Customize your workspace branding", time: "4 min read" },
-                { title: "Set up email notifications", time: "2 min read" },
-              ].map((article, i) => (
-                <Link
-                  key={i}
-                  href="#"
-                  className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
-                >
-                  <div>
-                    <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
-                    <p className="text-sm text-muted-foreground">{article.time}</p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </Link>
-              ))}
-            </div>
-          </section>
+          {searchQuery ? (
+            <section>
+              <h2 className="text-2xl font-bold mb-6">Search Results</h2>
+              <div className="space-y-4">
+                {filteredArticles.length > 0 ? (
+                  filteredArticles.map((article, i) => (
+                    <Link
+                      key={i}
+                      href={article.href}
+                      className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
+                    >
+                      <div>
+                        <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
+                        <p className="text-sm text-muted-foreground">{article.category}</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">
+                    No articles found. Try different keywords or{" "}
+                    <Link href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
+                      contact support
+                    </Link>
+                    .
+                  </p>
+                )}
+              </div>
+            </section>
+          ) : (
+            <>
+              <section>
+                <h2 className="text-2xl font-bold mb-6">Getting Started</h2>
+                <div className="space-y-4">
+                  {allArticles
+                    .filter((a) => a.category === "Getting Started")
+                    .map((article, i) => (
+                      <Link
+                        key={i}
+                        href={article.href}
+                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
+                      >
+                        <div>
+                          <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
+                          <p className="text-sm text-muted-foreground">Quick guide</p>
+                        </div>
+                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                </div>
+              </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-6">Advanced Features</h2>
-            <div className="space-y-4">
-              {[
-                { title: "Using flow templates", time: "6 min read" },
-                { title: "Setting up automated reminders", time: "4 min read" },
-                { title: "Understanding analytics and insights", time: "8 min read" },
-                { title: "Team collaboration and permissions", time: "5 min read" },
-                { title: "White-label setup and custom domains", time: "7 min read" },
-              ].map((article, i) => (
-                <Link
-                  key={i}
-                  href="#"
-                  className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
-                >
-                  <div>
-                    <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
-                    <p className="text-sm text-muted-foreground">{article.time}</p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </Link>
-              ))}
-            </div>
-          </section>
+              <section>
+                <h2 className="text-2xl font-bold mb-6">Advanced Features</h2>
+                <div className="space-y-4">
+                  {allArticles
+                    .filter((a) => a.category === "Advanced")
+                    .map((article, i) => (
+                      <Link
+                        key={i}
+                        href={article.href}
+                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
+                      >
+                        <div>
+                          <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
+                          <p className="text-sm text-muted-foreground">Detailed guide</p>
+                        </div>
+                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                </div>
+              </section>
+            </>
+          )}
         </div>
 
         {/* Contact Support */}
@@ -132,12 +198,14 @@ export default function HelpPage() {
                   Our support team typically responds within 2 hours during business hours
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="mailto:admin@getboardingpass.app">
+                  <a href="mailto:admin@getboardingpass.app" rel="noopener noreferrer">
                     <Button className="w-full sm:w-auto">Email Support</Button>
                   </a>
-                  <Button variant="outline" className="w-full sm:w-auto bg-transparent">
-                    Schedule a Call
-                  </Button>
+                  <Link href="/faq">
+                    <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+                      View FAQ
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

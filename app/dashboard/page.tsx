@@ -7,6 +7,7 @@ import { ClientProgressTable } from "@/components/client-progress-table"
 import { QuickActions } from "@/components/quick-actions"
 import { HelpButton } from "@/components/help-button"
 import { OnboardingTour } from "@/components/onboarding-tour"
+import { WorkspaceLoader } from "@/components/workspace-loader"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -28,7 +29,7 @@ export default async function DashboardPage() {
     .single()
 
   if (!profile?.current_workspace_id) {
-    redirect("/onboarding")
+    return <WorkspaceLoader />
   }
 
   // Get workspace stats

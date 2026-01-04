@@ -82,24 +82,42 @@ export function TemplatesLibrary({ templates }: { templates: Template[] }) {
       description: `Setting up "${template.name}"`,
     })
 
-    // Create flow from template
-    const response = await fetch("/api/flows/from-template", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ templateId: template.id }),
-    })
-
-    if (response.ok) {
-      const { flowId } = await response.json()
-      toast({
-        title: "Template applied!",
-        description: "Your new flow is ready to customize",
+    try {
+      const response = await fetch("/api/flows/from-template", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ templateId: template.id }),
       })
-      router.push(`/flows/${flowId}`)
-    } else {
+
+      if (response.status === 401) {
+        toast({
+          title: "Authentication required",
+          description: "Please log in to use templates",
+          variant: "destructive",
+        })
+        router.push("/auth/login")
+        return
+      }
+
+      if (response.ok) {
+        const { flowId } = await response.json()
+        toast({
+          title: "Template applied",
+          description: "Your new flow is ready to customize",
+        })
+        router.push(`/flows/${flowId}`)
+      } else {
+        const error = await response.json()
+        toast({
+          title: "Error",
+          description: error.error || "Failed to create flow from template",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create flow from template",
+        description: "Network error. Please try again.",
         variant: "destructive",
       })
     }
