@@ -16,8 +16,6 @@ import {
   Sparkles,
   Menu,
   X,
-  Moon,
-  Sun,
   HelpCircle,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
@@ -32,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useTheme } from "next-themes"
+import { ThemeToggleSlider } from "@/components/theme-toggle-slider"
 import { useState } from "react"
 
 const navigation = [
@@ -58,7 +56,6 @@ export function DashboardLayout({
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
-  const { theme, setTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = async () => {
@@ -84,6 +81,7 @@ export function DashboardLayout({
       <aside className="hidden lg:flex w-64 border-r border-border bg-card flex-col">
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
           <h1 className="text-xl font-semibold">BoardingPass</h1>
+          <ThemeToggleSlider />
         </div>
         <nav className="flex-1 flex flex-col gap-1 p-4 overflow-y-auto">
           {navigation.map((item) => {
@@ -131,10 +129,6 @@ export function DashboardLayout({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                {theme === "dark" ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>
               </DropdownMenuItem>
@@ -209,10 +203,6 @@ export function DashboardLayout({
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                      {theme === "dark" ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-                      {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/settings">Settings</Link>
                     </DropdownMenuItem>
@@ -231,14 +221,7 @@ export function DashboardLayout({
             <h1 className="text-lg font-semibold">BoardingPass</h1>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="h-9 w-9"
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+          <ThemeToggleSlider />
         </header>
 
         <main className="flex-1 overflow-auto">
