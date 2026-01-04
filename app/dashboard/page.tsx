@@ -8,6 +8,7 @@ import { QuickActions } from "@/components/quick-actions"
 import { HelpButton } from "@/components/help-button"
 import { OnboardingTour } from "@/components/onboarding-tour"
 import { WorkspaceLoader } from "@/components/workspace-loader"
+import { WelcomeVideoModal } from "@/components/welcome-video-modal"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -61,8 +62,14 @@ export default async function DashboardPage() {
 
   const recentActivity = activityResult.data || []
 
+  const workspace = profile.workspaces.find((w) => w.id === profile.current_workspace_id)
+  const shouldShowWelcomeVideo = workspace?.welcome_video_url && !profile.has_seen_welcome_video
+
   return (
     <DashboardLayout user={user} profile={profile}>
+      {shouldShowWelcomeVideo && (
+        <WelcomeVideoModal videoUrl={workspace.welcome_video_url} workspaceName={workspace.name} userId={user.id} />
+      )}
       <OnboardingTour />
       <HelpButton />
       <div className="flex flex-col gap-6">

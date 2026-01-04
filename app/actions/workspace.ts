@@ -32,6 +32,7 @@ export async function updateWorkspaceSettings(
     logoUrl?: string
     brandColor: string
     removeBranding: boolean
+    welcomeVideoUrl?: string
   },
 ) {
   await verifyWorkspaceOwnership(workspaceId)
@@ -44,6 +45,7 @@ export async function updateWorkspaceSettings(
       logo_url: data.logoUrl,
       brand_color: data.brandColor,
       remove_branding: data.removeBranding,
+      welcome_video_url: data.welcomeVideoUrl || null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", workspaceId)
@@ -53,6 +55,7 @@ export async function updateWorkspaceSettings(
   }
 
   revalidatePath("/settings")
+  revalidatePath("/dashboard")
   return { success: true }
 }
 

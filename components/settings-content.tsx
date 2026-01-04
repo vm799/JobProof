@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { useState } from "react"
-import { UploadIcon } from "lucide-react"
+import { UploadIcon, Video } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
@@ -24,6 +24,7 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
   const [logoPreview, setLogoPreview] = useState<string | null>(initialWorkspace.logo_url)
   const [isSaving, setIsSaving] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [welcomeVideoUrl, setWelcomeVideoUrl] = useState(initialWorkspace.welcome_video_url || "")
 
   const supabase = createClient()
   const router = useRouter()
@@ -57,6 +58,7 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
         logoUrl,
         brandColor,
         removeBranding,
+        welcomeVideoUrl,
       })
 
       toast({
@@ -180,6 +182,37 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
               </div>
             </Card>
           </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Video className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-semibold">Welcome Video</h2>
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="welcome-video">Loom or YouTube URL (Optional)</Label>
+            <Input
+              id="welcome-video"
+              type="url"
+              placeholder="https://www.loom.com/share/..."
+              value={welcomeVideoUrl}
+              onChange={(e) => setWelcomeVideoUrl(e.target.value)}
+            />
+            <p className="text-sm text-muted-foreground">
+              This video will be shown to new users on their first login. Perfect for introducing your team or
+              explaining your process.
+            </p>
+          </div>
+          {welcomeVideoUrl && (
+            <div className="rounded-lg border p-4 bg-muted/50">
+              <p className="text-sm font-medium mb-2">Preview:</p>
+              <p className="text-xs text-muted-foreground">
+                Video will display in a modal on first login. Each user only sees it once.
+              </p>
+            </div>
+          )}
         </div>
       </Card>
 
