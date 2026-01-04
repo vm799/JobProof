@@ -30,16 +30,16 @@ export default async function ClientsPage() {
       name,
       email,
       created_at,
-      client_onboardings(
+      client_onboardings!inner(
         id,
         status,
-        created_at,
-        client_step_progress(id, status)
+        created_at
       )
     `,
     )
     .eq("workspace_id", profile.current_workspace_id)
     .order("created_at", { ascending: false })
+    .limit(50) // Add pagination limit to prevent browser crash
 
   return (
     <DashboardLayout user={user} profile={profile}>

@@ -20,10 +20,6 @@ interface Client {
     id: string
     status: string
     created_at: string
-    client_step_progress: Array<{
-      id: string
-      status: string
-    }>
   }>
 }
 
@@ -69,9 +65,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
   }
 
   const calculateProgress = (steps: any[]) => {
-    if (!steps || steps.length === 0) return 0
-    const completed = steps.filter((s) => s.status === "completed").length
-    return Math.round((completed / steps.length) * 100)
+    return 0 // Will be loaded on-demand when client is clicked
   }
 
   const getInitials = (name: string) => {
@@ -155,7 +149,8 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
           ) : (
             filteredClients.map((client) => {
               const latestOnboarding = client.client_onboardings[0]
-              const progress = latestOnboarding ? calculateProgress(latestOnboarding.client_step_progress) : 0
+              const progress =
+                latestOnboarding?.status === "completed" ? 100 : latestOnboarding?.status === "in_progress" ? 50 : 0
               const status = latestOnboarding?.status || "not_started"
 
               return (

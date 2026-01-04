@@ -14,6 +14,9 @@ import { FileUpload } from "@/components/file-upload"
 import { CelebrationModal } from "@/components/celebration-modal"
 import { ProgressBadge } from "@/components/progress-badge"
 import { LoadingButton } from "@/components/ui/loading-button"
+import { stepDataSchema } from "@/lib/validation/schemas"
+import { sanitizeText } from "@/lib/validation/sanitize"
+import { toast } from "sonner"
 
 interface ClientPortalProps {
   onboarding: any
@@ -54,8 +57,25 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
     setIsSaving(true)
 
     try {
+      const sanitizedData: Record<string, any> = {}
+
+      for (const [key, value] of Object.entries(formData)) {
+        if (typeof value === "string") {
+          sanitizedData[key] = sanitizeText(value)
+        } else {
+          sanitizedData[key] = value
+        }
+      }
+
+      const validationResult = stepDataSchema.safeParse(sanitizedData)
+      if (!validationResult.success) {
+        toast.error("Invalid input: " + validationResult.error.errors[0].message)
+        setIsSaving(false)
+        return
+      }
+
       const updates: any = {
-        data: { ...currentProgress.data, ...formData },
+        data: { ...currentProgress.data, ...sanitizedData },
       }
 
       if (markComplete) {
@@ -67,7 +87,6 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
       if (error) throw error
 
-      // Log activity
       await supabase.from("activity_logs").insert({
         workspace_id: workspace.id,
         client_onboarding_id: onboarding.id,
@@ -83,12 +102,10 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
         const newCompletedSteps = completedSteps + 1
         const newProgress = Math.round((newCompletedSteps / totalSteps) * 100)
 
-        // All steps completed
         if (currentStepIndex === steps.length - 1) {
           setCelebrationType("onboarding_complete")
           setShowCelebration(true)
 
-          // Update onboarding status to completed
           await supabase
             .from("client_onboardings")
             .update({
@@ -101,14 +118,10 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
           setTimeout(() => {
             window.location.href = `/portal/${token}/success`
           }, 2000)
-        }
-        // Milestone: 50% complete
-        else if (newProgress >= 50 && progressPercentage < 50) {
+        } else if (newProgress >= 50 && progressPercentage < 50) {
           setCelebrationType("milestone")
           setShowCelebration(true)
-        }
-        // Regular step completion
-        else {
+        } else {
           setCelebrationType("step_complete")
           setShowCelebration(true)
         }
@@ -117,17 +130,18 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
           setTimeout(() => {
             setCurrentStepIndex(currentStepIndex + 1)
             setFormData({})
-            setIsSaving(false) // Re-enable after navigation
+            setIsSaving(false)
           }, 2000)
         }
       } else {
-        setIsSaving(false) // Re-enable for draft saves
+        setIsSaving(false)
       }
 
       router.refresh()
     } catch (err) {
       console.error("Failed to save:", err)
-      setIsSaving(false) // Re-enable on error
+      toast.error("Failed to save. Please try again.")
+      setIsSaving(false)
     }
   }
 
@@ -175,9 +189,13 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   id="notes"
                   placeholder="Add any notes..."
                   rows={4}
+                  maxLength={5000}
                   value={formData.notes || savedData.notes || ""}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {(formData.notes || savedData.notes || "").length}/5000 characters
+                </p>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -221,6 +239,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                 <Input
                   id="field1"
                   placeholder="Enter information..."
+                  maxLength={255}
                   value={formData.field1 || savedData.field1 || ""}
                   onChange={(e) => setFormData({ ...formData, field1: e.target.value })}
                 />
@@ -232,9 +251,13 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   id="field2"
                   placeholder="Provide details..."
                   rows={4}
+                  maxLength={5000}
                   value={formData.field2 || savedData.field2 || ""}
                   onChange={(e) => setFormData({ ...formData, field2: e.target.value })}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {(formData.field2 || savedData.field2 || "").length}/5000 characters
+                </p>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -290,7 +313,6 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
     <div className="min-h-screen bg-background">
       <CelebrationModal open={showCelebration} onOpenChange={setShowCelebration} type={celebrationType} />
 
-      {/* Header with workspace branding */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -318,7 +340,6 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
       <div className="container mx-auto px-6 py-12">
         <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
-          {/* Progress Tracker */}
           <div className="lg:sticky lg:top-12 lg:h-fit">
             <Card className="p-6">
               <h2 className="mb-6 font-semibold">Your Progress</h2>
@@ -399,7 +420,6 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
             </Card>
           </div>
 
-          {/* Active Task */}
           <div>
             <Card className="p-8">
               <div className="max-w-2xl">{renderStepContent()}</div>
