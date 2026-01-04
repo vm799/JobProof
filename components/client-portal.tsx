@@ -13,12 +13,14 @@ import { useRouter } from "next/navigation"
 import { FileUpload } from "@/components/file-upload"
 import { CelebrationModal } from "@/components/celebration-modal"
 import { ProgressBadge } from "@/components/progress-badge"
+import { LoadingButton } from "@/components/ui/loading-button"
 
 interface ClientPortalProps {
   onboarding: any
+  token: string // Added token prop for redirect
 }
 
-export function ClientPortal({ onboarding }: ClientPortalProps) {
+export function ClientPortal({ onboarding, token }: ClientPortalProps) {
   const steps = onboarding.client_step_progress || []
   const workspace = onboarding.onboarding_flows.workspaces
   const client = onboarding.clients
@@ -48,7 +50,9 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
   const handleSave = async (markComplete = false) => {
     if (!currentProgress) return
 
+    if (isSaving) return
     setIsSaving(true)
+
     try {
       const updates: any = {
         data: { ...currentProgress.data, ...formData },
@@ -93,6 +97,10 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
               completed_at: new Date().toISOString(),
             })
             .eq("id", onboarding.id)
+
+          setTimeout(() => {
+            window.location.href = `/portal/${token}/success`
+          }, 2000)
         }
         // Milestone: 50% complete
         else if (newProgress >= 50 && progressPercentage < 50) {
@@ -109,15 +117,17 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
           setTimeout(() => {
             setCurrentStepIndex(currentStepIndex + 1)
             setFormData({})
+            setIsSaving(false) // Re-enable after navigation
           }, 2000)
         }
+      } else {
+        setIsSaving(false) // Re-enable for draft saves
       }
 
       router.refresh()
     } catch (err) {
       console.error("Failed to save:", err)
-    } finally {
-      setIsSaving(false)
+      setIsSaving(false) // Re-enable on error
     }
   }
 
@@ -171,12 +181,29 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button variant="outline" onClick={() => handleSave(false)} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save Draft"}
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                  disabled={currentStepIndex === 0}
+                >
+                  Back
                 </Button>
-                <Button onClick={() => handleSave(true)} disabled={uploadedFiles.length === 0 || isSaving}>
-                  {isSaving ? "Saving..." : "Continue"}
-                </Button>
+                <LoadingButton
+                  variant="outline"
+                  onClick={() => handleSave(false)}
+                  loading={isSaving}
+                  loadingText="Saving..."
+                >
+                  Save Draft
+                </LoadingButton>
+                <LoadingButton
+                  onClick={() => handleSave(true)}
+                  disabled={uploadedFiles.length === 0 || isSaving}
+                  loading={isSaving}
+                  loadingText="Processing..."
+                >
+                  Continue
+                </LoadingButton>
               </div>
             </div>
           </>
@@ -216,12 +243,17 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                     Back
                   </Button>
                 )}
-                <Button variant="outline" onClick={() => handleSave(false)} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save Draft"}
-                </Button>
-                <Button onClick={() => handleSave(true)} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Continue"}
-                </Button>
+                <LoadingButton
+                  variant="outline"
+                  onClick={() => handleSave(false)}
+                  loading={isSaving}
+                  loadingText="Saving..."
+                >
+                  Save Draft
+                </LoadingButton>
+                <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+                  Continue
+                </LoadingButton>
               </div>
             </div>
           </>
@@ -244,9 +276,9 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                     Back
                   </Button>
                 )}
-                <Button onClick={() => handleSave(true)} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Mark Complete"}
-                </Button>
+                <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+                  Mark Complete
+                </LoadingButton>
               </div>
             </div>
           </>

@@ -11,7 +11,7 @@ interface ThemeLogoProps {
   priority?: boolean
 }
 
-export function ThemeLogo({ width = 200, height = 48, className = "", priority = false }: ThemeLogoProps) {
+export function ThemeLogo({ width = 500, height = 120, className = "", priority = false }: ThemeLogoProps) {
   const { theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -32,12 +32,9 @@ export function ThemeLogo({ width = 200, height = 48, className = "", priority =
     )
   }
 
-  const currentTheme = theme === "system" ? resolvedTheme : theme
-  const logoSrc = currentTheme === "dark" ? "/boardingpass-logo-dark.png" : "/boardingpass-logo.png"
-
   return (
     <Image
-      src={logoSrc || "/placeholder.svg"}
+      src="/boardingpass-logo.png"
       alt="BoardingPass"
       width={width}
       height={height}

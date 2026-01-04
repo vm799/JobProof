@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import Image from "next/image"
 
 export default function SignUpPage() {
   const [name, setName] = useState("")
@@ -64,11 +65,14 @@ export default function SignUpPage() {
         <Card>
           <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
+              <Image
+                src="/boardingpass-logo.png"
+                alt="BoardingPass"
+                width={450}
+                height={120}
+                className="h-30 w-auto"
+                priority
+              />
             </div>
             <CardTitle className="text-2xl font-semibold">Create your account</CardTitle>
             <CardDescription>Get started with BoardingPass today</CardDescription>

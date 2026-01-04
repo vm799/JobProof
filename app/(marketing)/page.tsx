@@ -11,7 +11,7 @@ export default function LandingPage() {
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <ThemeLogo width={240} height={56} className="h-14 w-auto" priority />
+            <ThemeLogo width={600} height={140} className="h-[8.75rem] w-auto" priority />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -57,16 +57,14 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo showcase */}
           <div className="mb-8 flex justify-center">
-            <div className="relative p-8 rounded-3xl bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 border border-primary/20">
-              <Image
-                src="/boardingpass-logo.png"
-                alt="BoardingPass"
-                width={320}
-                height={320}
-                className="w-64 h-64 object-contain"
-                priority
-              />
-            </div>
+            <Image
+              src="/boardingpass-logo.png"
+              alt="BoardingPass"
+              width={800}
+              height={800}
+              className="w-[50rem] h-[50rem] object-contain"
+              priority
+            />
           </div>
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
@@ -249,7 +247,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center mb-6">
-                <ThemeLogo width={220} height={52} className="h-12 w-auto" />
+                <ThemeLogo width={550} height={130} className="h-[8.125rem] w-auto" />
               </Link>
               <p className="text-sm text-muted-foreground max-w-sm">
                 White-label client onboarding made delightful. Transform chaotic kickoffs into smooth, branded
@@ -310,9 +308,9 @@ export default function LandingPage() {
                 <Image
                   src="/boardingpass-logo.png"
                   alt="BoardingPass"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 object-contain opacity-50"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 object-contain opacity-50"
                 />
                 <span className="text-xs text-muted-foreground">Powered by BoardingPass</span>
               </div>
