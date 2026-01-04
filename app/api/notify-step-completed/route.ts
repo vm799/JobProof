@@ -1,9 +1,23 @@
 import { createClient } from "@/lib/supabase/server"
 import { sendStepCompletedNotification } from "@/lib/email/send"
 import { NextResponse } from "next/server"
+import { checkRateLimit, getRateLimitHeaders } from "@/lib/rate-limit"
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+    const rateLimit = checkRateLimit(`notify-${ip}`, 20) // 20 requests per minute
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: getRateLimitHeaders(rateLimit.remaining, rateLimit.resetAt),
+        },
+      )
+    }
+
     const { onboardingId, stepTitle, clientName } = await request.json()
 
     const supabase = await createClient()
@@ -35,7 +49,12 @@ export async function POST(request: Request) {
       await sendStepCompletedNotification(ownerEmail, clientName, stepTitle, workspaceName)
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json(
+      { success: true },
+      {
+        headers: getRateLimitHeaders(rateLimit.remaining, rateLimit.resetAt),
+      },
+    )
   } catch (error: any) {
     console.error("[v0] Notify error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })

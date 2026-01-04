@@ -30,6 +30,30 @@ export async function updateFlow(
   return { success: true }
 }
 
+export async function deleteFlow(flowId: string) {
+  const supabase = await createClient()
+
+  // Check if flow has any active onboardings
+  const { data: onboardings } = await supabase
+    .from("client_onboardings")
+    .select("id, status")
+    .eq("flow_id", flowId)
+    .in("status", ["in_progress", "not_started"])
+
+  if (onboardings && onboardings.length > 0) {
+    throw new Error("Cannot delete flow with active onboardings. Complete or cancel them first.")
+  }
+
+  const { error } = await supabase.from("onboarding_flows").delete().eq("id", flowId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath("/flows")
+  return { success: true }
+}
+
 export async function createStep(
   flowId: string,
   data: {
