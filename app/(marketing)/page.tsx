@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, Zap, Users, TrendingUp, Clock, Shield } from "lucide-react"
 import { ThemeLogo } from "@/components/theme-logo"
+import { ThemeToggleSlider } from "@/components/theme-toggle-slider"
 import Image from "next/image"
 
 export default function LandingPage() {
@@ -9,9 +10,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <ThemeLogo width={600} height={140} className="h-[8.75rem] w-auto" priority />
+            <ThemeLogo width={300} height={70} className="h-12 w-auto" priority />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -36,6 +37,7 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <ThemeToggleSlider />
             <Link href="/auth/login">
               <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
                 Log in
@@ -69,20 +71,20 @@ export default function LandingPage() {
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
             <Sparkles className="h-4 w-4" />
-            White-label client onboarding made delightful
+            White-label client onboarding platform
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 text-balance">
-            Client onboarding that feels like
+            Professional client onboarding
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
               {" "}
-              magic
+              at scale
             </span>
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
-            Transform chaotic client kickoffs into smooth, branded experiences. Build custom onboarding flows in
-            minutes, track progress in real-time, and delight every client.
+            Replace manual client intake with structured, branded onboarding flows. Track progress, automate reminders,
+            and maintain consistency across every engagement.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -127,9 +129,9 @@ export default function LandingPage() {
       {/* Features Grid */}
       <section id="features" className="container mx-auto px-4 py-24">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Everything you need to wow clients</h2>
+          <h2 className="text-4xl font-bold mb-4">Built for professional services</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Built for agencies and consultants who want to deliver premium experiences
+            Complete client onboarding infrastructure for agencies and consultancies
           </p>
         </div>
 
@@ -137,33 +139,33 @@ export default function LandingPage() {
           {[
             {
               icon: Zap,
-              title: "5-Minute Setup",
-              desc: "Create branded onboarding flows in minutes with our intuitive flow builder",
+              title: "Rapid Deployment",
+              desc: "Configure branded onboarding workflows in minutes using the visual flow builder",
             },
             {
               icon: Users,
-              title: "White-Label Branding",
-              desc: "Add your logo and brand colors. Make it yours.",
+              title: "White-Label Platform",
+              desc: "Custom branding with logo and color configuration for client-facing portals",
             },
             {
               icon: TrendingUp,
-              title: "Progress Analytics",
-              desc: "Track completion rates, bottlenecks, and identify where clients get stuck",
+              title: "Analytics Dashboard",
+              desc: "Track completion metrics, identify bottlenecks, and measure client engagement",
             },
             {
               icon: Clock,
-              title: "Smart Reminders",
-              desc: "Automated email reminders keep clients moving forward without manual follow-ups",
+              title: "Automated Reminders",
+              desc: "Schedule and send follow-up emails automatically based on client progress",
             },
             {
               icon: Shield,
-              title: "Secure & Reliable",
-              desc: "Supabase-powered database, email verification, and secure file uploads included",
+              title: "Enterprise Security",
+              desc: "PostgreSQL RLS, SOC 2 infrastructure, and encrypted file storage",
             },
             {
               icon: Sparkles,
-              title: "Celebration Moments",
-              desc: "Delight clients with progress milestones, confetti, and completion celebrations",
+              title: "Progress Tracking",
+              desc: "Real-time completion status, milestone notifications, and step validation",
             },
           ].map((feature, i) => (
             <div
@@ -224,8 +226,8 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-12 border border-primary/20">
-          <h2 className="text-4xl font-bold mb-4">Ready to transform your onboarding?</h2>
-          <p className="text-xl text-muted-foreground mb-8">Start delivering premium client experiences today</p>
+          <h2 className="text-4xl font-bold mb-4">Deploy professional onboarding infrastructure</h2>
+          <p className="text-xl text-muted-foreground mb-8">Start with a 14-day trial, no credit card required</p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link href="/demo">
               <Button size="lg" className="gap-2 h-12 px-8">
@@ -250,8 +252,8 @@ export default function LandingPage() {
                 <ThemeLogo width={550} height={130} className="h-[8.125rem] w-auto" />
               </Link>
               <p className="text-sm text-muted-foreground max-w-sm">
-                White-label client onboarding made delightful. Transform chaotic kickoffs into smooth, branded
-                experiences that clients love.
+                White-label client onboarding platform. Structured intake workflows with progress tracking, automated
+                reminders, and analytics.
               </p>
             </div>
 

@@ -76,20 +76,19 @@ export default async function SuccessPage({ params }: { params: { token: string 
       {/* Main Content */}
       <div className="text-center max-w-2xl space-y-4 mb-10">
         <h1 className="text-4xl md:text-5xl font-bold text-balance bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          You're All Set, {client.name.split(" ")[0]}!
+          Onboarding Complete, {client.name.split(" ")[0]}
         </h1>
         <p className="text-lg text-muted-foreground max-w-md mx-auto">
-          Your onboarding is complete. We've received all your details and our team is already getting to work on your
-          project.
+          Your information has been submitted. Our team will review and follow up within one business day.
         </p>
-        <p className="text-sm text-muted-foreground">Completed on {completedDate}</p>
+        <p className="text-sm text-muted-foreground">Submitted on {completedDate}</p>
       </div>
 
       {/* What Happens Next Card */}
       <div className="bg-card p-8 rounded-2xl shadow-lg border border-border w-full max-w-lg mb-8">
         <h3 className="font-semibold text-lg mb-6 flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-          What happens next?
+          Next steps
         </h3>
         <ul className="space-y-6">
           <li className="flex gap-4">
@@ -97,9 +96,9 @@ export default async function SuccessPage({ params }: { params: { token: string 
               1
             </span>
             <div className="flex-1">
-              <p className="font-medium text-foreground mb-1">Team Review</p>
+              <p className="font-medium text-foreground mb-1">Review (24 hours)</p>
               <p className="text-sm text-muted-foreground">
-                Our team reviews your assets and information (typically within 24 hours)
+                Team reviews your submitted materials and validates requirements
               </p>
             </div>
           </li>
@@ -110,7 +109,7 @@ export default async function SuccessPage({ params }: { params: { token: string 
             <div className="flex-1">
               <p className="font-medium text-foreground mb-1">Dashboard Access</p>
               <p className="text-sm text-muted-foreground">
-                You'll receive email access to your project dashboard with real-time updates
+                Credentials will be sent via email for project tracking and communications
               </p>
             </div>
           </li>
@@ -119,9 +118,9 @@ export default async function SuccessPage({ params }: { params: { token: string 
               3
             </span>
             <div className="flex-1">
-              <p className="font-medium text-foreground mb-1">Kickoff Call</p>
+              <p className="font-medium text-foreground mb-1">Project Kickoff</p>
               <p className="text-sm text-muted-foreground">
-                We'll schedule a kickoff call to align on timelines and deliverables
+                Scheduled call to confirm scope, timeline, and deliverables
               </p>
             </div>
           </li>
@@ -142,8 +141,7 @@ export default async function SuccessPage({ params }: { params: { token: string 
 
       {/* Footer */}
       <p className="text-xs text-muted-foreground mt-12 text-center max-w-md">
-        Questions? Reach out to <strong>{workspace.name}</strong> anytime. We're here to help make your project a
-        success.
+        For questions or updates, contact <strong>{workspace.name}</strong> directly.
       </p>
     </div>
   )

@@ -89,24 +89,20 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
     let top = 0
     let left = 0
 
-    // Modal above the element
     switch (step.position) {
       case "top":
         top = targetRect.top - modalMaxHeight - padding * 2
         left = targetRect.left + targetRect.width / 2 - modalWidth / 2
         break
       case "bottom":
-        // Modal below the element
         top = targetRect.bottom + padding * 2
         left = targetRect.left + targetRect.width / 2 - modalWidth / 2
         break
       case "left":
-        // Modal to the left of element
         top = targetRect.top - padding
         left = targetRect.left - modalWidth - padding * 3
         break
       case "right":
-        // Modal to the right of element
         top = targetRect.top - padding
         left = targetRect.right + padding * 3
         break
@@ -115,9 +111,11 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         left = targetRect.left
     }
 
-    // Constrain to viewport with more padding
-    top = Math.max(padding * 2, Math.min(top, viewportHeight - modalMaxHeight - padding * 2))
-    left = Math.max(padding * 2, Math.min(left, viewportWidth - modalWidth - padding * 2))
+    const maxTop = viewportHeight - 400 // Reserve space for modal
+    const maxLeft = viewportWidth - modalWidth - padding * 4
+
+    top = Math.max(padding * 4, Math.min(top, maxTop))
+    left = Math.max(padding * 4, Math.min(left, maxLeft))
 
     return { top, left }
   }
@@ -162,13 +160,15 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
       )}
 
       <div
-        className="fixed z-[70] w-[400px] transition-all duration-500 ease-out"
+        className="fixed z-[70] transition-all duration-500 ease-out"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
+          maxWidth: `calc(100vw - 96px)`,
+          width: "400px",
         }}
       >
-        <div className="relative bg-white dark:bg-gray-900 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
+        <div className="relative bg-white dark:bg-gray-900 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
           <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
             <Lightbulb className="h-3.5 w-3.5" />
             DEMO TOUR
