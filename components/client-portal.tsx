@@ -303,14 +303,14 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                               className={cn(
                                 "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all",
                                 status === "complete"
-                                  ? "border-primary bg-primary"
+                                  ? "border-primary bg-primary text-primary-foreground"
                                   : status === "current"
                                     ? "border-primary bg-card animate-pulse"
                                     : "border-border bg-card",
                               )}
                             >
                               {status === "complete" ? (
-                                <Check className="h-4 w-4 text-primary-foreground" />
+                                <Check className="h-4 w-4 text-white" />
                               ) : (
                                 <span
                                   className={cn(
@@ -325,7 +325,11 @@ export function ClientPortal({ onboarding }: ClientPortalProps) {
                             <span
                               className={cn(
                                 "text-sm font-medium",
-                                status === "current" ? "text-foreground" : "text-muted-foreground",
+                                status === "complete"
+                                  ? "text-foreground"
+                                  : status === "current"
+                                    ? "text-foreground"
+                                    : "text-muted-foreground",
                               )}
                             >
                               {step.title}
