@@ -18,6 +18,7 @@ import {
   X,
   HelpCircle,
   Shield,
+  Map,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -41,6 +42,7 @@ const navigation = [
   { name: "Onboarding Flows", href: "/flows", icon: Workflow },
   { name: "Templates", href: "/templates", icon: Sparkles },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Roadmap", href: "/roadmap", icon: Map },
   { name: "Team", href: "/team", icon: UsersRound },
   { name: "Billing", href: "/billing", icon: CreditCard },
   { name: "Settings", href: "/settings", icon: Settings },

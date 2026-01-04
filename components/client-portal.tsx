@@ -161,6 +161,38 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
     const savedData = currentProgress.data || {}
 
+    if (currentStep.video_url) {
+      return (
+        <>
+          <h1 className="mb-2 text-balance text-3xl font-semibold tracking-tight">{currentStep.title}</h1>
+          <p className="mb-6 text-muted-foreground">{currentStep.description}</p>
+
+          <div className="space-y-6">
+            <div className="relative w-full overflow-hidden rounded-xl shadow-lg" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                src={currentStep.video_url}
+                className="absolute top-0 left-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={currentStep.title}
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              {currentStepIndex > 0 && (
+                <Button variant="outline" onClick={() => setCurrentStepIndex(currentStepIndex - 1)}>
+                  Back
+                </Button>
+              )}
+              <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+                Continue
+              </LoadingButton>
+            </div>
+          </div>
+        </>
+      )
+    }
+
     switch (currentStep.type) {
       case "upload":
         return (
