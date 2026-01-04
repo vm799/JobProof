@@ -40,7 +40,9 @@ export default function SignUpPage() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log("[v0] Attempting signup with email:", email)
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -50,8 +52,16 @@ export default function SignUpPage() {
           },
         },
       })
-      if (error) throw error
-      router.push("/auth/check-email")
+
+      if (error) {
+        console.error("[v0] Signup error:", error)
+        throw error
+      }
+
+      console.log("[v0] Signup successful. User ID:", data?.user?.id)
+      console.log("[v0] Email confirmation required:", data?.user?.confirmation_sent_at ? "Yes" : "No")
+
+      router.push(`/auth/check-email?email=${encodeURIComponent(email)}`)
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {

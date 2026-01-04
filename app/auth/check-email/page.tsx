@@ -1,7 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
-export default function CheckEmailPage() {
+export default function CheckEmailPage({
+  searchParams,
+}: {
+  searchParams: { email?: string }
+}) {
+  const email = searchParams.email
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
       <div className="w-full max-w-md">
@@ -21,18 +28,37 @@ export default function CheckEmailPage() {
             </div>
             <CardTitle className="text-2xl font-semibold">Check your email</CardTitle>
             <CardDescription>
-              We've sent you a confirmation link. Please check your email to complete your registration.
+              {email ? (
+                <>
+                  We've sent a confirmation link to <strong>{email}</strong>
+                </>
+              ) : (
+                <>We've sent you a confirmation link</>
+              )}
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="mb-4 text-sm text-muted-foreground">
-              Didn't receive the email? Check your spam folder or{" "}
-              <Link href="/auth/sign-up" className="text-primary underline-offset-4 hover:underline">
-                try signing up again
-              </Link>
-              .
-            </p>
-            <Link href="/auth/login" className="text-sm text-primary underline-offset-4 hover:underline">
+          <CardContent className="space-y-4 text-center">
+            <div className="rounded-lg bg-muted/50 p-4 text-sm text-muted-foreground">
+              <p className="mb-2 font-medium text-foreground">Email not arriving?</p>
+              <ul className="space-y-1 text-left">
+                <li>• Check your spam/junk folder</li>
+                <li>• Wait 2-3 minutes for delivery</li>
+                <li>• Verify the email address is correct</li>
+                <li>• Contact support if issues persist</li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <Button asChild variant="outline" className="w-full bg-transparent">
+                <Link href="/auth/sign-up">Try a different email</Link>
+              </Button>
+
+              <Button asChild variant="ghost" className="w-full">
+                <Link href="/help">Contact Support</Link>
+              </Button>
+            </div>
+
+            <Link href="/auth/login" className="block text-sm text-primary underline-offset-4 hover:underline">
               Back to login
             </Link>
           </CardContent>
