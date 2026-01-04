@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 
 export function WorkspaceLoader() {
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +44,8 @@ export function WorkspaceLoader() {
         }
 
         if (profile?.current_workspace_id) {
-          // Workspace exists, reload the page to show dashboard
+          // Workspace exists, redirect to dashboard
+          router.push("/dashboard")
           router.refresh()
         } else {
           pollCount++
@@ -75,11 +77,14 @@ export function WorkspaceLoader() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
+            <Image
+              src="/boardingpass-logo.png"
+              alt="BoardingPass"
+              width={120}
+              height={120}
+              className="h-24 w-24 object-contain"
+              priority
+            />
           </div>
           <CardTitle className="text-2xl font-semibold">
             {error ? "Setup Issue" : "Setting up your workspace"}

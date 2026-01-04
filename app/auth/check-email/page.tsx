@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Mail } from "lucide-react"
 
 export default function CheckEmailPage({
   searchParams,
@@ -16,14 +17,7 @@ export default function CheckEmailPage({
           <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
+                <Mail className="h-6 w-6" />
               </div>
             </div>
             <CardTitle className="text-2xl font-semibold">Check your email</CardTitle>
@@ -59,11 +53,15 @@ export default function CheckEmailPage({
                 <Link href="/auth/sign-up">Try a different email</Link>
               </Button>
 
-              <a href="mailto:admin@getboardingpass.app?subject=Email Confirmation Issue" rel="noopener noreferrer">
-                <Button variant="ghost" className="w-full">
+              <Button asChild variant="ghost" className="w-full">
+                <a
+                  href="mailto:admin@getboardingpass.app?subject=Email Confirmation Issue"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Contact Support
-                </Button>
-              </a>
+                </a>
+              </Button>
             </div>
 
             <Link href="/auth/login" className="block text-sm text-primary underline-offset-4 hover:underline">
