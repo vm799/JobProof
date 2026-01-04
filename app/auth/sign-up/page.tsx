@@ -60,10 +60,13 @@ export default function SignUpPage() {
 
       console.log("[v0] Signup successful. User ID:", data?.user?.id)
       console.log("[v0] Email confirmation required:", data?.user?.confirmation_sent_at ? "Yes" : "No")
+      console.log("[v0] User email:", data?.user?.email)
 
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`)
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during signup"
+      console.error("[v0] Signup failed with error:", errorMessage)
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
