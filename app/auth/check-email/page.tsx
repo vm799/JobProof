@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
 
 export default function CheckEmailPage({
   searchParams,
@@ -11,7 +12,7 @@ export default function CheckEmailPage({
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-4">
         <Card>
           <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
@@ -53,14 +54,34 @@ export default function CheckEmailPage({
                 <Link href="/auth/sign-up">Try a different email</Link>
               </Button>
 
-              <Button asChild variant="ghost" className="w-full">
-                <Link href="/help">Contact Support</Link>
-              </Button>
+              <a href="mailto:admin@getboardingpass.app?subject=Email Confirmation Issue" rel="noopener noreferrer">
+                <Button variant="ghost" className="w-full">
+                  Contact Support
+                </Button>
+              </a>
             </div>
 
             <Link href="/auth/login" className="block text-sm text-primary underline-offset-4 hover:underline">
               Back to login
             </Link>
+          </CardContent>
+        </Card>
+
+        <Card className="border-yellow-500/50 bg-yellow-500/5">
+          <CardContent className="pt-6">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <div className="text-sm space-y-2">
+                <p className="font-medium">Email Configuration Notice</p>
+                <p className="text-muted-foreground">
+                  If you're not receiving emails, the email service may need to be configured. See the{" "}
+                  <Link href="/help" className="text-primary hover:underline">
+                    help center
+                  </Link>{" "}
+                  for SMTP setup instructions or contact support.
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

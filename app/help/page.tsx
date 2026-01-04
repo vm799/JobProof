@@ -14,18 +14,36 @@ export default function HelpPage() {
     { title: "Create your first onboarding flow", category: "Getting Started", href: "/faq#create-flow" },
     { title: "Invite your first client", category: "Getting Started", href: "/faq#invite-client" },
     { title: "Customize your workspace branding", category: "Getting Started", href: "/faq#branding" },
-    { title: "Set up email notifications", category: "Getting Started", href: "/faq#notifications" },
+    {
+      title: "Set up email notifications",
+      category: "Getting Started",
+      href: "/faq#email-notifications",
+      keywords: "email notification smtp setup configure",
+    },
     { title: "Using flow templates", category: "Advanced", href: "/faq#templates" },
     { title: "Setting up automated reminders", category: "Advanced", href: "/faq#reminders" },
     { title: "Understanding analytics and insights", category: "Advanced", href: "/analytics" },
     { title: "Team collaboration and permissions", category: "Advanced", href: "/team" },
+    {
+      title: "Email configuration and SMTP setup",
+      category: "Configuration",
+      href: "/faq#email-setup",
+      keywords: "email smtp resend configuration delivery not working",
+    },
+    {
+      title: "Troubleshooting signup emails",
+      category: "Troubleshooting",
+      href: "/faq#email-troubleshooting",
+      keywords: "email not received spam confirmation signup",
+    },
   ]
 
   const filteredArticles = searchQuery
     ? allArticles.filter(
         (article) =>
           article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.category.toLowerCase().includes(searchQuery.toLowerCase()),
+          article.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (article.keywords && article.keywords.toLowerCase().includes(searchQuery.toLowerCase())),
       )
     : allArticles
 
@@ -68,7 +86,7 @@ export default function HelpPage() {
                   icon: Book,
                   title: "FAQ",
                   desc: "Frequently asked questions",
-                  articles: 4,
+                  articles: 6,
                   href: "/faq",
                 },
                 {
@@ -76,12 +94,12 @@ export default function HelpPage() {
                   title: "Contact Support",
                   desc: "Get help from our team",
                   articles: null,
-                  href: "mailto:admin@getboardingpass.app",
+                  href: "mailto:admin@getboardingpass.app?subject=Support Request",
                 },
               ].map((topic, i) => {
                 const Icon = topic.icon
                 return (
-                  <Link
+                  <a
                     key={i}
                     href={topic.href}
                     rel={topic.href.startsWith("mailto:") ? "noopener noreferrer" : undefined}
@@ -101,7 +119,7 @@ export default function HelpPage() {
                         </div>
                       )}
                     </Card>
-                  </Link>
+                  </a>
                 )
               })}
             </div>
@@ -128,13 +146,12 @@ export default function HelpPage() {
                     </Link>
                   ))
                 ) : (
-                  <p className="text-center text-muted-foreground py-8">
-                    No articles found. Try different keywords or{" "}
-                    <Link href="mailto:admin@getboardingpass.app" className="text-primary hover:underline">
-                      contact support
-                    </Link>
-                    .
-                  </p>
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground mb-4">No articles found. Try different keywords.</p>
+                    <a href="mailto:admin@getboardingpass.app?subject=Help Request" rel="noopener noreferrer">
+                      <Button>Contact Support</Button>
+                    </a>
+                  </div>
                 )}
               </div>
             </section>
@@ -181,6 +198,48 @@ export default function HelpPage() {
                     ))}
                 </div>
               </section>
+
+              <section>
+                <h2 className="text-2xl font-bold mb-6">Configuration</h2>
+                <div className="space-y-4">
+                  {allArticles
+                    .filter((a) => a.category === "Configuration")
+                    .map((article, i) => (
+                      <Link
+                        key={i}
+                        href={article.href}
+                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
+                      >
+                        <div>
+                          <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
+                          <p className="text-sm text-muted-foreground">Configuration guide</p>
+                        </div>
+                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                </div>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold mb-6">Troubleshooting</h2>
+                <div className="space-y-4">
+                  {allArticles
+                    .filter((a) => a.category === "Troubleshooting")
+                    .map((article, i) => (
+                      <Link
+                        key={i}
+                        href={article.href}
+                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent transition-colors group"
+                      >
+                        <div>
+                          <h3 className="font-medium group-hover:text-primary transition-colors">{article.title}</h3>
+                          <p className="text-sm text-muted-foreground">Troubleshooting guide</p>
+                        </div>
+                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </Link>
+                    ))}
+                </div>
+              </section>
             </>
           )}
         </div>
@@ -198,7 +257,7 @@ export default function HelpPage() {
                   Our support team typically responds within 2 hours during business hours
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="mailto:admin@getboardingpass.app" rel="noopener noreferrer">
+                  <a href="mailto:admin@getboardingpass.app?subject=Support Request" rel="noopener noreferrer">
                     <Button className="w-full sm:w-auto">Email Support</Button>
                   </a>
                   <Link href="/faq">

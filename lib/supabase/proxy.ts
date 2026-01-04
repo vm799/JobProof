@@ -22,6 +22,10 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
         },
       },
+      auth: {
+        storageKey: "sb-pvmucyfeayjhbitftpvp-auth-token",
+        flowType: "pkce",
+      },
     },
   )
 
