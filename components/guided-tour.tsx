@@ -80,127 +80,96 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
   if (!isVisible || !step || !targetRect) return null
 
   const getModalPosition = () => {
-    const padding = 20
-    const modalWidth = 380
-    const modalMaxHeight = 500
+    const padding = 24
+    const modalWidth = 400
+    const modalMaxHeight = 600
     const viewportHeight = window.innerHeight
     const viewportWidth = window.innerWidth
 
     let top = 0
     let left = 0
 
+    // Modal above the element
     switch (step.position) {
       case "top":
-        top = targetRect.top - padding - 240
+        top = targetRect.top - modalMaxHeight - padding * 2
         left = targetRect.left + targetRect.width / 2 - modalWidth / 2
         break
       case "bottom":
-        top = targetRect.bottom + padding
+        // Modal below the element
+        top = targetRect.bottom + padding * 2
         left = targetRect.left + targetRect.width / 2 - modalWidth / 2
         break
       case "left":
-        top = targetRect.top + targetRect.height / 2 - 120
-        left = targetRect.left - modalWidth - padding
+        // Modal to the left of element
+        top = targetRect.top - padding
+        left = targetRect.left - modalWidth - padding * 3
         break
       case "right":
-        top = targetRect.top + targetRect.height / 2 - 120
-        left = targetRect.right + padding
+        // Modal to the right of element
+        top = targetRect.top - padding
+        left = targetRect.right + padding * 3
         break
       default:
-        top = targetRect.bottom + padding
+        top = targetRect.bottom + padding * 2
         left = targetRect.left
     }
 
-    // Constrain to viewport with padding
-    top = Math.max(padding, Math.min(top, viewportHeight - modalMaxHeight - padding))
-    left = Math.max(padding, Math.min(left, viewportWidth - modalWidth - padding))
+    // Constrain to viewport with more padding
+    top = Math.max(padding * 2, Math.min(top, viewportHeight - modalMaxHeight - padding * 2))
+    left = Math.max(padding * 2, Math.min(left, viewportWidth - modalWidth - padding * 2))
 
     return { top, left }
   }
 
   const position = getModalPosition()
 
-  const getPointerPosition = () => {
-    switch (step.position) {
-      case "top":
-        // Pointer below modal, pointing up
-        return {
-          top: position.top + 260,
-          left: position.left + 190 - 12,
-        }
-      case "bottom":
-        // Pointer above modal, pointing down
-        return {
-          top: position.top - 40,
-          left: position.left + 190 - 12,
-        }
-      case "left":
-        // Pointer to the right of modal, pointing left
-        return {
-          top: position.top + 120,
-          left: position.left + 380 + 20,
-        }
-      case "right":
-        // Pointer to the left of modal, pointing right
-        return {
-          top: position.top + 120,
-          left: position.left - 40,
-        }
-      default:
-        return {
-          top: position.top - 40,
-          left: position.left + 190 - 12,
-        }
-    }
-  }
-
-  const pointerPosition = getPointerPosition()
-
   return (
     <>
       {/* Backdrop overlay */}
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 animate-in fade-in" />
+      <div className="fixed inset-0 bg-black/60 z-40 animate-in fade-in duration-300" />
 
-      {/* Spotlight on target element */}
+      {/* Spotlight on target element - smooth transitions */}
       <div
-        className="fixed z-50 pointer-events-none"
+        className="fixed z-50 pointer-events-none transition-all duration-500 ease-out"
         style={{
           top: targetRect.top - 8,
           left: targetRect.left - 8,
           width: targetRect.width + 16,
           height: targetRect.height + 16,
-          boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 20px 4px rgba(234, 179, 8, 0.6)",
+          boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.6), 0 0 30px 6px rgba(234, 179, 8, 0.8)",
           borderRadius: "12px",
-          transition: "all 0.3s ease",
         }}
       />
 
       {step.action && (
         <div
-          className="fixed z-[60] pointer-events-none"
+          className="fixed z-[60] pointer-events-none transition-all duration-500 ease-out"
           style={{
-            top: `${pointerPosition.top}px`,
-            left: `${pointerPosition.left}px`,
+            top: `${targetRect.top + targetRect.height / 2 - 16}px`,
+            left:
+              step.position === "right"
+                ? `${targetRect.left - 48}px`
+                : step.position === "left"
+                  ? `${targetRect.right + 16}px`
+                  : `${targetRect.left + targetRect.width / 2 - 16}px`,
           }}
         >
           <div className="relative">
-            <MousePointerClick className="h-8 w-8 text-yellow-500 drop-shadow-[0_0_12px_rgba(234,179,8,0.8)]" />
-            <div className="absolute inset-0 h-8 w-8 bg-yellow-400 rounded-full blur-md opacity-40" />
+            <MousePointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_16px_rgba(250,204,21,1)]" />
           </div>
         </div>
       )}
 
       <div
-        className="fixed z-50 w-[380px] max-h-[calc(100vh-40px)] overflow-y-auto animate-in slide-in-from-bottom-5"
+        className="fixed z-[70] w-[400px] transition-all duration-500 ease-out"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
-        <div className="absolute inset-0 bg-yellow-500 rounded-2xl blur-md opacity-30 pointer-events-none" />
-
-        <div className="relative bg-white dark:bg-gray-900 backdrop-blur-xl border-4 border-yellow-500 rounded-2xl p-6 shadow-2xl">
-          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
+        <div className="relative bg-white dark:bg-gray-900 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
+          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
             <Lightbulb className="h-3.5 w-3.5" />
             DEMO TOUR
           </div>
@@ -211,7 +180,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               <div className="p-1.5 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              <span className="text-sm font-bold text-gray-900 dark:text-yellow-100">
                 Step {currentStep + 1} of {steps.length}
               </span>
             </div>
@@ -226,21 +195,21 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           </div>
 
           {/* Progress bar */}
-          <div className="mb-5 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+          <div className="mb-5 h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-yellow-400 to-amber-500 transition-all duration-700 ease-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
 
-          <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">{step.title}</h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-5 leading-relaxed">{step.description}</p>
+          <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-yellow-50">{step.title}</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-200 mb-5 leading-relaxed">{step.description}</p>
 
           {step.action && (
-            <div className="mb-5 p-3 bg-yellow-50 dark:bg-yellow-950/30 border-2 border-yellow-500 rounded-xl">
-              <p className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <div className="p-1 bg-yellow-500 rounded-md">
-                  <MousePointerClick className="h-3.5 w-3.5 text-white" />
+            <div className="mb-5 p-3.5 bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-400 rounded-xl">
+              <p className="text-sm font-bold text-gray-900 dark:text-yellow-100 flex items-center gap-2">
+                <div className="p-1 bg-yellow-400 rounded-md">
+                  <MousePointerClick className="h-3.5 w-3.5 text-gray-900" />
                 </div>
                 {step.action}
               </p>
@@ -253,14 +222,14 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
               variant="ghost"
               size="sm"
               onClick={handleSkip}
-              className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
+              className="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
             >
               Skip Tour
             </Button>
             <Button
               onClick={handleNext}
               size="sm"
-              className="gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+              className="gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-gray-900 font-bold shadow-lg hover:shadow-xl transition-all"
             >
               {currentStep === steps.length - 1 ? "Finish Tour" : "Next Step"}
               <ArrowRight className="h-4 w-4" />
@@ -273,9 +242,9 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         .tour-highlight {
           position: relative;
           z-index: 45 !important;
-          box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.5);
+          box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.6);
           border-radius: 8px;
-          transition: box-shadow 0.3s ease;
+          transition: all 0.5s ease-out;
         }
       `}</style>
     </>

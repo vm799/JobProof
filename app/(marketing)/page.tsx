@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, Zap, Users, TrendingUp, Clock, Shield } from "lucide-react"
+import { ThemeLogo } from "@/components/theme-logo"
 import Image from "next/image"
 
 export default function LandingPage() {
@@ -8,16 +9,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image
-              src="/boardingpass-logo.png"
-              alt="BoardingPass"
-              width={160}
-              height={36}
-              className="h-9 w-auto"
-              priority
-            />
+            <ThemeLogo width={240} height={56} className="h-14 w-auto" priority />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -61,6 +55,20 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 sm:py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
+          {/* Logo showcase */}
+          <div className="mb-8 flex justify-center">
+            <div className="relative p-8 rounded-3xl bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 border border-primary/20">
+              <Image
+                src="/boardingpass-logo.png"
+                alt="BoardingPass"
+                width={320}
+                height={320}
+                className="w-64 h-64 object-contain"
+                priority
+              />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
             <Sparkles className="h-4 w-4" />
             White-label client onboarding made delightful
@@ -239,11 +247,14 @@ export default function LandingPage() {
       <footer className="border-t border-border py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <Link href="/" className="flex items-center mb-4">
-                <Image src="/boardingpass-logo.png" alt="BoardingPass" width={140} height={32} className="h-8 w-auto" />
+            <div className="md:col-span-2">
+              <Link href="/" className="flex items-center mb-6">
+                <ThemeLogo width={220} height={52} className="h-12 w-auto" />
               </Link>
-              <p className="text-sm text-muted-foreground">White-label client onboarding made delightful</p>
+              <p className="text-sm text-muted-foreground max-w-sm">
+                White-label client onboarding made delightful. Transform chaotic kickoffs into smooth, branded
+                experiences that clients love.
+              </p>
             </div>
 
             <div>
@@ -292,8 +303,20 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2025 BoardingPass. All rights reserved.
+          <div className="mt-12 pt-8 border-t border-border">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="text-sm text-muted-foreground">© 2025 BoardingPass. All rights reserved.</div>
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/boardingpass-logo.png"
+                  alt="BoardingPass"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain opacity-50"
+                />
+                <span className="text-xs text-muted-foreground">Powered by BoardingPass</span>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
