@@ -115,8 +115,15 @@ Transform BoardingPass from a simple onboarding tool into the most human-centere
 **Focus:** Schedule meetings directly in onboarding flows
 **Timeline:** 3 weeks
 **Priority:** MEDIUM-HIGH
+**Status:** 🔜 Planned (Not Yet Implemented)
 
-### Calendar Features
+### Current State
+- ✅ Success page references scheduling
+- ✅ Demo mode shows scheduling UI
+- ❌ No actual calendar integration exists
+- ❌ "Schedule a Call" buttons are not functional
+
+### Planned Calendar Features
 - [ ] Calendly integration
 - [ ] Google Calendar integration
 - [ ] Microsoft 365 Calendar integration

@@ -19,29 +19,26 @@ export function CelebrationModal({ open, onOpenChange, type, title, message, cli
     step_complete: {
       icon: Sparkles,
       color: "text-primary",
-      title: title || "You did it!",
+      title: title || "Step Complete",
       message:
         message ||
-        `That wasn't easy, but you powered through. We're genuinely impressed${clientName ? `, ${clientName}` : ""}. Keep this momentum going!`,
-      emoji: "🎉",
+        `${clientName ? `${clientName}, you` : "You"}'re making progress. Each completed step brings you closer to launch.`,
     },
     milestone: {
       icon: Star,
       color: "text-amber-500",
-      title: title || "Wow, you're halfway there!",
+      title: title || "Halfway There",
       message:
         message ||
-        `${clientName ? clientName + ", you" : "You"}'re absolutely crushing this. Take a moment to appreciate how far you've come. The finish line is in sight!`,
-      emoji: "⭐",
+        `${clientName ? clientName + ", you've" : "You've"} completed half the steps. Keep the momentum going.`,
     },
     onboarding_complete: {
       icon: Heart,
       color: "text-rose-500",
-      title: title || "This is the start of something special!",
+      title: title || "Onboarding Complete",
       message:
         message ||
-        `${clientName ? clientName + ", we" : "We"}'re genuinely excited to work with you. Thank you for trusting us with your project. Our team is already preparing to make this partnership amazing. Welcome aboard!`,
-      emoji: "❤️",
+        `${clientName ? clientName + ", your" : "Your"} onboarding is complete. Our team will review your information and reach out within 24 hours to schedule next steps.`,
     },
   }
 
@@ -54,20 +51,18 @@ export function CelebrationModal({ open, onOpenChange, type, title, message, cli
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-md">
           <div className="flex flex-col items-center text-center p-6">
-            <div className="text-6xl mb-4 animate-bounce">{celebration.emoji}</div>
-            <div className="mb-4 rounded-full bg-primary/10 p-6">
-              <Icon className={`h-12 w-12 ${celebration.color}`} />
+            <div className="mb-4 rounded-full bg-primary/10 p-8">
+              <Icon className={`h-16 w-16 ${celebration.color}`} />
             </div>
             <h2 className="text-2xl font-bold mb-2 text-balance">{celebration.title}</h2>
             <p className="text-muted-foreground mb-6 text-pretty leading-relaxed">{celebration.message}</p>
             {type === "onboarding_complete" && (
-              <p className="text-sm text-muted-foreground mb-6 italic">
-                "Every great partnership starts with a leap of faith. Thank you for taking that leap with us."
+              <p className="text-sm text-muted-foreground mb-6">
+                We'll be in touch soon to discuss your project details.
               </p>
             )}
             <Button onClick={() => onOpenChange(false)} size="lg" className="w-full gap-2">
-              {type === "onboarding_complete" ? "Let's Get Started!" : "Keep Going!"}
-              <Sparkles className="h-4 w-4" />
+              {type === "onboarding_complete" ? "Done" : "Continue"}
             </Button>
           </div>
         </DialogContent>

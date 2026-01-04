@@ -107,7 +107,7 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
         <DialogHeader>
           <DialogTitle>Create New Onboarding</DialogTitle>
           <DialogDescription>
-            {step === 1 ? "Enter client information to get started" : "Select an onboarding flow template"}
+            {step === 1 ? "Add client information to begin" : "Optionally select an onboarding flow template"}
           </DialogDescription>
         </DialogHeader>
 

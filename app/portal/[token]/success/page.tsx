@@ -129,13 +129,18 @@ export default async function SuccessPage({ params }: { params: { token: string 
 
       {/* CTA Buttons */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <Button size="lg" className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-          <Mail className="h-4 w-4" />
-          Contact {workspace.name}
+        <Button size="lg" asChild className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90">
+          <a href={`mailto:${workspace.name.toLowerCase().replace(/\s+/g, "")}@example.com`}>
+            <Mail className="h-4 w-4" />
+            Contact {workspace.name}
+          </a>
         </Button>
-        <Button size="lg" variant="outline" className="gap-2 bg-transparent">
+        <Button size="lg" variant="outline" className="gap-2 bg-transparent relative group" disabled>
           <Calendar className="h-4 w-4" />
           Schedule Kickoff Call
+          <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground text-xs px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            Calendar integration coming in V1.3
+          </span>
         </Button>
       </div>
 
