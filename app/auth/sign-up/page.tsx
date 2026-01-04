@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 
 export default function SignUpPage() {
@@ -19,7 +19,45 @@ export default function SignUpPage() {
   const [repeatPassword, setRepeatPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isExistingUser, setIsExistingUser] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    const checkExistingSession = async () => {
+      const supabase = createClient()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (session) {
+        // User is already logged in, redirect to dashboard
+        router.push("/dashboard")
+      }
+    }
+
+    checkExistingSession()
+  }, [router])
+
+  useEffect(() => {
+    const checkEmailExists = async () => {
+      if (email && email.includes("@")) {
+        const supabase = createClient()
+        const { data } = await supabase.auth.signInWithOtp({
+          email,
+          options: {
+            shouldCreateUser: false,
+          },
+        })
+
+        // This is a workaround to check if email exists
+        // If error is "User not found", email doesn't exist
+        setIsExistingUser(false) // We'll handle this in the form submission
+      }
+    }
+
+    const debounce = setTimeout(checkEmailExists, 500)
+    return () => clearTimeout(debounce)
+  }, [email])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,6 +92,12 @@ export default function SignUpPage() {
       })
 
       if (error) {
+        if (error.message.includes("already registered") || error.message.includes("already exists")) {
+          setError("This email is already registered. Please sign in instead.")
+          setIsExistingUser(true)
+          setIsLoading(false)
+          return
+        }
         console.error("[v0] Signup error:", error)
         throw error
       }
@@ -70,6 +114,41 @@ export default function SignUpPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (isExistingUser) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
+        <div className="w-full max-w-sm">
+          <Card>
+            <CardHeader className="text-center">
+              <div className="mb-4 flex justify-center">
+                <Image
+                  src="/boardingpass-logo.png"
+                  alt="BoardingPass"
+                  width={450}
+                  height={120}
+                  className="h-30 w-auto"
+                  priority
+                />
+              </div>
+              <CardTitle className="text-2xl font-semibold">Welcome back</CardTitle>
+              <CardDescription>This email is already registered. Please sign in with your password.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button asChild className="w-full">
+                <Link href={`/auth/login?email=${encodeURIComponent(email)}`}>Continue to Sign In</Link>
+              </Button>
+              <Button asChild variant="ghost" className="w-full">
+                <Link href="/auth/sign-up" onClick={() => setIsExistingUser(false)}>
+                  Try a different email
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -8,16 +8,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
+  const searchParams = useSearchParams()
+  const [email, setEmail] = useState(searchParams.get("email") || "")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    const emailParam = searchParams.get("email")
+    if (emailParam) {
+      setEmail(emailParam)
+    }
+  }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -55,7 +55,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-4 sm:py-6 md:py-8">
+      <section className="container mx-auto px-4 py-1">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo showcase */}
           <div className="flex justify-center">

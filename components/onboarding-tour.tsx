@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, X } from "lucide-react"
+import { ArrowRight, ArrowLeft, X } from "lucide-react"
 
 interface TourStep {
   title: string
@@ -13,28 +13,39 @@ interface TourStep {
 
 const tourSteps: TourStep[] = [
   {
-    title: "Welcome to BoardingPass!",
+    title: "Welcome to BoardingPass",
     description:
-      "Let's take a quick tour to show you around. You'll be creating amazing client onboarding experiences in no time.",
+      "This quick tour shows how to create flows, manage clients, and track progress. Let's walk through the platform together.",
   },
   {
-    title: "Create Your First Flow",
+    title: "Step 1: Create Onboarding Flows",
     description:
-      "Start by creating an onboarding flow. You can build from scratch or use one of our 10+ pre-built templates.",
+      "Build structured intake workflows using our flow builder. Start from templates or create custom steps for your process.",
   },
   {
-    title: "Invite Your Clients",
+    title: "Step 2: Send Client Invitations",
     description:
-      "Once your flow is ready, invite clients by email. They'll get a branded portal link to complete their onboarding.",
+      "Invite clients by email. They receive a branded portal link where they can complete onboarding at their own pace.",
   },
   {
-    title: "Track Progress",
+    title: "Step 3: Clients Complete Their Onboarding",
     description:
-      "Monitor client progress in real-time with our analytics dashboard. See completion rates and identify bottlenecks.",
+      "Your clients see a clean, branded portal. They work through each step, upload documents, and provide information you need.",
   },
   {
-    title: "You're All Set!",
-    description: "That's it! Explore the app and don't hesitate to reach out if you need help. Happy onboarding!",
+    title: "Step 4: Track Real-Time Progress",
+    description:
+      "Monitor completion status in your dashboard. See which clients need follow-up and identify any bottlenecks in your flow.",
+  },
+  {
+    title: "Step 5: Automate Follow-Ups",
+    description:
+      "Set up automated reminder emails to keep clients moving. Configure reminder schedules based on your workflow needs.",
+  },
+  {
+    title: "Ready to Build",
+    description:
+      "You now understand how BoardingPass works from both sides. Start creating your first flow or explore the dashboard.",
   },
 ]
 
@@ -55,6 +66,12 @@ export function OnboardingTour() {
       setCurrentStep(currentStep + 1)
     } else {
       handleComplete()
+    }
+  }
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
     }
   }
 
@@ -95,9 +112,17 @@ export function OnboardingTour() {
           </div>
 
           <div className="flex items-center justify-between">
-            <Button variant="ghost" onClick={handleSkip}>
-              Skip tour
-            </Button>
+            <div className="flex gap-2">
+              {currentStep > 0 && (
+                <Button variant="outline" onClick={handleBack} className="gap-2 bg-transparent">
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+              )}
+              <Button variant="ghost" onClick={handleSkip}>
+                Skip tour
+              </Button>
+            </div>
             <Button onClick={handleNext} className="gap-2">
               {currentStep === tourSteps.length - 1 ? "Get Started" : "Next"}
               <ArrowRight className="h-4 w-4" />

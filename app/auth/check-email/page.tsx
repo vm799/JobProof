@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
 
 export default function CheckEmailPage({
   searchParams,
@@ -45,7 +44,13 @@ export default function CheckEmailPage({
                 <li>• Check your spam/junk folder</li>
                 <li>• Wait 2-3 minutes for delivery</li>
                 <li>• Verify the email address is correct</li>
-                <li>• Contact support if issues persist</li>
+                <li>
+                  • Check{" "}
+                  <Link href="/help" className="text-primary hover:underline">
+                    help center
+                  </Link>{" "}
+                  for SMTP configuration
+                </li>
               </ul>
             </div>
 
@@ -64,24 +69,6 @@ export default function CheckEmailPage({
             <Link href="/auth/login" className="block text-sm text-primary underline-offset-4 hover:underline">
               Back to login
             </Link>
-          </CardContent>
-        </Card>
-
-        <Card className="border-yellow-500/50 bg-yellow-500/5">
-          <CardContent className="pt-6">
-            <div className="flex gap-3">
-              <AlertCircle className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
-              <div className="text-sm space-y-2">
-                <p className="font-medium">Email Configuration Notice</p>
-                <p className="text-muted-foreground">
-                  If you're not receiving emails, the email service may need to be configured. See the{" "}
-                  <Link href="/help" className="text-primary hover:underline">
-                    help center
-                  </Link>{" "}
-                  for SMTP setup instructions or contact support.
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>

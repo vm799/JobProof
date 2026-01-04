@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { X, ArrowRight, Sparkles, MousePointerClick, Lightbulb } from "lucide-react"
+import { X, ArrowRight, ArrowLeft, Sparkles, Lightbulb, MousePointerClick as ArrowPointerClick } from "lucide-react"
 
 interface TourStep {
   target: string
@@ -67,6 +67,12 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
     }
   }
 
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
   const handleSkip = () => {
     setIsVisible(false)
     onSkip?.()
@@ -82,7 +88,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
   const getModalPosition = () => {
     const padding = 24
     const modalWidth = 400
-    const modalMaxHeight = 600
+    const modalMaxHeight = 500
     const viewportHeight = window.innerHeight
     const viewportWidth = window.innerWidth
 
@@ -111,10 +117,10 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         left = targetRect.left
     }
 
-    const maxTop = viewportHeight - 480
-    const minTop = 80
-    const maxLeft = viewportWidth - modalWidth - padding * 2
-    const minLeft = padding * 2
+    const maxTop = viewportHeight - 400
+    const minTop = 100
+    const maxLeft = viewportWidth - modalWidth - padding * 3
+    const minLeft = padding * 3
 
     top = Math.max(minTop, Math.min(top, maxTop))
     left = Math.max(minLeft, Math.min(left, maxLeft))
@@ -156,7 +162,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           }}
         >
           <div className="relative animate-pulse">
-            <MousePointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_16px_rgba(250,204,21,1)]" />
+            <ArrowPointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_16px_rgba(250,204,21,1)]" />
           </div>
         </div>
       )}
@@ -166,11 +172,11 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
-          maxWidth: `min(400px, calc(100vw - 48px))`,
+          maxWidth: `min(400px, calc(100vw - 96px))`,
           width: "400px",
         }}
       >
-        <div className="relative bg-white dark:bg-gray-900 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl max-h-[60vh] overflow-y-auto">
+        <div className="relative bg-white dark:bg-gray-900 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl max-h-[70vh] overflow-y-auto">
           <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5">
             <Lightbulb className="h-3.5 w-3.5" />
             DEMO TOUR
@@ -207,33 +213,35 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
           <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-yellow-50">{step.title}</h3>
           <p className="text-sm text-gray-700 dark:text-gray-200 mb-5 leading-relaxed">{step.description}</p>
 
-          {step.action && (
-            <div className="mb-5 p-3.5 bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-400 rounded-xl">
-              <p className="text-sm font-bold text-gray-900 dark:text-yellow-100 flex items-center gap-2">
-                <div className="p-1 bg-yellow-400 rounded-md">
-                  <MousePointerClick className="h-3.5 w-3.5 text-gray-900" />
-                </div>
-                {step.action}
-              </p>
-            </div>
-          )}
-
           {/* Navigation */}
           <div className="flex items-center justify-between gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSkip}
-              className="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-            >
-              Skip Tour
-            </Button>
+            <div className="flex gap-2">
+              {currentStep > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBack}
+                  className="gap-2 border-gray-300 dark:border-gray-600 bg-transparent"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSkip}
+                className="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
+              >
+                Skip
+              </Button>
+            </div>
             <Button
               onClick={handleNext}
               size="sm"
               className="gap-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-gray-900 font-bold shadow-lg hover:shadow-xl transition-all"
             >
-              {currentStep === steps.length - 1 ? "Finish Tour" : "Next Step"}
+              {currentStep === steps.length - 1 ? "Finish" : "Next"}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

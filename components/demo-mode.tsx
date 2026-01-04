@@ -13,51 +13,38 @@ import { cn } from "@/lib/utils"
 import { CelebrationModal } from "@/components/celebration-modal"
 import { ProgressBadge } from "@/components/progress-badge"
 import { GuidedTour } from "@/components/guided-tour"
+import type { OnboardingFlow } from "@/types/onboarding-flow"
 
-const DEMO_FLOW = {
-  name: "New Client Onboarding",
-  workspace: {
-    name: "Acme Design Agency",
-    brandColor: "#6366f1",
-  },
-  client: {
-    name: "Demo User",
-    email: "demo@example.com",
-  },
+const DEMO_FLOW: OnboardingFlow = {
+  name: "Client Onboarding Demo",
   steps: [
     {
-      id: "step-1",
-      title: "Company Information",
-      description: "Tell us about your business so we can tailor our services to your needs.",
+      title: "Welcome Aboard",
+      description: "Let's get to know you and your business.",
       type: "form",
       fields: [
+        { id: "name", label: "Full Name", type: "text", required: true },
         { id: "company", label: "Company Name", type: "text", required: true },
-        { id: "industry", label: "Industry", type: "text", required: true },
-        { id: "description", label: "Brief Description", type: "textarea", required: false },
       ],
     },
     {
-      id: "step-2",
-      title: "Upload Brand Assets",
-      description: "Share your logo, brand guidelines, and any other visual assets.",
-      type: "upload",
-      fields: [{ id: "files", label: "Upload Files", type: "file", required: true }],
-    },
-    {
-      id: "step-3",
-      title: "Project Goals",
-      description: "What are your main objectives for this project?",
+      title: "Tell Us About Your Project",
+      description: "Help us understand your goals and timeline.",
       type: "form",
       fields: [
-        { id: "goals", label: "Primary Goals", type: "textarea", required: true },
-        { id: "timeline", label: "Desired Timeline", type: "text", required: true },
-        { id: "budget", label: "Budget Range", type: "text", required: false },
+        { id: "project", label: "Project Description", type: "textarea", required: true },
+        { id: "timeline", label: "Target Launch Date", type: "date", required: true },
       ],
     },
     {
-      id: "step-4",
-      title: "Schedule Kickoff Call",
-      description: "Pick a time for our initial strategy session.",
+      title: "Upload Key Documents",
+      description: "Share any relevant files or assets.",
+      type: "upload",
+      fields: [{ id: "files", label: "Upload Files", type: "file", required: false }],
+    },
+    {
+      title: "Schedule Kickoff Call (Coming Soon)",
+      description: "Calendar integration planned for V2 - for now, we'll reach out to schedule.",
       type: "calendar",
       fields: [{ id: "date", label: "Preferred Date", type: "date", required: true }],
     },
@@ -305,6 +292,18 @@ export function DemoMode() {
             <p className="mb-8 text-muted-foreground">{currentStep.description}</p>
 
             <div className="space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 dark:text-blue-100">Feature Preview</p>
+                    <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                      Calendar and meeting integrations are on our V2 roadmap. This demo shows the planned experience.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label>Select Date & Time</Label>
                 <div className="grid gap-3">
@@ -335,7 +334,7 @@ export function DemoMode() {
                   </Button>
                 )}
                 <Button onClick={handleCompleteStep} disabled={!formData.selectedSlot}>
-                  Schedule Call
+                  Continue Demo
                 </Button>
               </div>
             </div>
@@ -376,7 +375,11 @@ export function DemoMode() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <span>Built-in file uploads and calendar scheduling</span>
+                  <span>Built-in file uploads and document management</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-muted-foreground/50 mt-0.5 flex-shrink-0" />
+                  <span className="text-muted-foreground/70">Calendar & meeting integration (V2 roadmap)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
@@ -392,20 +395,6 @@ export function DemoMode() {
                   <Sparkles className="h-5 w-5" />
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full bg-transparent"
-                onClick={() => {
-                  setCurrentStepIndex(0)
-                  setCompletedSteps([])
-                  setFormData({})
-                  setUploadedFiles([])
-                  setView("dashboard")
-                }}
-              >
-                Restart Demo
-              </Button>
             </div>
 
             <p className="text-xs text-muted-foreground mt-4">No credit card required • Setup in 5 minutes</p>
@@ -599,12 +588,12 @@ export function DemoMode() {
               <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-lg" style={{ backgroundColor: DEMO_FLOW.workspace.brandColor }} />
-                    <span className="text-sm font-medium text-foreground">{DEMO_FLOW.workspace.name}</span>
+                    <div className="h-8 w-8 rounded-lg" style={{ backgroundColor: "#6366f1" }} />
+                    <span className="text-sm font-medium text-foreground">Acme Design Agency</span>
                   </div>
                   <div className="flex items-center gap-3" data-tour="progress-badge">
                     <ProgressBadge progress={progressPercentage} showTrending />
-                    <div className="text-sm text-muted-foreground">Welcome, {DEMO_FLOW.client.name}</div>
+                    <div className="text-sm text-muted-foreground">Welcome, Demo User</div>
                   </div>
                 </div>
               </div>

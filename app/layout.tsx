@@ -19,9 +19,13 @@ export const metadata: Metadata = {
       {
         url: "/boardingpass-logo.png",
         type: "image/png",
+        sizes: "320x320",
       },
     ],
-    apple: "/boardingpass-logo.png",
+    apple: {
+      url: "/boardingpass-logo.png",
+      sizes: "320x320",
+    },
     shortcut: "/boardingpass-logo.png",
   },
 }
