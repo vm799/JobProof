@@ -2,7 +2,7 @@ import { DemoMode } from "@/components/demo-mode"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Sparkles, MousePointer, Eye, Zap } from "lucide-react"
+import { Sparkles, MousePointer, Eye, Zap, CheckCircle2 } from "lucide-react"
 
 export const metadata = {
   title: "Try Demo - BoardingPass",
@@ -18,10 +18,45 @@ export default function DemoPage() {
             <Sparkles className="h-8 w-8 text-primary" />
             <h1 className="text-4xl font-bold">Interactive Demo</h1>
           </div>
-          <p className="text-xl text-muted-foreground mb-8">
-            Experience BoardingPass from your client's perspective. Complete a full onboarding flow to see how smooth
-            the process is.
-          </p>
+
+          <div className="mb-8">
+            <p className="text-xl text-muted-foreground mb-4">
+              BoardingPass automates client onboarding with professional intake forms, file uploads, and progress
+              tracking.
+            </p>
+            <p className="text-lg text-muted-foreground">
+              This demo lets you experience both sides: the internal dashboard where you manage clients, and the
+              client-facing portal they complete. No login required.
+            </p>
+          </div>
+
+          <div className="bg-muted/50 rounded-xl p-6 mb-8 border border-border">
+            <h3 className="font-bold mb-3 flex items-center gap-2">
+              <MousePointer className="h-5 w-5 text-primary" />
+              What This Demo Shows:
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Dashboard view:</strong> See real-time analytics and client progress tracking
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Client portal:</strong> Complete a 4-step onboarding with forms, file uploads, and scheduling
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Guided tour:</strong> Interactive walkthrough explains each feature as you explore
+                </span>
+              </li>
+            </ul>
+          </div>
+          {/* </CHANGE> */}
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
             <Card className="p-4 bg-background/50">

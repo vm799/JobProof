@@ -111,11 +111,13 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         left = targetRect.left
     }
 
-    const maxTop = viewportHeight - 400 // Reserve space for modal
-    const maxLeft = viewportWidth - modalWidth - padding * 4
+    const maxTop = viewportHeight - 480
+    const minTop = 80
+    const maxLeft = viewportWidth - modalWidth - padding * 2
+    const minLeft = padding * 2
 
-    top = Math.max(padding * 4, Math.min(top, maxTop))
-    left = Math.max(padding * 4, Math.min(left, maxLeft))
+    top = Math.max(minTop, Math.min(top, maxTop))
+    left = Math.max(minLeft, Math.min(left, maxLeft))
 
     return { top, left }
   }
@@ -153,7 +155,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
                   : `${targetRect.left + targetRect.width / 2 - 16}px`,
           }}
         >
-          <div className="relative">
+          <div className="relative animate-pulse">
             <MousePointerClick className="h-8 w-8 text-yellow-400 drop-shadow-[0_0_16px_rgba(250,204,21,1)]" />
           </div>
         </div>
@@ -164,7 +166,7 @@ export function GuidedTour({ steps, onComplete, onSkip }: GuidedTourProps) {
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
-          maxWidth: `calc(100vw - 96px)`,
+          maxWidth: `min(400px, calc(100vw - 48px))`,
           width: "400px",
         }}
       >

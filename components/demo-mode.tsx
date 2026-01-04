@@ -80,27 +80,27 @@ export function DemoMode() {
   const dashboardTourSteps = [
     {
       target: '[data-tour="stats"]',
-      title: "Real-Time Analytics",
+      title: "Step 1: Monitor All Onboardings",
       description:
-        "Monitor all your onboardings at a glance. See active clients, completion rates, and overdue steps instantly.",
+        "BoardingPass tracks every client automatically. These real-time stats show active onboardings, completion rates, and which clients need follow-up—no manual spreadsheets required.",
       position: "bottom" as const,
-      action: "These numbers update automatically as clients progress",
+      action: "See how analytics update automatically as clients progress",
     },
     {
       target: '[data-tour="client-list"]',
-      title: "Client Management",
+      title: "Step 2: Manage Client Progress",
       description:
-        "Track every client's progress in real-time. Click any client to see detailed information and send reminders.",
+        "Each client gets a progress percentage and status. Click any client to view detailed step completion, send reminder emails, or download their submitted information.",
       position: "top" as const,
-      action: "Click a client to view their detailed progress",
+      action: "This list updates in real-time as clients complete steps",
     },
     {
       target: '[data-tour="portal-button"]',
-      title: "Try the Client Experience",
+      title: "Step 3: Experience the Client View",
       description:
-        "Switch to the Interactive Client Portal to see exactly what your clients experience during onboarding.",
+        "Now switch perspectives. You'll see the actual onboarding portal your clients interact with—professional, branded, and zero friction.",
       position: "top" as const,
-      action: "Click to experience the client portal",
+      action: "Click to switch to the client portal experience",
       onShow: () => {
         setTimeout(() => {
           setView("portal")
@@ -116,23 +116,25 @@ export function DemoMode() {
   const portalTourSteps = [
     {
       target: '[data-tour="progress-badge"]',
-      title: "Progress Tracking",
+      title: "Step 1: Clear Progress Tracking",
       description:
-        "Your clients always know where they stand. This badge shows completion percentage and updates in real-time.",
+        "Your clients never wonder where they are. This badge shows exact completion percentage and updates instantly after each step.",
       position: "bottom" as const,
     },
     {
       target: '[data-tour="progress-sidebar"]',
-      title: "Visual Progress Tracker",
-      description: "A clear roadmap of all steps. Clients see what's done, what's current, and what's coming next.",
+      title: "Step 2: Visual Step Navigator",
+      description:
+        "The sidebar shows the full journey: completed steps (green check), current step (highlighted), and upcoming steps. Clients always know what's next.",
       position: "right" as const,
     },
     {
       target: '[data-tour="form-section"]',
-      title: "Smart Forms",
-      description: "Forms are intuitive and auto-save as clients type. No data loss, no frustration.",
+      title: "Step 3: Smart Form Experience",
+      description:
+        "Forms auto-save as clients type. No data loss if they close the browser. Required fields are clearly marked. It's intuitive and frustration-free.",
       position: "top" as const,
-      action: "Fill out the form and click Continue",
+      action: "Fill out the form below to complete this step",
     },
   ]
 
@@ -343,6 +345,74 @@ export function DemoMode() {
       default:
         return null
     }
+  }
+
+  const renderCompletionCTA = () => {
+    if (completedSteps.length !== DEMO_FLOW.steps.length) return null
+
+    return (
+      <div className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-lg w-full shadow-2xl border-4 border-primary">
+          <div className="text-center">
+            <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg">
+              <Check className="h-10 w-10 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Demo Complete</h2>
+            <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+              You just experienced the full onboarding flow. Your clients get this same smooth, professional
+              experience—no technical setup required.
+            </p>
+
+            <div className="bg-muted/50 rounded-xl p-6 mb-6">
+              <h3 className="font-bold mb-3">What You Just Saw:</h3>
+              <ul className="text-left space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <span>Real-time progress tracking that keeps clients engaged</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <span>Professional forms with auto-save and clear navigation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <span>Built-in file uploads and calendar scheduling</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <span>Analytics dashboard to monitor all client progress</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <Link href="/auth/sign-up" className="block">
+                <Button size="lg" className="w-full gap-2 text-lg h-14">
+                  Start Your Free Trial
+                  <Sparkles className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full bg-transparent"
+                onClick={() => {
+                  setCurrentStepIndex(0)
+                  setCompletedSteps([])
+                  setFormData({})
+                  setUploadedFiles([])
+                  setView("dashboard")
+                }}
+              >
+                Restart Demo
+              </Button>
+            </div>
+
+            <p className="text-xs text-muted-foreground mt-4">No credit card required • Setup in 5 minutes</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -617,6 +687,8 @@ export function DemoMode() {
           </div>
         )}
       </div>
+
+      {renderCompletionCTA()}
     </div>
   )
 }
