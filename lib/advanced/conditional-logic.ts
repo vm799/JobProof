@@ -11,7 +11,7 @@ interface ConditionalLogic {
   skip_if?: Condition[]
 }
 
-export function evaluateCondition(condition: Condition, answers: Record<string, any>): boolean {
+export async function evaluateCondition(condition: Condition, answers: Record<string, any>): Promise<boolean> {
   const answerValue = answers[condition.field]
 
   switch (condition.operator) {
@@ -30,17 +30,18 @@ export function evaluateCondition(condition: Condition, answers: Record<string, 
   }
 }
 
-export function shouldShowStep(logic: ConditionalLogic | null, answers: Record<string, any>): boolean {
+export async function shouldShowStep(logic: ConditionalLogic | null, answers: Record<string, any>): Promise<boolean> {
   if (!logic) return true
 
   // Check show_if condition
   if (logic.show_if) {
-    return evaluateCondition(logic.show_if, answers)
+    return await evaluateCondition(logic.show_if, answers)
   }
 
   // Check skip_if conditions (all must be false to show)
   if (logic.skip_if && logic.skip_if.length > 0) {
-    const shouldSkip = logic.skip_if.some((condition) => evaluateCondition(condition, answers))
+    const results = await Promise.all(logic.skip_if.map((condition) => evaluateCondition(condition, answers)))
+    const shouldSkip = results.some((result) => result)
     return !shouldSkip
   }
 
