@@ -8,7 +8,6 @@ import { uploadFile, deleteFile } from "@/lib/utils/file-upload"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/hooks/use-toast"
 import { Progress } from "@/components/ui/progress"
-import { validateFileType, validateFileSize, sanitizeFileName } from "@/lib/validation"
 
 interface FileUploadProps {
   onboardingId: string
@@ -47,17 +46,7 @@ export function FileUpload({
     const selectedFile = e.target.files?.[0]
     if (!selectedFile) return
 
-    if (!validateFileType(selectedFile.name, acceptedTypes)) {
-      setError(`Invalid file type. Accepted types: ${acceptedTypes.join(", ")}`)
-      toast({
-        title: "Invalid file type",
-        description: `Please choose one of: ${acceptedTypes.join(", ")}`,
-        variant: "destructive",
-      })
-      return
-    }
-
-    if (!validateFileSize(selectedFile.size, maxSizeMB)) {
+    if (selectedFile.size > maxSizeMB * 1024 * 1024) {
       setError(`File size must be less than ${maxSizeMB}MB`)
       toast({
         title: "File too large",
@@ -66,8 +55,6 @@ export function FileUpload({
       })
       return
     }
-
-    const sanitizedName = sanitizeFileName(selectedFile.name)
 
     setIsUploading(true)
     setError(null)
@@ -91,7 +78,7 @@ export function FileUpload({
 
       toast({
         title: "Upload successful",
-        description: `${sanitizedName} has been uploaded`,
+        description: `${selectedFile.name} has been uploaded`,
       })
 
       setFiles([...files, { ...uploadedFile, file_size: selectedFile.size }])
@@ -154,7 +141,7 @@ export function FileUpload({
           variant="outline"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="w-full gap-2 bg-transparent"
+          className="w-full gap-2"
         >
           {isUploading ? (
             <>

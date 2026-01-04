@@ -12,8 +12,6 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { updateWorkspaceSettings, uploadWorkspaceLogo } from "@/app/actions/workspace"
-import { ExportDataModal } from "@/components/export-data-modal"
-import { DeleteAccountModal } from "@/components/delete-account-modal"
 
 interface SettingsContentProps {
   workspace: any
@@ -212,39 +210,11 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
         </div>
       </Card>
 
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Data Management</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Export Your Data</Label>
-              <p className="text-sm text-muted-foreground">
-                Download all your data in CSV or JSON format for backup or migration
-              </p>
-            </div>
-            <ExportDataModal />
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-6 border-destructive/50">
-        <h2 className="text-lg font-semibold mb-4 text-destructive">Danger Zone</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Delete Account</Label>
-              <p className="text-sm text-muted-foreground">Permanently delete your workspace and all associated data</p>
-            </div>
-            <DeleteAccountModal workspaceId={workspace.id} />
-          </div>
-        </div>
-      </Card>
-
       <div className="flex gap-3">
         <Button onClick={handleSave} disabled={isSaving}>
           {isSaving ? "Saving..." : "Save Changes"}
         </Button>
-        <Button variant="outline" onClick={() => router.refresh()} className="bg-transparent">
+        <Button variant="outline" onClick={() => router.refresh()}>
           Cancel
         </Button>
       </div>

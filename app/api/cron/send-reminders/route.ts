@@ -2,16 +2,8 @@ import { createServerClient } from "@/lib/supabase/server"
 import { sendEmail } from "@/lib/email/send"
 import { NextResponse } from "next/server"
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    // Verify cron secret to prevent unauthorized access
-    const authHeader = request.headers.get("authorization")
-    const cronSecret = process.env.CRON_SECRET || "dev-secret-change-in-production"
-
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const supabase = await createServerClient()
 
     // Get pending reminders that are due
