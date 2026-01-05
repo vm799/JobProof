@@ -19,42 +19,49 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser()
 
     const userEmail = user?.email || "Anonymous User"
-    const userId = user?.id || "Not authenticated"
+    const userId = user?.id || null
 
     console.log("[v0] Feature request submitted:", { title, userEmail, userId })
 
-    if (user?.id) {
-      const { data: profile } = await supabase.from("profiles").select("workspace_id").eq("id", user.id).single()
+    if (userId) {
+      const { error: insertError } = await supabase.from("feature_requests").insert({
+        user_id: userId,
+        title,
+        description: description || null,
+        status: "pending",
+        votes: 0,
+      })
 
-      if (profile?.workspace_id) {
-        await supabase.from("feature_requests").insert({
-          workspace_id: profile.workspace_id,
-          user_id: user.id,
-          title,
-          description: description || null,
-          status: "pending",
-        })
+      if (insertError) {
+        console.error("[v0] Failed to insert feature request:", insertError)
+      } else {
+        console.log("[v0] Feature request saved to database")
       }
     }
 
     // Send email to admin
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "onboarding@getboardingpass.app",
-      to: "admin@getboardingpass.app",
-      subject: `Feature Request: ${title}`,
-      html: `
-        <h2>New Feature Suggestion</h2>
-        <p><strong>From:</strong> ${userEmail}</p>
-        <p><strong>User ID:</strong> ${userId}</p>
-        <hr />
-        <h3>${title}</h3>
-        <p>${description || "No additional description provided."}</p>
-        <hr />
-        <p style="color: #666; font-size: 12px;">Submitted from BoardingPass Roadmap</p>
-      `,
-    })
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL || "onboarding@getboardingpass.app",
+        to: "admin@getboardingpass.app",
+        subject: `Feature Request: ${title}`,
+        html: `
+          <h2>New Feature Suggestion</h2>
+          <p><strong>From:</strong> ${userEmail}</p>
+          <p><strong>User ID:</strong> ${userId || "Anonymous"}</p>
+          <hr />
+          <h3>${title}</h3>
+          <p>${description || "No additional description provided."}</p>
+          <hr />
+          <p style="color: #666; font-size: 12px;">Submitted from BoardingPass Roadmap</p>
+        `,
+      })
 
-    console.log("[v0] Feature request email sent successfully")
+      console.log("[v0] Feature request email sent successfully to admin")
+    } catch (emailError) {
+      console.error("[v0] Failed to send feature request email:", emailError)
+      // Don't fail the request if email fails
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
