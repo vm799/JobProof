@@ -13,8 +13,8 @@ export default function NotFound() {
           </div>
           <h1 className="mb-2 text-2xl font-semibold">Page Not Found</h1>
           <p className="mb-6 text-muted-foreground">The page you're looking for doesn't exist or has been moved.</p>
-          <Link href="/">
-            <Button>Go Home</Button>
+          <Link href="/dashboard">
+            <Button>Go to Dashboard</Button>
           </Link>
         </div>
       </Card>

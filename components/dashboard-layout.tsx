@@ -64,6 +64,10 @@ export function DashboardLayout({
 
   const handleLogout = async () => {
     console.log("[v0] DashboardLayout - Logout initiated")
+    if (typeof window !== "undefined") {
+      localStorage.clear()
+      sessionStorage.clear()
+    }
     await supabase.auth.signOut()
     window.location.href = "/auth/login"
   }

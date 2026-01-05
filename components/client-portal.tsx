@@ -17,6 +17,7 @@ import { LoadingButton } from "@/components/ui/loading-button"
 import { stepDataSchema } from "@/lib/validation/schemas"
 import { sanitizeText } from "@/lib/validation/sanitize"
 import { toast } from "sonner"
+import Link from "next/link"
 
 interface ClientPortalProps {
   onboarding: any
@@ -382,20 +383,32 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link href={`/portal/${token}`} className="flex items-center gap-3">
               {workspace.logo_url ? (
                 <img
                   src={workspace.logo_url || "/placeholder.svg"}
                   alt={workspace.name}
-                  className="h-8 w-auto rounded-lg"
+                  className="h-8 w-auto max-w-[200px] object-contain"
+                  onError={(e) => {
+                    // Fallback to workspace name if image fails to load
+                    const target = e.target as HTMLImageElement
+                    target.style.display = "none"
+                    const fallback = target.nextElementSibling
+                    if (fallback) {
+                      ;(fallback as HTMLElement).style.display = "flex"
+                    }
+                  }}
                 />
-              ) : (
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">{workspace.name[0]}</span>
-                </div>
-              )}
-              <span className="text-sm font-medium">{workspace.name}</span>
-            </div>
+              ) : null}
+              <div
+                className="h-8 flex items-center justify-center"
+                style={{
+                  display: workspace.logo_url ? "none" : "flex",
+                }}
+              >
+                <span className="text-lg font-semibold">{workspace.name}</span>
+              </div>
+            </Link>
             <div className="flex items-center gap-3">
               <ProgressBadge progress={progressPercentage} showTrending />
               <div className="text-sm text-muted-foreground">Welcome, {client.name}</div>

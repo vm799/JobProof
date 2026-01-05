@@ -62,7 +62,7 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
       })
 
       toast({
-        title: "Settings saved",
+        title: "✓ Settings saved",
         description: "Your workspace settings have been updated successfully.",
       })
 
