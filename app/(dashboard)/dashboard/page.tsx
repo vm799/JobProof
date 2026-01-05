@@ -24,38 +24,41 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<any>(null)
 
-  const fetchData = useCallback(async () => {
-    // 1. Guard: Prevent double-fetching
+const fetchData = useCallback(async () => {
     if (isFetching.current) return
     isFetching.current = true
 
     try {
       const supabase = createClient()
 
-      // 2. Auth Check
+      // 1. Auth Check
       const { data: { user }, error: authError } = await supabase.auth.getUser()
       if (authError || !user) {
         router.push("/auth/login")
         return
       }
 
-      currentUserId.current = user.id
-
-      // 3. Fetch Profile AND Workspace in one go (Optimized)
+      // 2. Fetch Profile simply
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select(`
-          *,
-          workspaces!current_workspace_id (*)
-        `)
+        .select("*")
         .eq("id", user.id)
         .single()
 
       if (profileError) throw new Error("Profile fetch failed")
 
-      const workspace = profile?.workspaces
+      // 3. Fetch Workspace separately using the ID from the profile
+      let workspace = null
+      if (profile.current_workspace_id) {
+        const { data: wsData } = await supabase
+          .from("workspaces")
+          .select("*")
+          .eq("id", profile.current_workspace_id)
+          .single()
+        workspace = wsData
+      }
 
-      // 4. Fetch Stats & Activity (Only if workspace exists)
+      // 4. Fetch Stats & Activity
       let stats = { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 }
       let recentActivity = []
 
@@ -76,7 +79,6 @@ export default function DashboardPage() {
         stats.totalClients = clientsCount || 0
       }
 
-      // 5. Set State ONCE
       setData({
         user,
         profile,
@@ -95,7 +97,82 @@ export default function DashboardPage() {
       isFetching.current = false
       hasInitialized.current = true
     }
-  }, [router]) // REMOVED 'data' from here - this stops the infinite loop
+  }, [router])
+
+
+  
+  // const fetchData = useCallback(async () => {
+  //   // 1. Guard: Prevent double-fetching
+  //   if (isFetching.current) return
+  //   isFetching.current = true
+
+  //   try {
+  //     const supabase = createClient()
+
+  //     // 2. Auth Check
+  //     const { data: { user }, error: authError } = await supabase.auth.getUser()
+  //     if (authError || !user) {
+  //       router.push("/auth/login")
+  //       return
+  //     }
+
+  //     currentUserId.current = user.id
+
+  //     // 3. Fetch Profile AND Workspace in one go (Optimized)
+  //     const { data: profile, error: profileError } = await supabase
+  //       .from("profiles")
+  //       .select(`
+  //         *,
+  //         workspaces!current_workspace_id (*)
+  //       `)
+  //       .eq("id", user.id)
+  //       .single()
+
+  //     if (profileError) throw new Error("Profile fetch failed")
+
+  //     const workspace = profile?.workspaces
+
+  //     // 4. Fetch Stats & Activity (Only if workspace exists)
+  //     let stats = { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 }
+  //     let recentActivity = []
+
+  //     if (workspace) {
+  //       const { count: clientsCount } = await supabase
+  //         .from("clients")
+  //         .select("id", { count: "exact" })
+  //         .eq("workspace_id", workspace.id)
+
+  //       const { data: activity } = await supabase
+  //         .from("activity_logs")
+  //         .select("*")
+  //         .eq("workspace_id", workspace.id)
+  //         .order("created_at", { ascending: false })
+  //         .limit(10)
+        
+  //       recentActivity = activity || []
+  //       stats.totalClients = clientsCount || 0
+  //     }
+
+  //     // 5. Set State ONCE
+  //     setData({
+  //       user,
+  //       profile,
+  //       workspace,
+  //       stats,
+  //       recentActivity,
+  //       shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
+  //     })
+      
+  //     setError(null)
+  //   } catch (err: any) {
+  //     console.error("Dashboard error:", err)
+  //     setError(err.message)
+  //   } finally {
+  //     setLoading(false)
+  //     isFetching.current = false
+  //     hasInitialized.current = true
+  //   }
+  // }, [router]) // REMOVED 'data' from here - this stops the infinite loop
 
   useEffect(() => {
     fetchData()
