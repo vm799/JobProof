@@ -47,8 +47,8 @@ export default function LoginPage() {
       const productionUrl =
         process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://getboardingpass.app"
       const redirectUrl = isLocalhost
-        ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/dashboard"
-        : `${productionUrl}/dashboard`
+        ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/auth/callback"
+        : `${productionUrl}/auth/callback`
 
       console.log("[v0] Magic link redirect URL:", redirectUrl)
 

@@ -12,7 +12,8 @@ export async function proxy(request: NextRequest) {
     "/auth/login",
     "/auth/sign-up",
     "/auth/check-email",
-    "/onboarding", // Allow access to onboarding page
+    "/auth/callback", // Added callback route to public paths for magic link auth
+    "/onboarding",
     "/faq",
     "/privacy",
     "/terms",
