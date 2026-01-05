@@ -93,8 +93,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Desktop Sidebar - Added red border for visual test */}
-      <aside className="hidden lg:flex w-64 border-r-4 border-r-red-500 bg-card flex-col">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 border-r bg-card flex-col">
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
           <Link href="/dashboard" className="flex items-center gap-2">
             <ThemeLogo width={350} height={80} className="h-24 w-auto" priority />
