@@ -16,11 +16,21 @@ export default async function AnalyticsPage() {
     redirect("/auth/login")
   }
 
+  const { data: onboardings } = await supabase
+    .from("client_onboardings")
+    .select("*")
+    .order("created_at", { ascending: false })
+
+  const { data: activities } = await supabase
+    .from("onboarding_activities")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(100)
+
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Analytics</h1>
       <Suspense fallback={<div>Loading analytics...</div>}>
-        <AnalyticsDashboard />
+        <AnalyticsDashboard onboardings={onboardings || []} activities={activities || []} />
       </Suspense>
     </div>
   )
