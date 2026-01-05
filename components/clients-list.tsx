@@ -6,10 +6,22 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Plus, Search, MoreVertical, Mail, Calendar, Users } from "lucide-react"
+import { Plus, Search, MoreVertical, Mail, Calendar, Users, Copy, Trash2 } from "lucide-react"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { EmptyState } from "@/components/empty-state"
 import { formatDistanceToNow } from "date-fns"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { toast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 interface Client {
   id: string
@@ -32,6 +44,9 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [clientToDelete, setClientToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const router = useRouter()
 
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
@@ -75,6 +90,65 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
       .join("")
       .toUpperCase()
       .slice(0, 2)
+  }
+
+  const handleDeleteClient = async (clientId: string) => {
+    setClientToDelete(null)
+    setIsDeleting(true)
+
+    try {
+      const response = await fetch(`/api/clients/${clientId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) throw new Error("Failed to delete client")
+
+      toast({
+        title: "Client deleted",
+        description: "The client and their onboarding data have been removed.",
+      })
+
+      router.refresh()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete client. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleSharePortal = (client: Client) => {
+    const portalUrl = `${window.location.origin}/portal/${client.id}`
+    const subject = `Your Onboarding Portal - ${client.name}`
+    const body = `Hi ${client.name.split(" ")[0]},\n\nYour personalized onboarding portal is ready! Click the link below to get started:\n\n${portalUrl}\n\nLet me know if you have any questions.\n\nBest regards`
+
+    window.location.href = `mailto:${client.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+    toast({
+      title: "Email client opened",
+      description: "Ready to send the portal link to your client.",
+    })
+  }
+
+  const handleCopyLink = async (clientId: string, clientName: string) => {
+    const portalUrl = `${window.location.origin}/portal/${clientId}`
+
+    try {
+      await navigator.clipboard.writeText(portalUrl)
+      toast({
+        title: "Link copied!",
+        description: `Portal link for ${clientName} copied to clipboard.`,
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy link. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   if (clients.length === 0) {
@@ -183,10 +257,24 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleSharePortal(client)}>
+                                <Mail className="mr-2 h-4 w-4" />
+                                Email Portal Link
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleCopyLink(client.id, client.name)}>
+                                <Copy className="mr-2 h-4 w-4" />
+                                Copy Portal Link
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => router.push(`/clients/${client.id}`)}>
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => setClientToDelete(client.id)}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
@@ -209,6 +297,27 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
       </div>
 
       <OnboardingModal open={isModalOpen} onOpenChange={setIsModalOpen} workspaceId={workspaceId} />
+
+      <AlertDialog open={clientToDelete !== null} onOpenChange={() => setClientToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Client?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this client and all their onboarding data. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => clientToDelete && handleDeleteClient(clientToDelete)}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete Client"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

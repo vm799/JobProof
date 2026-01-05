@@ -40,7 +40,11 @@ export function InviteMemberModal({ open, onOpenChange, workspaceId }: InviteMem
       const { data: existingProfile } = await supabase.from("profiles").select("id").eq("email", email).single()
 
       if (!existingProfile) {
-        throw new Error("User not found. They must sign up first before being added to a workspace.")
+        throw new Error(
+          "User not found. Please ask them to create an account at " +
+            window.location.origin +
+            " first, then you can add them to your workspace.",
+        )
       }
 
       // Check if already a member
@@ -76,6 +80,11 @@ export function InviteMemberModal({ open, onOpenChange, workspaceId }: InviteMem
     } catch (err: any) {
       console.error("[v0] Invite error:", err)
       setError(err.message || "Failed to invite member")
+      toast({
+        title: "Invite failed",
+        description: err.message || "Failed to invite member",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
