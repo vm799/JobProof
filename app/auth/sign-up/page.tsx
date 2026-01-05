@@ -80,10 +80,14 @@ export default function SignUpPage() {
     try {
       console.log("[v0] Attempting signup with email:", email)
 
-      const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      const isLocalhost =
+        typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      const productionUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://getboardingpass.app"
       const redirectUrl = isLocalhost
         ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/dashboard"
-        : `${window.location.origin}/dashboard`
+        : `${productionUrl}/dashboard`
 
       console.log("[v0] Using redirect URL:", redirectUrl)
 

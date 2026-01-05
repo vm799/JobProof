@@ -3,6 +3,9 @@ import { createClient } from "@/lib/supabase/server"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { ClientsList } from "@/components/clients-list"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function ClientsPage() {
   const supabase = await createClient()
 
@@ -30,7 +33,7 @@ export default async function ClientsPage() {
       name,
       email,
       created_at,
-      client_onboardings!inner(
+      client_onboardings(
         id,
         status,
         created_at
@@ -39,7 +42,7 @@ export default async function ClientsPage() {
     )
     .eq("workspace_id", profile.current_workspace_id)
     .order("created_at", { ascending: false })
-    .limit(50) // Add pagination limit to prevent browser crash
+    .limit(50)
 
   return (
     <DashboardLayout user={user} profile={profile}>

@@ -12,6 +12,9 @@ import { WelcomeVideoModal } from "@/components/welcome-video-modal"
 import { DashboardSkeleton } from "@/components/loading-skeleton"
 import { Suspense } from "react"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function DashboardPage() {
   const supabase = await createClient()
 
