@@ -37,12 +37,12 @@ import { ThemeLogo } from "@/components/theme-logo"
 import { useState } from "react"
 
 const navigation = [
+  { name: "Roadmap", href: "/roadmap", icon: Map },
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Clients", href: "/clients", icon: Users },
   { name: "Onboarding Flows", href: "/flows", icon: Workflow },
   { name: "Templates", href: "/templates", icon: Layers },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Roadmap", href: "/roadmap", icon: Map },
   { name: "Team", href: "/team", icon: UsersRound },
   { name: "Billing", href: "/billing", icon: CreditCard },
   { name: "Settings", href: "/settings", icon: Settings },
@@ -85,8 +85,8 @@ export function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 border-r border-border bg-card flex-col">
+      {/* Desktop Sidebar - Added red border for visual test */}
+      <aside className="hidden lg:flex w-64 border-r-4 border-r-red-500 bg-card flex-col">
         <div className="flex h-16 items-center justify-between border-b border-border px-6">
           <Link href="/dashboard" className="flex items-center gap-2">
             <ThemeLogo width={350} height={80} className="h-24 w-auto" priority />
@@ -132,6 +132,12 @@ export function DashboardLayout({
               className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             >
               Terms of Service
+            </Link>
+            <Link
+              href="/security"
+              className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            >
+              Security
             </Link>
           </div>
         </div>
@@ -237,6 +243,13 @@ export function DashboardLayout({
                       className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                     >
                       Terms of Service
+                    </Link>
+                    <Link
+                      href="/security"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    >
+                      Security
                     </Link>
                   </div>
                 </div>
