@@ -21,6 +21,22 @@ export async function POST(request: Request) {
     const userEmail = user?.email || "Anonymous User"
     const userId = user?.id || "Not authenticated"
 
+    console.log("[v0] Feature request submitted:", { title, userEmail, userId })
+
+    if (user?.id) {
+      const { data: profile } = await supabase.from("profiles").select("workspace_id").eq("id", user.id).single()
+
+      if (profile?.workspace_id) {
+        await supabase.from("feature_requests").insert({
+          workspace_id: profile.workspace_id,
+          user_id: user.id,
+          title,
+          description: description || null,
+          status: "pending",
+        })
+      }
+    }
+
     // Send email to admin
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@getboardingpass.app",
@@ -38,9 +54,11 @@ export async function POST(request: Request) {
       `,
     })
 
+    console.log("[v0] Feature request email sent successfully")
+
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Feature suggestion error:", error)
+    console.error("[v0] Feature suggestion error:", error)
     return NextResponse.json({ error: "Failed to submit suggestion" }, { status: 500 })
   }
 }

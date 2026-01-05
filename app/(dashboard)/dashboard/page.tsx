@@ -1,17 +1,10 @@
-"use client"
-
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { StatsCards } from "@/components/stats-cards"
 import { RecentActivity } from "@/components/recent-activity"
 import { ClientProgressTable } from "@/components/client-progress-table"
 import { QuickActions } from "@/components/quick-actions"
-import { HelpButton } from "@/components/help-button"
-import { OnboardingTour } from "@/components/onboarding-tour"
-import { WorkspaceLoader } from "@/components/workspace-loader"
-import { WelcomeVideoModal } from "@/components/welcome-video-modal"
-import { Button } from "@/components/ui/button"
-import { RefreshCw } from "lucide-react"
+import { DashboardClientWrapper } from "@/components/dashboard-client-wrapper"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -34,10 +27,15 @@ export default async function DashboardPage() {
     profile = data
   } catch (error) {
     console.error("[v0] Profile fetch failed:", error)
-    return <ErrorState message="Unable to load profile" />
+    return (
+      <DashboardClientWrapper showError errorMessage="Unable to load profile">
+        <div />
+      </DashboardClientWrapper>
+    )
   }
 
   if (!profile?.current_workspace_id) {
+    const { WorkspaceLoader } = await import("@/components/workspace-loader")
     return <WorkspaceLoader />
   }
 
@@ -106,12 +104,12 @@ export default async function DashboardPage() {
   const shouldShowWelcomeVideo = workspace?.welcome_video_url && !profile.has_seen_welcome_video
 
   return (
-    <>
-      {shouldShowWelcomeVideo && (
-        <WelcomeVideoModal videoUrl={workspace.welcome_video_url} workspaceName={workspace.name} userId={user.id} />
-      )}
-      <OnboardingTour />
-      <HelpButton />
+    <DashboardClientWrapper
+      shouldShowWelcomeVideo={shouldShowWelcomeVideo}
+      welcomeVideoUrl={workspace?.welcome_video_url}
+      workspaceName={workspace?.name}
+      userId={user.id}
+    >
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
@@ -138,18 +136,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-    </>
-  )
-}
-
-function ErrorState({ message }: { message: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-      <p className="text-muted-foreground">{message}</p>
-      <Button variant="outline" onClick={() => window.location.reload()}>
-        <RefreshCw className="mr-2 h-4 w-4" />
-        Refresh Page
-      </Button>
-    </div>
+    </DashboardClientWrapper>
   )
 }
