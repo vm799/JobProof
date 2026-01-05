@@ -2,7 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
+  turbopack: {},
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -27,5 +27,4 @@ export default withSentryConfig(nextConfig, {
   
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
-  tunnelRoute: "/monitoring",
 })
