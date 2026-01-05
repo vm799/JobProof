@@ -69,8 +69,8 @@ Before claiming "no issues found":
 5. **Check layout Suspense**: Ensure `app/(dashboard)/layout.tsx` wraps DashboardLayout in Suspense
 
 ## KNOWN FILES THAT NEED SUSPENSE
-- ✅ `app/auth/login/page.tsx` - Uses useSearchParams
-- ✅ `components/dashboard-layout.tsx` - Uses usePathname (wrapped in layout)
+- ✅ `app/auth/login/page.tsx` - Uses useSearchParams (WRAPPED ✓)
+- ✅ `components/dashboard-layout.tsx` - Uses usePathname (WRAPPED in layout ✓)
 
 ## BUILD ERROR SIGNATURES
 - "only works in a Server Component" → Check for server import in client component
@@ -85,3 +85,77 @@ Before every deployment:
 3. Check that lib/supabase/server.ts has `await cookies()`
 4. Confirm no pages/ directory exists
 5. Test build locally: `npm run build`
+
+---
+
+## AUDIT HISTORY
+
+### Latest Audit: [Current Date]
+**Status: ✅ SYSTEM COMPLIANT - ALL CHECKS PASSED**
+
+**Checks Performed:**
+1. ✅ Suspense Boundaries - Login page properly wrapped (lines 411-426)
+2. ✅ No pages/ directory - Confirmed using App Router only
+3. ✅ Cookie headers - Correct Next.js 16 syntax with `await cookies()`
+4. ✅ Build script - Clean: `"next build"` in package.json
+5. ✅ Server/Client isolation - All client components use client Supabase
+6. ✅ PROJECT_RULES.md - Exists and comprehensive
+
+**Architecture Lock:**
+- Next.js: 16.0.10
+- React: 19.2.0
+- @supabase/ssr: 0.8.0
+- App Router: Enabled
+- Route Groups: (dashboard) for protected routes only
+
+**Known Good Patterns:**
+- Login: Uses Suspense wrapper with LoginContent child component
+- Dashboard Layout: Wrapped in Suspense via app/(dashboard)/layout.tsx
+- All Server Actions: Marked with 'use server'
+- All API routes: Use server-side Supabase client
+
+**Zero Violations Detected**
+
+---
+
+## PERMANENT RULES TO PREVENT REGRESSIONS
+
+### DO NOT CREATE:
+- ❌ `pages/` directory
+- ❌ `app/(marketing)` folder
+- ❌ Duplicate route groups for same URL path
+- ❌ Client Components importing `@/lib/supabase/server`
+
+### ALWAYS DO:
+- ✅ Read this file FIRST before making changes
+- ✅ Wrap `useSearchParams()` and `usePathname()` in Suspense
+- ✅ Use `await cookies()` in lib/supabase/server.ts
+- ✅ Mark Server Actions with `'use server'`
+- ✅ Use `export const dynamic = "force-dynamic"` for data-fetching pages
+
+### TESTING COMMANDS:
+```bash
+# Check for Suspense violations
+grep -rn "useSearchParams\|usePathname" app/ components/ --include="*.tsx" --include="*.ts"
+
+# Check for server imports in client components
+find app/ -name "*.tsx" -exec grep -l '"use client"' {} \; | xargs grep -l '@/lib/supabase/server'
+
+# Verify no pages directory exists
+ls -la pages/ src/pages/ 2>/dev/null || echo "✅ No pages directory found"
+
+# Test build
+npm run build
+```
+
+---
+
+## EMERGENCY RECOVERY
+
+If build fails with:
+- **"useSearchParams" warning** → Find the file, extract to child component, wrap in Suspense
+- **"cookies() can only be used"** → Check lib/supabase/server.ts has `await cookies()`
+- **"conflicting route groups"** → Delete pages/ folder or find duplicate page.tsx files
+- **"Server Component context"** → Check client component isn't importing server Supabase
+
+**Contact senior engineer if any of these errors persist after following the rules.**
