@@ -6,7 +6,7 @@ let client: ReturnType<typeof createBrowserClient> | undefined
 
 export function createClient() {
   if (typeof window === "undefined") {
-    throw new Error("createClient should only be called in browser")
+    return null as any // Return null-like object that won't crash during SSR
   }
 
   if (client) return client

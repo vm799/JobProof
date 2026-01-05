@@ -10,9 +10,21 @@ export function UserStateProvider({ children }: { children: ReactNode }) {
   const [userState, setUserState] = useState<UserStateData>({
     state: "LOADING",
   })
-  const supabase = createClient()
+
+  const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null)
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const client = createClient()
+    if (!client) return
+
+    setSupabase(client)
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+
     const checkUserState = async () => {
       console.log("[STATE-LOG] Checking user state...")
 
