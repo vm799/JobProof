@@ -37,6 +37,12 @@ export class ErrorBoundary extends Component<Props, State> {
     })
   }
 
+  handleReload = () => {
+    if (typeof window !== "undefined") {
+      window.location.reload()
+    }
+  }
+
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -55,14 +61,14 @@ export class ErrorBoundary extends Component<Props, State> {
                 {this.state.error?.message || "An unexpected error occurred"}
               </p>
               <p className="mb-6 text-xs text-muted-foreground">
-                Our team has been notified and we're working on a fix. Please try again or contact support if the issue
-                persists.
+                Our team has been notified and we're working on a fix. Please try reloading the page or contact support
+                if the issue persists.
               </p>
               <div className="flex gap-3">
                 <Button onClick={() => (window.location.href = "/")} variant="outline">
                   Go Home
                 </Button>
-                <Button onClick={() => this.setState({ hasError: false, error: null })}>Try Again</Button>
+                <Button onClick={this.handleReload}>Reload Page</Button>
               </div>
             </div>
           </Card>

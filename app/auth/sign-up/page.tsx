@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,6 +10,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { Check, X } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
+import { cn } from "@/lib/utils"
 
 export default function SignUpPage() {
   const [name, setName] = useState("")
@@ -59,6 +61,15 @@ export default function SignUpPage() {
     return () => clearTimeout(debounce)
   }, [email])
 
+  const passwordValidation = {
+    minLength: password.length >= 10,
+    hasNumber: /\d/.test(password),
+    hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  }
+
+  const passwordStrength = Object.values(passwordValidation).filter(Boolean).length
+  const isPasswordValid = Object.values(passwordValidation).every(Boolean)
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
@@ -71,8 +82,8 @@ export default function SignUpPage() {
       return
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters")
+    if (!isPasswordValid) {
+      setError("Password must be at least 10 characters with 1 number and 1 special character")
       setIsLoading(false)
       return
     }
@@ -114,9 +125,6 @@ export default function SignUpPage() {
       }
 
       console.log("[v0] Signup successful. User ID:", data?.user?.id)
-      console.log("[v0] Email confirmation required:", data?.user?.confirmation_sent_at ? "Yes" : "No")
-      console.log("[v0] User email:", data?.user?.email)
-
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`)
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred during signup"
@@ -209,11 +217,46 @@ export default function SignUpPage() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="At least 6 characters"
+                  placeholder="At least 10 characters"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                {/* Password strength meter */}
+                {password && (
+                  <div className="space-y-2 mt-2">
+                    <Progress value={(passwordStrength / 3) * 100} className="h-1" />
+                    <div className="space-y-1 text-xs">
+                      <div
+                        className={cn(
+                          "flex items-center gap-1",
+                          passwordValidation.minLength ? "text-green-600" : "text-muted-foreground",
+                        )}
+                      >
+                        {passwordValidation.minLength ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                        <span>At least 10 characters</span>
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center gap-1",
+                          passwordValidation.hasNumber ? "text-green-600" : "text-muted-foreground",
+                        )}
+                      >
+                        {passwordValidation.hasNumber ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                        <span>Contains a number</span>
+                      </div>
+                      <div
+                        className={cn(
+                          "flex items-center gap-1",
+                          passwordValidation.hasSpecial ? "text-green-600" : "text-muted-foreground",
+                        )}
+                      >
+                        {passwordValidation.hasSpecial ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                        <span>Contains a special character (!@#$%^&*)</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="repeat-password">Confirm Password</Label>
@@ -226,7 +269,7 @@ export default function SignUpPage() {
                 />
               </div>
               {error && <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading || !isPasswordValid}>
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
             </form>
