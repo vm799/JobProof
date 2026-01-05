@@ -20,7 +20,7 @@ import { toast } from "sonner"
 
 interface ClientPortalProps {
   onboarding: any
-  token: string // Added token prop for redirect
+  token: string
 }
 
 export function ClientPortal({ onboarding, token }: ClientPortalProps) {
@@ -131,7 +131,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
             setCurrentStepIndex(currentStepIndex + 1)
             setFormData({})
             setIsSaving(false)
-          }, 2000)
+          }, 1500)
         }
       } else {
         setIsSaving(false)
@@ -180,11 +180,20 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
             <div className="flex gap-3 pt-4">
               {currentStepIndex > 0 && (
-                <Button variant="outline" onClick={() => setCurrentStepIndex(currentStepIndex - 1)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                  className="border-border hover:bg-secondary"
+                >
                   Back
                 </Button>
               )}
-              <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+              <LoadingButton
+                onClick={() => handleSave(true)}
+                loading={isSaving}
+                loadingText="Processing..."
+                className="flex-1"
+              >
                 Continue
               </LoadingButton>
             </div>
@@ -224,6 +233,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   maxLength={5000}
                   value={formData.notes || savedData.notes || ""}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  className="resize-none"
                 />
                 <p className="text-xs text-muted-foreground">
                   {(formData.notes || savedData.notes || "").length}/5000 characters
@@ -235,6 +245,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   variant="outline"
                   onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
                   disabled={currentStepIndex === 0}
+                  className="border-border hover:bg-secondary"
                 >
                   Back
                 </Button>
@@ -243,6 +254,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   onClick={() => handleSave(false)}
                   loading={isSaving}
                   loadingText="Saving..."
+                  className="border-border hover:bg-secondary"
                 >
                   Save Draft
                 </LoadingButton>
@@ -251,6 +263,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   disabled={uploadedFiles.length === 0 || isSaving}
                   loading={isSaving}
                   loadingText="Processing..."
+                  className="flex-1"
                 >
                   Continue
                 </LoadingButton>
@@ -275,6 +288,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   value={formData.field1 || savedData.field1 || ""}
                   onChange={(e) => setFormData({ ...formData, field1: e.target.value })}
                 />
+                <p className="text-xs text-muted-foreground">Maximum 255 characters</p>
               </div>
 
               <div className="space-y-2">
@@ -286,6 +300,7 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   maxLength={5000}
                   value={formData.field2 || savedData.field2 || ""}
                   onChange={(e) => setFormData({ ...formData, field2: e.target.value })}
+                  className="resize-none"
                 />
                 <p className="text-xs text-muted-foreground">
                   {(formData.field2 || savedData.field2 || "").length}/5000 characters
@@ -294,7 +309,11 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
               <div className="flex gap-3 pt-4">
                 {currentStepIndex > 0 && (
-                  <Button variant="outline" onClick={() => setCurrentStepIndex(currentStepIndex - 1)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                    className="border-border hover:bg-secondary"
+                  >
                     Back
                   </Button>
                 )}
@@ -303,10 +322,16 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
                   onClick={() => handleSave(false)}
                   loading={isSaving}
                   loadingText="Saving..."
+                  className="border-border hover:bg-secondary"
                 >
                   Save Draft
                 </LoadingButton>
-                <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+                <LoadingButton
+                  onClick={() => handleSave(true)}
+                  loading={isSaving}
+                  loadingText="Processing..."
+                  className="flex-1"
+                >
                   Continue
                 </LoadingButton>
               </div>
@@ -327,11 +352,20 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
 
               <div className="flex gap-3 pt-4">
                 {currentStepIndex > 0 && (
-                  <Button variant="outline" onClick={() => setCurrentStepIndex(currentStepIndex - 1)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStepIndex(currentStepIndex - 1)}
+                    className="border-border hover:bg-secondary"
+                  >
                     Back
                   </Button>
                 )}
-                <LoadingButton onClick={() => handleSave(true)} loading={isSaving} loadingText="Processing...">
+                <LoadingButton
+                  onClick={() => handleSave(true)}
+                  loading={isSaving}
+                  loadingText="Processing..."
+                  className="flex-1"
+                >
                   Mark Complete
                 </LoadingButton>
               </div>

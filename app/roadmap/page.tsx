@@ -3,6 +3,8 @@ import { redirect } from "next/navigation"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { RoadmapContent } from "@/components/roadmap-content"
 
+export const dynamic = "force-dynamic"
+
 export default async function RoadmapPage() {
   const supabase = await createClient()
 

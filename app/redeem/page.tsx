@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { RedeemContent } from "@/components/redeem-content"
 
+export const dynamic = "force-dynamic"
+
 export default async function RedeemPage() {
   const supabase = await createClient()
 

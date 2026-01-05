@@ -6,6 +6,8 @@ export const metadata = {
   description: "Track onboarding performance and client engagement",
 }
 
+export const dynamic = "force-dynamic"
+
 export default async function AnalyticsPage() {
   const supabase = await createServerClient()
 

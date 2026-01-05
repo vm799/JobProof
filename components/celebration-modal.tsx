@@ -49,17 +49,15 @@ export function CelebrationModal({ open, onOpenChange, type, title, message, cli
     <>
       <Confetti active={open && type === "onboarding_complete"} />
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md border-border">
           <div className="flex flex-col items-center text-center p-6">
             <div className="mb-4 rounded-full bg-primary/10 p-8">
               <Icon className={`h-16 w-16 ${celebration.color}`} />
             </div>
-            <h2 className="text-2xl font-bold mb-2 text-balance">{celebration.title}</h2>
-            <p className="text-muted-foreground mb-6 text-pretty leading-relaxed">{celebration.message}</p>
+            <h2 className="text-2xl font-bold mb-2 text-balance text-foreground">{celebration.title}</h2>
+            <p className="text-foreground/80 mb-6 text-pretty leading-relaxed">{celebration.message}</p>
             {type === "onboarding_complete" && (
-              <p className="text-sm text-muted-foreground mb-6">
-                We'll be in touch soon to discuss your project details.
-              </p>
+              <p className="text-sm text-foreground/70 mb-6">We'll be in touch soon to discuss your project details.</p>
             )}
             <Button onClick={() => onOpenChange(false)} size="lg" className="w-full gap-2">
               {type === "onboarding_complete" ? "Done" : "Continue"}

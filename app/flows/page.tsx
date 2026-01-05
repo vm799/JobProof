@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { FlowsList } from "@/components/flows-list"
 
+export const dynamic = "force-dynamic"
+
 export default async function FlowsPage() {
   const supabase = await createClient()
 

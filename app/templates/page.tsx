@@ -6,6 +6,8 @@ export const metadata = {
   description: "Pre-built onboarding flow templates",
 }
 
+export const dynamic = "force-dynamic"
+
 export default async function TemplatesPage() {
   const supabase = await createClient()
 

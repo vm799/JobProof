@@ -5,6 +5,8 @@ import { Check, Calendar, Mail } from "lucide-react"
 import Image from "next/image"
 import { SuccessConfetti } from "@/components/success-confetti"
 
+export const dynamic = "force-dynamic"
+
 export default async function SuccessPage({ params }: { params: { token: string } }) {
   const { token } = params
   const supabase = await createClient()
