@@ -5,7 +5,7 @@
 ### 1. Global Suspense Boundary - ROOT LAYOUT REQUIREMENT
 **The root layout MUST wrap all children in a Suspense boundary:**
 
-\`\`\`tsx
+```tsx
 // app/layout.tsx - REQUIRED PATTERN ✅
 import { Suspense } from "react"
 import ThemeProvider from "@/components/theme-provider"
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-\`\`\`
+```
 
 **Why this matters:**
 - Creates a top-level boundary covering every page in the app
@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
 - `useRouter()` (from next/navigation)
 
 **Pattern to follow:**
-\`\`\`tsx
+```tsx
 // WRONG ❌
 export default function Page() {
   const searchParams = useSearchParams()
@@ -58,7 +58,7 @@ export default function Page() {
     </Suspense>
   )
 }
-\`\`\`
+```
 
 ### 3. Supabase Client/Server Separation
 **NEVER import server client in client components:**
@@ -88,6 +88,133 @@ export default function Page() {
 - Must have `'use server'` directive at the top
 - This is REQUIRED for Next.js 16+
 
+---
+
+## V0 DEVELOPMENT GUIDELINES
+
+### Design Guidelines
+**Always follow these design principles:**
+
+1. **Use GenerateDesignInspiration** when:
+   - Vague design requests (e.g., "a nice landing page")
+   - Creative enhancement needed
+   - No clear aesthetic or visual style provided
+   - Complex UI/UX projects
+
+2. **Color Selection:**
+   - Use exactly 3-5 colors total
+   - 1 primary brand color + 2-3 neutrals + 1-2 accents
+   - NEVER exceed 5 total colors
+   - Avoid gradients unless explicitly requested
+
+3. **Typography:**
+   - Maximum 2 font families total
+   - One for headings, one for body text
+   - Use line-height between 1.4-1.6 for body text
+
+4. **Layout Method Priority:**
+   - Use Flexbox for most layouts
+   - CSS Grid only for complex 2D layouts
+   - NEVER use floats or absolute positioning unless necessary
+
+### Context Gathering Best Practices
+
+**Use Parallel Tool Calls:**
+- Call multiple independent tools simultaneously
+- Read multiple files in parallel when no dependencies exist
+- Maximize efficiency and speed
+
+**Don't Stop at First Match:**
+- When searching finds multiple files, examine ALL of them
+- Check if you found the right variant/version
+- Look beyond the obvious - check parent components, utilities, patterns
+
+**Understand the Full System:**
+- Layout issues? Check parents, wrappers, and global styles first
+- Adding features? Find existing similar implementations
+- State changes? Trace where state lives and flows
+- API work? Understand existing patterns and error handling
+- Styling? Check theme systems, utility classes, and component variants
+- New dependencies? Check existing imports - utilities may already exist
+- Types/validation? Look for existing schemas, interfaces, and validation patterns
+
+**Search Systematically:**
+- Use broad → specific → verify relationships approach
+- Before making changes, ask:
+  - Is this the right file among multiple options?
+  - Does a parent/wrapper already handle this?
+  - Are there existing utilities/patterns I should use?
+  - How does this fit into the broader architecture?
+
+### Code Editing Standards
+
+**Always Use CodeProject Block:**
+- Wrap all file edits in `brief description`
+
+**Post-Edit Communication:**
+- Write a 2-4 sentence postamble explaining your changes
+- Do not write more than a paragraph
+- Focus on what was changed and why
+
+### Debugging Protocol
+
+**Use Debug Logging:**
+- Add `console.log("[v0] ...")` statements for debugging
+- Log execution flow and variable states
+- Always prefix with "[v0]" for easy filtering
+
+**Clean Up After Debugging:**
+- Remove all `console.log("[v0] ...")` statements when done
+- Use my ability to quickly edit to skip unchanged code
+
+### Todo Lists
+
+**When to Use:**
+- Projects with multiple distinct systems that need to work together
+- Apps requiring separate user-facing and admin components
+- Complex integrations with multiple independent features
+
+**When NOT to Use:**
+- Single cohesive builds (even if complex)
+- Landing pages, forms, or single components
+- Conversational/informational requests
+
+**Guidelines:**
+- Do NOT break up a single app or page into multiple tasks
+- Keep tasks at milestone-level (not micro-steps)
+- Maximum 7 tasks total
+- One page = one task
+
+### Response Style
+
+**Do NOT:**
+- Use emojis unless explicitly asked
+- Write lengthy explanations (keep to 2-4 sentences)
+- Apologize or explain refusals
+
+**Always:**
+- Be direct and technical
+- Focus on what was changed and why
+- Provide actionable next steps
+
+### Tool Usage
+
+**Available Integrations:**
+- Supabase (database, auth, storage)
+- Use GetOrRequestIntegration for schemas and environment variables
+
+**Search Tools:**
+- 29 tools available via Search Tools
+- Use SearchTools to discover and load tools before use
+- Examples: supabase_search_docs, supabase_list_organizations, etc.
+
+**Tool Loading:**
+1. Search with 'name_only' or 'name_and_description' to discover
+2. Search with 'full_tool' to load the tool
+3. Use the tool in subsequent actions
+
+---
+
 ## DEBUGGING CHECKLIST
 
 Before claiming "no issues found":
@@ -98,10 +225,14 @@ Before claiming "no issues found":
 5. **Find server imports in client**: `grep -r '"use client"' app/ | xargs grep -l '@/lib/supabase/server'`
 6. **Check layout Suspense**: Ensure `app/(dashboard)/layout.tsx` wraps DashboardLayout in Suspense
 
+---
+
 ## KNOWN FILES THAT NEED SUSPENSE
 - ✅ `app/auth/login/page.tsx` - Uses useSearchParams (WRAPPED ✓)
 - ✅ `components/dashboard-layout.tsx` - Uses usePathname (WRAPPED in layout ✓)
 - ✅ **app/layout.tsx** - Global Suspense boundary wrapping all children (WRAPPED ✓)
+
+---
 
 ## BUILD ERROR SIGNATURES
 - "useSearchParams() should be wrapped in suspense" → Check root layout has global Suspense
@@ -109,6 +240,8 @@ Before claiming "no issues found":
 - "useSearchParams" warning → Missing Suspense boundary
 - "cookies() can only be used" → Check Next.js 16 syntax in lib/supabase/server.ts
 - "conflicting route groups" → Check for duplicate page.tsx files or pages/ folder
+
+---
 
 ## DEPLOYMENT SAFETY
 Before every deployment:
@@ -172,7 +305,7 @@ Before every deployment:
 - ✅ Use `export const dynamic = "force-dynamic"` for data-fetching pages
 
 ### TESTING COMMANDS:
-\`\`\`bash
+```bash
 # Verify root layout has Suspense
 grep -n "Suspense" app/layout.tsx
 
@@ -187,7 +320,7 @@ ls -la pages/ src/pages/ 2>/dev/null || echo "✅ No pages directory found"
 
 # Test build
 npm run build
-\`\`\`
+```
 
 ---
 

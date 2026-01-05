@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { StatsCards } from "@/components/stats-cards"
@@ -16,127 +16,191 @@ import { RefreshCw } from "lucide-react"
 
 export default function DashboardPage() {
   const router = useRouter()
+
+  const hasInitialized = useRef(false)
+  const currentUserId = useRef<string | null>(null)
+  const isFetching = useRef(false)
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<any>(null)
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        console.log("[v0] Dashboard: Starting data fetch")
-        const supabase = createClient()
+  const fetchData = useCallback(async () => {
+    // Prevent concurrent fetches
+    if (isFetching.current) {
+      console.log("[v0] Dashboard: Already fetching, skipping")
+      return
+    }
 
-        // Check auth
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser()
-        if (authError || !user) {
-          console.log("[v0] Dashboard: No user, redirecting to login")
-          router.push("/auth/login")
-          return
-        }
+    // Only fetch if we don't have data or explicitly re-fetching
+    if (hasInitialized.current && data) {
+      console.log("[v0] Dashboard: Data already loaded, skipping")
+      return
+    }
 
-        // Fetch profile
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single()
+    isFetching.current = true
 
-        if (profileError) {
-          console.error("[v0] Profile fetch failed:", profileError)
-          setError("Unable to load profile")
-          setLoading(false)
-          return
-        }
+    try {
+      console.log("[v0] Dashboard: Starting data fetch")
+      const supabase = createClient()
 
-        if (!profile?.current_workspace_id) {
-          console.log("[v0] Dashboard: No workspace, showing loader")
-          // Import and show workspace loader
-          const { WorkspaceLoader } = await import("@/components/workspace-loader")
-          setData({ showWorkspaceLoader: true })
-          setLoading(false)
-          return
-        }
+      // Check auth
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser()
 
-        // Fetch workspace
-        const { data: workspace, error: workspaceError } = await supabase
-          .from("workspaces")
-          .select("*")
-          .eq("id", profile.current_workspace_id)
-          .single()
-
-        if (workspaceError) {
-          console.error("[v0] Workspace fetch failed:", workspaceError)
-        }
-
-        // Fetch clients count
-        const { count: clientsCount, error: clientsError } = await supabase
-          .from("clients")
-          .select("id", { count: "exact" })
-          .eq("workspace_id", profile.current_workspace_id)
-
-        if (clientsError) {
-          console.error("[v0] Clients count failed:", clientsError)
-        }
-
-        // Fetch onboardings
-        const { data: onboardings, error: onboardingsError } = await supabase
-          .from("client_onboardings")
-          .select("id, status, created_at, client_id, clients!inner(workspace_id)")
-          .eq("clients.workspace_id", profile.current_workspace_id)
-
-        if (onboardingsError) {
-          console.error("[v0] Onboardings fetch failed:", onboardingsError)
-        }
-
-        // Fetch activity
-        const { data: recentActivity, error: activityError } = await supabase
-          .from("activity_logs")
-          .select("*")
-          .eq("workspace_id", profile.current_workspace_id)
-          .order("created_at", { ascending: false })
-          .limit(10)
-
-        if (activityError) {
-          console.error("[v0] Activity logs failed:", activityError)
-        }
-
-        const activeOnboardings = (onboardings || []).filter((o: any) => o.status === "in_progress").length
-        const now = new Date()
-        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-        const completedThisMonth = (onboardings || []).filter((o: any) => {
-          if (o.status !== "completed") return false
-          const createdDate = new Date(o.created_at)
-          return createdDate >= firstDayOfMonth
-        }).length
-
-        setData({
-          user,
-          profile,
-          workspace,
-          stats: {
-            activeOnboardings,
-            totalClients: clientsCount || 0,
-            completedThisMonth,
-          },
-          recentActivity: recentActivity || [],
-          shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
-        })
-        setLoading(false)
-        console.log("[v0] Dashboard: Data loaded successfully")
-      } catch (err: any) {
-        console.error("[v0] Dashboard fetch error:", err)
-        setError(err.message || "Something went wrong")
-        setLoading(false)
+      if (authError || !user) {
+        console.log("[v0] Dashboard: No user found, redirecting to login")
+        router.push("/auth/login")
+        return
       }
+
+      hasInitialized.current = true
+      currentUserId.current = user.id
+      console.log("[v0] Dashboard: Initialized with user:", user.id)
+
+      // Fetch profile
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single()
+
+      if (profileError) {
+        console.error("[v0] Profile fetch failed:", profileError)
+        setError("Unable to load profile")
+        setLoading(false)
+        isFetching.current = false
+        return
+      }
+
+      if (!profile?.current_workspace_id) {
+        console.log("[v0] Dashboard: No workspace, showing loader")
+        const { WorkspaceLoader } = await import("@/components/workspace-loader")
+        setData({ showWorkspaceLoader: true })
+        setLoading(false)
+        isFetching.current = false
+        return
+      }
+
+      // Fetch workspace
+      const { data: workspace, error: workspaceError } = await supabase
+        .from("workspaces")
+        .select("*")
+        .eq("id", profile.current_workspace_id)
+        .single()
+
+      if (workspaceError) {
+        console.error("[v0] Workspace fetch failed:", workspaceError)
+      }
+
+      // Fetch clients count
+      const { count: clientsCount, error: clientsError } = await supabase
+        .from("clients")
+        .select("id", { count: "exact" })
+        .eq("workspace_id", profile.current_workspace_id)
+
+      if (clientsError) {
+        console.error("[v0] Clients count failed:", clientsError)
+      }
+
+      // Fetch onboardings
+      const { data: onboardings, error: onboardingsError } = await supabase
+        .from("client_onboardings")
+        .select("id, status, created_at, client_id, clients!inner(workspace_id)")
+        .eq("clients.workspace_id", profile.current_workspace_id)
+
+      if (onboardingsError) {
+        console.error("[v0] Onboardings fetch failed:", onboardingsError)
+      }
+
+      // Fetch activity
+      const { data: recentActivity, error: activityError } = await supabase
+        .from("activity_logs")
+        .select("*")
+        .eq("workspace_id", profile.current_workspace_id)
+        .order("created_at", { ascending: false })
+        .limit(10)
+
+      if (activityError) {
+        console.error("[v0] Activity logs failed:", activityError)
+      }
+
+      const activeOnboardings = (onboardings || []).filter((o: any) => o.status === "in_progress").length
+      const now = new Date()
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const completedThisMonth = (onboardings || []).filter((o: any) => {
+        if (o.status !== "completed") return false
+        const createdDate = new Date(o.created_at)
+        return createdDate >= firstDayOfMonth
+      }).length
+
+      setData({
+        user,
+        profile,
+        workspace,
+        stats: {
+          activeOnboardings,
+          totalClients: clientsCount || 0,
+          completedThisMonth,
+        },
+        recentActivity: recentActivity || [],
+        shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
+      })
+      setLoading(false)
+      isFetching.current = false
+      console.log("[v0] Dashboard: Data loaded successfully")
+    } catch (err: any) {
+      console.error("[v0] Dashboard fetch error:", err)
+      setError(err.message || "Something went wrong")
+      setLoading(false)
+      isFetching.current = false
+    }
+  }, [router, data])
+
+  useEffect(() => {
+    if (hasInitialized.current) {
+      console.log("[v0] Dashboard: Already initialized, skipping")
+      return
     }
 
     fetchData()
-  }, [router])
 
-  if (loading) {
+    const supabase = createClient()
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      const newUserId = session?.user?.id
+
+      // Ignore duplicate events for same user
+      if (event === "SIGNED_IN" && newUserId === currentUserId.current) {
+        console.log("[v0] Dashboard: Ignoring duplicate SIGNED_IN for same user")
+        return
+      }
+
+      // Only handle user changes (login/logout), not session refreshes
+      if (event === "SIGNED_OUT") {
+        console.log("[v0] Dashboard: User signed out, redirecting")
+        router.push("/auth/login")
+        return
+      }
+
+      // Only refresh if user actually changed
+      if (event === "SIGNED_IN" && newUserId && newUserId !== currentUserId.current) {
+        console.log("[v0] Dashboard: New user signed in, reloading")
+        currentUserId.current = newUserId
+        hasInitialized.current = false
+        isFetching.current = false
+        // Use window.location for hard refresh to clear all state
+        window.location.href = "/dashboard"
+      }
+    })
+
+    return () => {
+      authListener?.subscription.unsubscribe()
+    }
+  }, [])
+
+  if (!data && loading) {
     return (
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
@@ -155,11 +219,11 @@ export default function DashboardPage() {
     )
   }
 
-  if (error) {
+  if (error && !data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <p className="text-muted-foreground">{error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>
+        <Button variant="outline" onClick={() => router.refresh()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh Page
         </Button>
