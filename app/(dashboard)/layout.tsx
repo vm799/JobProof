@@ -18,11 +18,13 @@ export default async function DashboardLayoutWrapper({ children }: { children: R
     redirect("/auth/login")
   }
 
-  let profile
+  // Just check if profile exists, don't pass it as prop
   try {
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+    const { data, error } = await supabase.from("profiles").select("id").eq("id", user.id).single()
     if (error) throw error
-    profile = data
+    if (!data) {
+      redirect("/welcome")
+    }
   } catch (error) {
     console.error("[v0] Profile fetch failed:", error)
     redirect("/welcome")
@@ -31,9 +33,7 @@ export default async function DashboardLayoutWrapper({ children }: { children: R
   return (
     <ErrorBoundary>
       <Suspense fallback={<DashboardSkeleton />}>
-        <DashboardLayout user={user} profile={profile}>
-          {children}
-        </DashboardLayout>
+        <DashboardLayout>{children}</DashboardLayout>
       </Suspense>
     </ErrorBoundary>
   )

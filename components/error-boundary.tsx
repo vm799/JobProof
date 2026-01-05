@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { AlertCircle } from "lucide-react"
 import { captureError } from "@/lib/monitoring/sentry"
 import { createClient } from "@/lib/supabase/client"
+import Link from "next/link"
 
 interface Props {
   children: ReactNode
@@ -78,10 +79,10 @@ export class ErrorBoundary extends Component<Props, State> {
                 if the issue persists.
               </p>
               <div className="flex gap-3">
-                <Button onClick={() => (window.location.href = "/")} variant="outline">
-                  Go Home
+                <Button asChild variant="outline">
+                  <Link href="/">Go Home</Link>
                 </Button>
-                <Button onClick={this.handleReload}>Reload Page</Button>
+                <Button onClick={this.handleReload}>Clear & Login</Button>
               </div>
             </div>
           </Card>

@@ -34,7 +34,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggleSlider } from "@/components/theme-toggle-slider"
 import { ThemeLogo } from "@/components/theme-logo"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const navigation = [
   { name: "Roadmap", href: "/roadmap", icon: Map },
@@ -48,19 +48,27 @@ const navigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ]
 
-export function DashboardLayout({
-  children,
-  user,
-  profile,
-}: {
-  children: React.ReactNode
-  user?: { email?: string }
-  profile?: { name?: string; avatar_url?: string | null }
-}) {
+export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
+
+  useEffect(() => {
+    async function fetchUserData() {
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser()
+      if (currentUser) {
+        setUser(currentUser)
+        const { data: profileData } = await supabase.from("profiles").select("*").eq("id", currentUser.id).single()
+        setProfile(profileData)
+      }
+    }
+    fetchUserData()
+  }, [supabase])
 
   const handleLogout = async () => {
     console.log("[v0] DashboardLayout - Logout initiated")
@@ -159,7 +167,7 @@ export function DashboardLayout({
                 </Avatar>
                 <div className="flex flex-col items-start text-sm">
                   <span className="font-medium">{profile?.name || "User"}</span>
-                  <span className="text-xs text-muted-foreground">{user?.email}</span>
+                  <span className="text-xs text-muted-foreground">{user?.email || "Loading..."}</span>
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -264,7 +272,7 @@ export function DashboardLayout({
                       </Avatar>
                       <div className="flex flex-col items-start text-sm">
                         <span className="font-medium">{profile?.name || "User"}</span>
-                        <span className="text-xs text-muted-foreground">{user?.email}</span>
+                        <span className="text-xs text-muted-foreground">{user?.email || "Loading..."}</span>
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
