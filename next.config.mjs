@@ -3,6 +3,7 @@ import { withSentryConfig } from "@sentry/nextjs"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
+  swcMinify: true,
   typescript: {
     ignoreBuildErrors: true,
   },

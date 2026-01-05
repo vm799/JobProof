@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Image from "next/image"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, Mail, CheckCircle, Info } from "lucide-react"
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState(searchParams.get("email") || "")
   const [password, setPassword] = useState("")
@@ -318,5 +318,22 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen w-full items-center justify-center bg-background">
+          <div className="text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+            <p className="mt-4 text-sm text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   )
 }
