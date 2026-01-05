@@ -5,7 +5,6 @@ import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ErrorBoundary } from "@/components/error-boundary"
-import { UserStateProvider } from "@/components/user-state-provider"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -41,7 +40,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <ErrorBoundary>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <UserStateProvider>{children}</UserStateProvider>
+            {children}
             <Toaster />
             <Analytics />
           </ThemeProvider>
