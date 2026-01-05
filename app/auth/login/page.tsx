@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, Mail, CheckCircle } from "lucide-react"
+import { AlertCircle, Mail, CheckCircle, Info } from "lucide-react"
 
 export default function LoginPage() {
   const searchParams = useSearchParams()
@@ -25,12 +25,30 @@ export default function LoginPage() {
   const [magicLinkSent, setMagicLinkSent] = useState(false)
   const router = useRouter()
 
+  const message = searchParams.get("message")
+  const [infoMessage, setInfoMessage] = useState<string | null>(null)
+
   useEffect(() => {
+    console.log("[STATE-LOG] Login page loaded")
+
     const emailParam = searchParams.get("email")
     if (emailParam) {
       setEmail(emailParam)
     }
-  }, [searchParams])
+
+    // Handle state-based messages
+    if (message === "session_expired") {
+      console.log("[STATE-LOG] Login - SESSION_EXPIRED message displayed")
+      setInfoMessage("Your session has expired. Please sign in again.")
+      // Clear local storage to prevent stale data
+      if (typeof window !== "undefined") {
+        localStorage.clear()
+      }
+    } else if (message === "password_reset_success") {
+      console.log("[STATE-LOG] Login - Password reset success message displayed")
+      setInfoMessage("Password reset successfully! You can now sign in with your new password.")
+    }
+  }, [searchParams, message])
 
   const handleMagicLink = async () => {
     const supabase = createClient()
@@ -38,7 +56,7 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      console.log("[v0] Sending magic link to:", email)
+      console.log("[STATE-LOG] Login - Sending magic link to:", email)
 
       const isLocalhost =
         typeof window !== "undefined" &&
@@ -50,7 +68,7 @@ export default function LoginPage() {
         ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/auth/callback"
         : `${productionUrl}/auth/callback`
 
-      console.log("[v0] Magic link redirect URL:", redirectUrl)
+      console.log("[STATE-LOG] Login - Magic link redirect URL:", redirectUrl)
 
       const { error } = await supabase.auth.signInWithOtp({
         email,
@@ -60,16 +78,16 @@ export default function LoginPage() {
       })
 
       if (error) {
-        console.error("[v0] Magic link error:", error.message)
+        console.error("[STATE-LOG] Login - Magic link error:", error.message)
         setError(error.message)
         return
       }
 
-      console.log("[v0] Magic link sent successfully")
+      console.log("[STATE-LOG] Login - Magic link sent successfully")
       setMagicLinkSent(true)
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Failed to send magic link"
-      console.error("[v0] Magic link failed:", errorMessage)
+      console.error("[STATE-LOG] Login - Magic link failed:", errorMessage)
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -84,7 +102,7 @@ export default function LoginPage() {
     setNeedsEmailConfirmation(false)
 
     try {
-      console.log("[v0] Attempting login with email:", email)
+      console.log("[STATE-LOG] Login - Attempting password login with email:", email)
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -92,7 +110,7 @@ export default function LoginPage() {
       })
 
       if (error) {
-        console.error("[v0] Login error:", error.message)
+        console.error("[STATE-LOG] Login - Password login error:", error.message)
 
         if (error.message.includes("Invalid login credentials")) {
           const { data: users } = await supabase.from("profiles").select("email").eq("email", email).single()
@@ -109,16 +127,16 @@ export default function LoginPage() {
         return
       }
 
-      console.log("[v0] Login successful. User ID:", data.user?.id)
-      console.log("[v0] Session exists:", !!data.session)
+      console.log("[STATE-LOG] Login - Success! User ID:", data.user?.id)
+      console.log("[STATE-LOG] Login - Session exists:", !!data.session)
 
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      console.log("[v0] Redirecting to dashboard with window.location...")
+      console.log("[STATE-LOG] Login - Redirecting to dashboard")
       window.location.href = "/dashboard"
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred"
-      console.error("[v0] Login failed:", errorMessage)
+      console.error("[STATE-LOG] Login - Failed:", errorMessage)
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -188,6 +206,13 @@ export default function LoginPage() {
             <CardDescription>Sign in to your BoardingPass account</CardDescription>
           </CardHeader>
           <CardContent>
+            {infoMessage && (
+              <Alert className="mb-4 border-blue-200 bg-blue-50">
+                <Info className="h-4 w-4 text-blue-600" />
+                <AlertDescription className="text-sm text-blue-900">{infoMessage}</AlertDescription>
+              </Alert>
+            )}
+
             {!showMagicLink ? (
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">

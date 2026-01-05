@@ -12,18 +12,24 @@ export async function proxy(request: NextRequest) {
     "/auth/login",
     "/auth/sign-up",
     "/auth/check-email",
-    "/auth/callback", // Added callback route to public paths for magic link auth
+    "/auth/callback",
+    "/auth/reset-password", // Added password reset to public paths
+    "/welcome", // Added welcome page for new users
     "/onboarding",
     "/faq",
     "/privacy",
     "/terms",
+    "/portal", // Allow all portal routes (including expired)
   ]
   const path = request.nextUrl.pathname
 
+  // Allow public paths and portal routes
   if (publicPaths.some((publicPath) => path.startsWith(publicPath))) {
+    console.log("[STATE-LOG] Proxy - Public path allowed:", path)
     return NextResponse.next()
   }
 
+  console.log("[STATE-LOG] Proxy - Protected path, checking session:", path)
   return await updateSession(request)
 }
 

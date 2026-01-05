@@ -29,67 +29,93 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  console.log("[v0] Middleware - Path:", request.nextUrl.pathname)
+  const path = request.nextUrl.pathname
+  console.log("[STATE-LOG] Middleware - Processing path:", path)
 
+  // Get user session
   const {
     data: { user },
     error: authError,
   } = await supabase.auth.getUser()
 
   if (authError) {
-    console.error("[v0] Middleware - Auth error:", authError.message)
+    console.error("[STATE-LOG] Middleware - Auth error:", authError.message)
   }
 
-  console.log("[v0] Middleware - User authenticated:", !!user)
-  if (user) {
-    console.log("[v0] Middleware - User ID:", user.id)
+  // GUEST STATE: Portal routes (always allow)
+  if (path.startsWith("/portal/")) {
+    console.log("[STATE-LOG] Middleware - Portal route (GUEST) → Allow")
+    return supabaseResponse
   }
 
-  // Protect dashboard routes - redirect to login if not authenticated
-  if (
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/portal") &&
-    !request.nextUrl.pathname.startsWith("/_next") &&
-    !user
-  ) {
-    console.log("[v0] Middleware - Redirecting to login (no user)")
+  // SESSION_EXPIRED STATE: No user on protected route
+  if (!user && !path.startsWith("/auth") && !path.startsWith("/_next")) {
+    console.log("[STATE-LOG] Middleware - No user on protected route (SESSION_EXPIRED) → Redirect to /auth/login")
     const url = request.nextUrl.clone()
     url.pathname = "/auth/login"
+    url.searchParams.set("message", "session_expired")
     return NextResponse.redirect(url)
   }
 
-  if (request.nextUrl.pathname.startsWith("/auth") && user && !request.nextUrl.pathname.includes("/check-email")) {
-    console.log("[v0] Middleware - User on auth page, checking workspace status")
+  // Allow access to auth pages if no user
+  if (!user) {
+    console.log("[STATE-LOG] Middleware - No user, on public route → Allow")
+    return supabaseResponse
+  }
 
-    // Check if user has a workspace before redirecting
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("current_workspace_id")
-      .eq("id", user.id)
-      .single()
+  // User is authenticated - check state
+  console.log("[STATE-LOG] Middleware - User authenticated:", user.id)
 
-    if (profileError) {
-      console.error("[v0] Middleware - Profile check error:", profileError.message)
-      // Allow them to proceed to auth pages to see error
-      return supabaseResponse
+  // PASSWORD_RECOVERY STATE: Check for password recovery flow
+  const isPasswordRecovery = request.nextUrl.searchParams.get("type") === "recovery"
+  if (isPasswordRecovery) {
+    console.log("[STATE-LOG] Middleware - Password recovery flow (PASSWORD_RECOVERY) → Allow /auth/reset-password")
+    if (!path.startsWith("/auth/reset-password")) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/auth/reset-password"
+      return NextResponse.redirect(url)
     }
+    return supabaseResponse
+  }
 
-    if (profile?.current_workspace_id) {
-      console.log(
-        "[v0] Middleware - Workspace exists (ID:",
-        profile.current_workspace_id,
-        "), redirecting to dashboard",
-      )
+  // Check profile and workspace state
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("current_workspace_id, has_seen_onboarding")
+    .eq("id", user.id)
+    .single()
+
+  // NEW_USER STATE: No profile exists
+  if (profileError || !profile) {
+    console.log("[STATE-LOG] Middleware - No profile (NEW_USER) → Redirect to /welcome")
+    if (!path.startsWith("/welcome") && !path.startsWith("/auth/callback")) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/welcome"
+      return NextResponse.redirect(url)
+    }
+    return supabaseResponse
+  }
+
+  // EXISTING_NO_WS STATE: Profile exists but no workspace
+  if (!profile.current_workspace_id) {
+    console.log("[STATE-LOG] Middleware - No workspace (EXISTING_NO_WS) → Allow workspace creation flow")
+    if (!path.startsWith("/dashboard") && !path.startsWith("/auth/callback")) {
       const url = request.nextUrl.clone()
       url.pathname = "/dashboard"
       return NextResponse.redirect(url)
-    } else {
-      console.log("[v0] Middleware - No workspace yet, redirecting to dashboard for workspace loader")
-      // Redirect to dashboard which will show WorkspaceLoader
-      const url = request.nextUrl.clone()
-      url.pathname = "/dashboard"
-      return NextResponse.redirect(url)
     }
+    return supabaseResponse
+  }
+
+  // EXISTING_WITH_WS STATE: User has everything
+  console.log("[STATE-LOG] Middleware - User has workspace (EXISTING_WITH_WS):", profile.current_workspace_id)
+
+  // Redirect authenticated users away from auth pages
+  if (path.startsWith("/auth") && !path.includes("/check-email")) {
+    console.log("[STATE-LOG] Middleware - User on auth page with workspace → Redirect to /dashboard")
+    const url = request.nextUrl.clone()
+    url.pathname = "/dashboard"
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse

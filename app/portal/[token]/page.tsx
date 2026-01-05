@@ -10,6 +10,8 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
   const { token } = await params
   const supabase = await createClient()
 
+  console.log("[STATE-LOG] Portal - GUEST state, checking token validity")
+
   const { data: onboarding, error: fetchError } = await supabase
     .from("client_onboardings")
     .select(
@@ -37,10 +39,11 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
     .single()
 
   if (!onboarding || fetchError) {
+    console.log("[STATE-LOG] Portal - Invalid token → Redirect to /portal/expired")
     Sentry.captureMessage("Invalid portal token access attempt", {
       level: "warning",
       extra: {
-        token: token.substring(0, 8) + "...", // Log partial token for debugging
+        token: token.substring(0, 8) + "...",
         error: fetchError?.message,
         timestamp: new Date().toISOString(),
       },
@@ -54,6 +57,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
   const diffDays = Math.ceil((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))
 
   if (diffDays > 7) {
+    console.log("[STATE-LOG] Portal - Expired token (", diffDays, "days old) → Redirect to /portal/expired")
     Sentry.captureMessage("Expired portal token access attempt", {
       level: "info",
       extra: {
@@ -68,6 +72,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
   }
 
   if (!onboarding.onboarding_flows.workspace_id) {
+    console.log("[STATE-LOG] Portal - Missing workspace ID → Security issue, redirect to /portal/expired")
     Sentry.captureException(new Error("Portal missing workspace_id isolation"), {
       extra: {
         onboardingId: onboarding.id,
@@ -78,8 +83,11 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ t
   }
 
   if (onboarding.status === "completed") {
+    console.log("[STATE-LOG] Portal - Onboarding completed → Redirect to success page")
     redirect(`/portal/${token}/success`)
   }
+
+  console.log("[STATE-LOG] Portal - Valid token, workspace:", onboarding.onboarding_flows.workspaces.name)
 
   // Sort steps by order
   const sortedProgress = (onboarding.client_step_progress || []).sort(
