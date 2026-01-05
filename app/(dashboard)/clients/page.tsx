@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
 export const dynamic = "force-dynamic"
-export const revalidate = 0
+//export const revalidate = 0
 
 export default async function ClientsPage() {
   const supabase = await createClient()
