@@ -1,5 +1,3 @@
-"use client"
-
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ClientsList } from "@/components/clients-list"
@@ -68,10 +66,11 @@ function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
       <p className="text-muted-foreground">{message}</p>
-      <Button variant="outline" onClick={() => window.location.reload()}>
+      {/* Remove the onClick reload button or replace with a link */}
+      <a href="/clients" className="px-4 py-2 border rounded-md hover:bg-gray-100 flex items-center">
         <RefreshCw className="mr-2 h-4 w-4" />
         Refresh Page
-      </Button>
+      </a>
     </div>
   )
 }
