@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get("code")
 
   console.log("[STATE-LOG] Auth callback - Code present:", !!code)
+  console.log("[STATE-LOG] Auth callback - Request URL:", requestUrl.toString())
 
   if (code) {
     const cookieStore = await cookies()
@@ -17,22 +18,49 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error("[STATE-LOG] Auth callback - Error exchanging code:", error.message)
-      // Redirect to login with error
+      console.error("[STATE-LOG] Auth callback - Error details:", JSON.stringify(error))
       return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=auth_callback_failed`)
     }
 
     console.log("[STATE-LOG] Auth callback - Session created for user:", data.user?.id)
     console.log("[STATE-LOG] Auth callback - User email:", data.user?.email)
+    console.log("[STATE-LOG] Auth callback - Email confirmed:", data.user?.email_confirmed_at)
 
     // Check if this is a new user (profile might not exist yet)
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("current_workspace_id, has_seen_onboarding")
       .eq("id", data.user.id)
       .single()
 
+    if (profileError) {
+      console.error("[STATE-LOG] Auth callback - Profile fetch error:", profileError.message)
+    }
+
     if (!profile) {
-      console.log("[STATE-LOG] Auth callback - NEW_USER → Redirecting to /welcome")
+      console.log("[STATE-LOG] Auth callback - NEW_USER → Sending welcome email and redirecting to /welcome")
+
+      try {
+        const response = await fetch(`${requestUrl.origin}/api/auth/send-welcome-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: data.user.id }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          console.error("[STATE-LOG] Auth callback - Welcome email failed:", errorData)
+        } else {
+          const result = await response.json()
+          console.log(
+            "[STATE-LOG] Auth callback - Welcome email sent:",
+            result.skipped ? "skipped (no API key)" : "success",
+          )
+        }
+      } catch (emailError) {
+        console.error("[STATE-LOG] Auth callback - Welcome email error:", emailError)
+      }
+
       return NextResponse.redirect(`${requestUrl.origin}/welcome`)
     }
 
@@ -51,6 +79,5 @@ export async function GET(request: Request) {
   }
 
   console.log("[STATE-LOG] Auth callback - No code present, redirecting to login")
-  // No code present, redirect to login
   return NextResponse.redirect(`${requestUrl.origin}/auth/login`)
 }

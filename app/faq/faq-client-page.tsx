@@ -68,6 +68,155 @@ export default function FAQClientPage() {
 
   const allFAQs = [
     {
+      id: "create-flow",
+      category: "Getting Started",
+      question: "How do I create my first onboarding flow?",
+      answer: (
+        <>
+          <p>1. Go to Dashboard → Click "Create Flow"</p>
+          <p>2. Choose a template or start from scratch</p>
+          <p>3. Add steps with titles, descriptions, and due dates</p>
+          <p>4. Save and share the flow with your clients</p>
+        </>
+      ),
+      status: "implemented",
+      evidence: "components/create-flow-modal.tsx",
+    },
+    {
+      id: "invite-client",
+      category: "Getting Started",
+      question: "How do I invite my first client?",
+      answer: (
+        <>
+          <p>1. Go to Clients → Click "Add Client"</p>
+          <p>2. Enter client name and email</p>
+          <p>3. Assign them to a flow</p>
+          <p>4. Click "Copy Link" or "Email Invite" to share their portal</p>
+        </>
+      ),
+      status: "implemented",
+      evidence: "components/clients-list.tsx",
+    },
+    {
+      id: "branding",
+      category: "Getting Started",
+      question: "How do I customize my workspace branding?",
+      answer: (
+        <>
+          <p>1. Go to Settings → Upload your logo</p>
+          <p>2. Choose your brand color (applies to portal and emails)</p>
+          <p>3. Save changes - clients will see your branding in their portal</p>
+        </>
+      ),
+      status: "implemented",
+      evidence: "components/settings-content.tsx",
+    },
+    {
+      id: "email-notifications",
+      category: "Getting Started",
+      question: "How do I set up email notifications?",
+      answer: (
+        <>
+          <p>Email notifications are configured automatically using Resend.</p>
+          <p>You'll receive notifications when:</p>
+          <ul className="list-disc list-inside ml-4">
+            <li>A client completes a step</li>
+            <li>A client completes their entire onboarding</li>
+            <li>A reminder is due (if configured)</li>
+          </ul>
+          <p className="mt-2">
+            <strong>Not receiving emails?</strong> Check the{" "}
+            <a href="#email-troubleshooting" className="text-primary underline">
+              troubleshooting section
+            </a>
+            .
+          </p>
+        </>
+      ),
+      status: "implemented",
+    },
+    {
+      id: "templates",
+      category: "Advanced",
+      question: "How do I use flow templates?",
+      answer: (
+        <>
+          <p>1. Go to Templates page</p>
+          <p>2. Browse pre-built templates (SEO Onboarding, Social Media, etc.)</p>
+          <p>3. Click "Use Template" on any template</p>
+          <p>4. Customize the steps for your needs</p>
+        </>
+      ),
+      status: "implemented",
+      evidence: "components/templates-library.tsx",
+    },
+    {
+      id: "reminders",
+      category: "Advanced",
+      question: "How do I set up automated reminders?",
+      answer: "Automated reminders run via cron job. Clients receive reminders 24 hours before step due dates.",
+      status: "implemented",
+      evidence: "app/api/cron/send-reminders/route.ts",
+    },
+    {
+      id: "email-setup",
+      category: "Configuration",
+      question: "How do I configure email (SMTP/Resend)?",
+      answer: (
+        <>
+          <p>
+            <strong>For Self-Hosted Users:</strong>
+          </p>
+          <ol className="list-decimal list-inside ml-4">
+            <li>Get a Resend API key from resend.com</li>
+            <li>
+              Add to environment variables: <code className="bg-muted px-2 py-1 rounded">RESEND_API_KEY=your_key</code>
+            </li>
+            <li>
+              Set from email: <code className="bg-muted px-2 py-1 rounded">RESEND_FROM_EMAIL=admin@yourdomain.com</code>
+            </li>
+            <li>Restart your app - emails will now send automatically</li>
+          </ol>
+          <p className="mt-2">
+            <strong>For BoardingPass Cloud:</strong> Email is preconfigured - no setup needed.
+          </p>
+        </>
+      ),
+      status: "implemented",
+      evidence: "lib/email/resend.ts",
+    },
+    {
+      id: "email-troubleshooting",
+      category: "Troubleshooting",
+      question: "Why am I not receiving emails?",
+      answer: (
+        <>
+          <p>
+            <strong>Common causes:</strong>
+          </p>
+          <ul className="list-disc list-inside ml-4">
+            <li>
+              <strong>Missing API key:</strong> Check that <code>RESEND_API_KEY</code> is set
+            </li>
+            <li>
+              <strong>Spam folder:</strong> Check your spam/junk folder
+            </li>
+            <li>
+              <strong>Invalid from address:</strong> Ensure <code>RESEND_FROM_EMAIL</code> uses a verified domain
+            </li>
+            <li>
+              <strong>Rate limits:</strong> Resend has sending limits on free tier (100 emails/day)
+            </li>
+          </ul>
+          <p className="mt-2">
+            <strong>How to debug:</strong> Check your server logs for "[v0] Resend error:" or "[v0] Email send error:"
+            messages
+          </p>
+        </>
+      ),
+      status: "implemented",
+    },
+    {
       category: "Architecture & Hosting",
       question: "What is your tech stack?",
       answer:
@@ -121,7 +270,7 @@ export default function FAQClientPage() {
         "YES. AppSumo lifetime access means no recurring fees, ever. All future updates included within your tier limits.",
       status: "implemented",
     },
-  ]
+  ] as const
 
   const filteredFAQs = searchQuery
     ? allFAQs.filter(
@@ -207,18 +356,19 @@ export default function FAQClientPage() {
         {/* Categories */}
         <div className="space-y-12">
           {Object.entries(groupedByCategory).map(([category, faqs]) => (
-            <section key={category}>
+            <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")}>
               <h2 className="text-2xl font-bold mb-6">{category}</h2>
               <div className="space-y-6">
                 {faqs.map((faq, idx) => (
-                  <FAQItem
-                    key={idx}
-                    status={faq.status as any}
-                    question={faq.question}
-                    answer={faq.answer}
-                    evidence={faq.evidence}
-                    roadmapVersion={faq.roadmapVersion}
-                  />
+                  <div key={idx} id={faq.id}>
+                    <FAQItem
+                      status={faq.status as any}
+                      question={faq.question}
+                      answer={faq.answer}
+                      evidence={faq.evidence}
+                      roadmapVersion={faq.roadmapVersion}
+                    />
+                  </div>
                 ))}
               </div>
             </section>

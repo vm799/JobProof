@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertCircle } from "lucide-react"
 import { captureError } from "@/lib/monitoring/sentry"
+import { createClient } from "@/lib/supabase/client"
 
 interface Props {
   children: ReactNode
@@ -37,9 +38,21 @@ export class ErrorBoundary extends Component<Props, State> {
     })
   }
 
-  handleReload = () => {
+  handleReload = async () => {
     if (typeof window !== "undefined") {
-      window.location.reload()
+      try {
+        console.log("[v0] ErrorBoundary: Clearing Supabase session before reload")
+        const supabase = createClient()
+        if (supabase) {
+          await supabase.auth.signOut()
+        }
+        localStorage.clear()
+        sessionStorage.clear()
+      } catch (error) {
+        console.error("[v0] Error clearing session:", error)
+      } finally {
+        window.location.href = "/auth/login"
+      }
     }
   }
 
