@@ -80,11 +80,18 @@ export default function SignUpPage() {
     try {
       console.log("[v0] Attempting signup with email:", email)
 
+      const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      const redirectUrl = isLocalhost
+        ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/dashboard"
+        : `${window.location.origin}/dashboard`
+
+      console.log("[v0] Using redirect URL:", redirectUrl)
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/dashboard`,
+          emailRedirectTo: redirectUrl,
           data: {
             name: name,
           },

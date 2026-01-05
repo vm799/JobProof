@@ -9,6 +9,8 @@ import { HelpButton } from "@/components/help-button"
 import { OnboardingTour } from "@/components/onboarding-tour"
 import { WorkspaceLoader } from "@/components/workspace-loader"
 import { WelcomeVideoModal } from "@/components/welcome-video-modal"
+import { DashboardSkeleton } from "@/components/loading-skeleton"
+import { Suspense } from "react"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -22,16 +24,36 @@ export default async function DashboardPage() {
     redirect("/auth/login")
   }
 
-  // Get user's profile with current workspace
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*, workspaces!current_workspace_id(*)")
-    .eq("id", user.id)
-    .single()
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
   if (!profile?.current_workspace_id) {
     return <WorkspaceLoader />
   }
+
+  // Fetch workspace separately
+  const { data: workspace } = await supabase
+    .from("workspaces")
+    .select("*")
+    .eq("id", profile.current_workspace_id)
+    .single()
+
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent user={user} profile={profile} workspace={workspace} />
+    </Suspense>
+  )
+}
+
+async function DashboardContent({
+  user,
+  profile,
+  workspace,
+}: {
+  user: any
+  profile: any
+  workspace: any
+}) {
+  const supabase = await createClient()
 
   // Get workspace stats
   const [clientsResult, onboardingsResult, activityResult] = await Promise.all([
@@ -62,7 +84,6 @@ export default async function DashboardPage() {
 
   const recentActivity = activityResult.data || []
 
-  const workspace = profile.workspaces.find((w) => w.id === profile.current_workspace_id)
   const shouldShowWelcomeVideo = workspace?.welcome_video_url && !profile.has_seen_welcome_video
 
   return (

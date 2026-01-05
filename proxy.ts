@@ -12,6 +12,7 @@ export async function proxy(request: NextRequest) {
     "/auth/login",
     "/auth/sign-up",
     "/auth/check-email",
+    "/onboarding", // Allow access to onboarding page
     "/faq",
     "/privacy",
     "/terms",
