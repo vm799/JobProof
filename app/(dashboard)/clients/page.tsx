@@ -1,3 +1,5 @@
+"use client"
+
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ClientsList } from "@/components/clients-list"
@@ -5,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
 export const dynamic = "force-dynamic"
-//export const revalidate = 0
+export const revalidate = 0
 
 export default async function ClientsPage() {
   const supabase = await createClient()
@@ -66,11 +68,10 @@ function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
       <p className="text-muted-foreground">{message}</p>
-      {/* Remove the onClick reload button or replace with a link */}
-      <a href="/clients" className="px-4 py-2 border rounded-md hover:bg-gray-100 flex items-center">
+      <Button variant="outline" onClick={() => window.location.reload()}>
         <RefreshCw className="mr-2 h-4 w-4" />
         Refresh Page
-      </a>
+      </Button>
     </div>
   )
 }
