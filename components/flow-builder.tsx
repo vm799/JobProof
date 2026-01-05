@@ -7,10 +7,22 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, FileText, Upload, FileSignature, Video, Trash2, Settings, ArrowLeft, Save } from "lucide-react"
+import {
+  Plus,
+  FileText,
+  Upload,
+  FileSignature,
+  Video,
+  Trash2,
+  Settings,
+  ArrowLeft,
+  Save,
+  MoveUp,
+  MoveDown,
+} from "lucide-react"
 import { useState, useTransition } from "react"
 import Link from "next/link"
-import { updateFlow, createStep, updateStep, deleteStep } from "@/app/actions/flows"
+import { updateFlow, createStep, updateStep, deleteStep, reorderSteps } from "@/app/actions/flows"
 import { toast } from "@/hooks/use-toast"
 import {
   AlertDialog,
@@ -49,7 +61,7 @@ const stepTypeConfig = {
   video: { icon: Video, label: "Video", color: "bg-orange-100 text-orange-700" },
 }
 
-export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
+export function FlowBuilder({ flow: initialFlow, workspaceId }: { flow: Flow; workspaceId: string }) {
   const [flow, setFlow] = useState(initialFlow)
   const [steps, setSteps] = useState<Step[]>(initialFlow.onboarding_steps)
   const [editingStep, setEditingStep] = useState<string | null>(null)
@@ -59,7 +71,7 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
   const addStep = async (type: StepType) => {
     startTransition(async () => {
       try {
-        const result = await createStep(flow.id, {
+        const result = await createStep(flow.id, workspaceId, {
           type,
           title: `New ${stepTypeConfig[type].label}`,
           description: "Click settings to edit",
@@ -80,7 +92,7 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
 
     startTransition(async () => {
       try {
-        await deleteStep(id, flow.id)
+        await deleteStep(id, flow.id, workspaceId)
         setSteps(steps.filter((step) => step.id !== id))
         toast({ title: "Step deleted", description: "The step has been removed." })
       } catch (err: any) {
@@ -92,7 +104,7 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
   const handleUpdateStep = async (id: string, updates: Partial<Step>) => {
     startTransition(async () => {
       try {
-        await updateStep(id, updates)
+        await updateStep(id, flow.id, workspaceId, updates)
         setSteps(steps.map((step) => (step.id === id ? { ...step, ...updates } : step)))
       } catch (err: any) {
         toast({ title: "Error", description: err.message, variant: "destructive" })
@@ -103,10 +115,39 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
   const handleUpdateFlow = async (updates: Partial<Flow>) => {
     startTransition(async () => {
       try {
-        await updateFlow(flow.id, updates)
+        await updateFlow(flow.id, workspaceId, updates)
         setFlow({ ...flow, ...updates })
         toast({ title: "Flow saved", description: "Your changes have been saved." })
       } catch (err: any) {
+        toast({ title: "Error", description: err.message, variant: "destructive" })
+      }
+    })
+  }
+
+  const handleMoveStep = async (index: number, direction: "up" | "down") => {
+    if (direction === "up" && index === 0) return
+    if (direction === "down" && index === steps.length - 1) return
+
+    const newIndex = direction === "up" ? index - 1 : index + 1
+    const newSteps = [...steps]
+    const [movedStep] = newSteps.splice(index, 1)
+    newSteps.splice(newIndex, 0, movedStep)
+
+    // Update step_order for all affected steps
+    const reorderedSteps = newSteps.map((step, idx) => ({
+      id: step.id,
+      step_order: idx,
+    }))
+
+    setSteps(newSteps)
+
+    startTransition(async () => {
+      try {
+        await reorderSteps(flow.id, workspaceId, reorderedSteps)
+        toast({ title: "Steps reordered", description: "Step order has been updated." })
+      } catch (err: any) {
+        // Revert on error
+        setSteps(steps)
         toast({ title: "Error", description: err.message, variant: "destructive" })
       }
     })
@@ -166,6 +207,26 @@ export function FlowBuilder({ flow: initialFlow }: { flow: Flow }) {
                     return (
                       <Card key={step.id} className="p-4 transition-colors hover:border-primary/50">
                         <div className="flex items-start gap-3">
+                          <div className="flex flex-col gap-1 pt-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => handleMoveStep(index, "up")}
+                              disabled={index === 0 || isPending}
+                            >
+                              <MoveUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => handleMoveStep(index, "down")}
+                              disabled={index === steps.length - 1 || isPending}
+                            >
+                              <MoveDown className="h-3 w-3" />
+                            </Button>
+                          </div>
                           <div
                             className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${stepTypeConfig[step.type].color}`}
                           >

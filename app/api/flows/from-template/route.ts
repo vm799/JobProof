@@ -1,10 +1,10 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerClient()
-    const { templateId } = await request.json()
+    const supabase = await createClient()
+    const { templateId, flowName } = await request.json()
 
     // Get user workspace
     const {
@@ -14,23 +14,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { data: workspaceMember } = await supabase
-      .from("workspace_members")
-      .select("workspace_id")
-      .eq("user_id", user.id)
-      .single()
+    const { data: profile } = await supabase.from("profiles").select("current_workspace_id").eq("id", user.id).single()
 
-    if (!workspaceMember) {
+    if (!profile?.current_workspace_id) {
       return NextResponse.json({ error: "No workspace found" }, { status: 404 })
     }
 
-    // Get template with steps - ONLY public templates
     const { data: template } = await supabase
       .from("flow_templates")
       .select(
         `
         *,
-        steps:flow_template_steps(*)
+        flow_template_steps(*)
       `,
       )
       .eq("id", templateId)
@@ -38,42 +33,49 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (!template) {
-      return NextResponse.json({ error: "Template not found" }, { status: 404 })
+      return NextResponse.json({ error: "Template not found or not accessible" }, { status: 404 })
     }
 
-    // Create new flow from template
     const { data: newFlow, error: flowError } = await supabase
-      .from("flows")
+      .from("onboarding_flows")
       .insert({
-        workspace_id: workspaceMember.workspace_id,
-        name: template.name,
+        workspace_id: profile.current_workspace_id,
+        name: flowName || `${template.name} (Copy)`,
         description: template.description,
-        is_published: false,
+        status: "draft",
       })
       .select()
       .single()
 
-    if (flowError) throw flowError
+    if (flowError) {
+      console.error("[v0] Template flow creation error:", flowError)
+      throw flowError
+    }
 
-    // Create steps from template
-    if (template.steps && template.steps.length > 0) {
-      const steps = template.steps.map((step: any) => ({
+    if (template.flow_template_steps && template.flow_template_steps.length > 0) {
+      const steps = template.flow_template_steps.map((step: any) => ({
         flow_id: newFlow.id,
+        type: step.type,
         title: step.title,
         description: step.description,
         step_order: step.step_order,
-        field_type: step.field_type || "text",
-        is_required: step.is_required,
+        config: step.config || {},
       }))
 
-      const { error: stepsError } = await supabase.from("flow_steps").insert(steps)
+      const { error: stepsError } = await supabase.from("onboarding_steps").insert(steps)
 
-      if (stepsError) throw stepsError
+      if (stepsError) {
+        // Rollback: delete the flow if steps fail
+        await supabase.from("onboarding_flows").delete().eq("id", newFlow.id)
+        console.error("[v0] Template steps creation error:", stepsError)
+        throw stepsError
+      }
     }
 
+    console.log("[v0] Template flow created successfully:", newFlow.id)
     return NextResponse.json({ flowId: newFlow.id })
   } catch (error) {
-    console.error("Template flow creation error:", error)
+    console.error("[v0] Template flow creation error:", error)
     return NextResponse.json({ error: "Failed to create flow from template" }, { status: 500 })
   }
 }

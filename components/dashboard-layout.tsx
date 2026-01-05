@@ -63,9 +63,9 @@ export function DashboardLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = async () => {
+    console.log("[v0] DashboardLayout - Logout initiated")
     await supabase.auth.signOut()
-    router.push("/auth/login")
-    router.refresh()
+    window.location.href = "/auth/login"
   }
 
   const getInitials = () => {

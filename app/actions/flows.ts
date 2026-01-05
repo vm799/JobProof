@@ -112,3 +112,90 @@ export async function deleteStep(stepId: string, flowId: string, workspaceId: st
   revalidatePath(`/flows/${flowId}`)
   return { success: true }
 }
+
+export async function createFlowFromTemplate(templateId: string, workspaceId: string, flowName?: string) {
+  const supabase = await createClient()
+
+  // Fetch template and its steps
+  const { data: template, error: templateError } = await supabase
+    .from("flow_templates")
+    .select(
+      `
+      id,
+      name,
+      description,
+      category,
+      flow_template_steps(*)
+    `,
+    )
+    .eq("id", templateId)
+    .single()
+
+  if (templateError || !template) {
+    throw new Error("Template not found")
+  }
+
+  // Create new flow from template
+  const { data: newFlow, error: flowError } = await supabase
+    .from("onboarding_flows")
+    .insert({
+      name: flowName || `${template.name} (Copy)`,
+      description: template.description,
+      workspace_id: workspaceId,
+      status: "draft",
+    })
+    .select()
+    .single()
+
+  if (flowError || !newFlow) {
+    throw new Error("Failed to create flow from template")
+  }
+
+  // Clone all template steps into the new flow
+  if (template.flow_template_steps && template.flow_template_steps.length > 0) {
+    const steps = template.flow_template_steps.map((step: any) => ({
+      flow_id: newFlow.id,
+      type: step.type,
+      title: step.title,
+      description: step.description,
+      step_order: step.step_order,
+      config: step.config || {},
+    }))
+
+    const { error: stepsError } = await supabase.from("onboarding_steps").insert(steps)
+
+    if (stepsError) {
+      // Rollback: delete the flow if steps fail
+      await supabase.from("onboarding_flows").delete().eq("id", newFlow.id)
+      throw new Error("Failed to create steps from template")
+    }
+  }
+
+  revalidatePath("/flows")
+  revalidatePath("/templates")
+  return { success: true, flowId: newFlow.id }
+}
+
+export async function reorderSteps(
+  flowId: string,
+  workspaceId: string,
+  reorderedSteps: Array<{ id: string; step_order: number }>,
+) {
+  await verifyFlowAccess(flowId, workspaceId)
+  const supabase = await createClient()
+
+  // Update all step orders in a transaction-like manner
+  const updates = reorderedSteps.map((step) =>
+    supabase.from("onboarding_steps").update({ step_order: step.step_order }).eq("id", step.id),
+  )
+
+  const results = await Promise.all(updates)
+  const hasError = results.some((result) => result.error)
+
+  if (hasError) {
+    throw new Error("Failed to reorder steps")
+  }
+
+  revalidatePath(`/flows/${flowId}`)
+  return { success: true }
+}
