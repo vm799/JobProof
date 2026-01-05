@@ -17,12 +17,12 @@ The **Site URL** in your Supabase project settings is still set to localhost.
 ### Step 2: Add Redirect URLs to Whitelist
 In the same **URL Configuration** page, add these to the **Redirect URLs** list:
 
-```
+\`\`\`
 http://localhost:3000/**
 https://getboardingpass.app/**
 https://*.vercel.app/**
 https://*.vusercontent.net/**
-```
+\`\`\`
 
 The wildcards allow:
 - Local development (localhost)
@@ -38,11 +38,11 @@ The wildcards allow:
 ### Step 4: Delete Old Users (Optional)
 If users signed up when the Site URL was localhost, you may need to delete and recreate them:
 
-```sql
+\`\`\`sql
 -- Delete old user accounts created with localhost tokens
 DELETE FROM auth.users WHERE email = 'vaishalimehmi@yahoo.co.uk';
 -- They can now sign up fresh with correct redirect URLs
-```
+\`\`\`
 
 ## Verification
 After making these changes, all new magic links will correctly redirect to your production domain.

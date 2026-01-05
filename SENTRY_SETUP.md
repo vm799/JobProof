@@ -16,10 +16,10 @@ Sentry is fully configured for production error tracking and performance monitor
 
 Add to your Vercel project:
 
-```bash
+\`\`\`bash
 NEXT_PUBLIC_SENTRY_DSN=https://your-dsn@o12345.ingest.sentry.io/67890
 SENTRY_AUTH_TOKEN=your-auth-token-from-sentry
-```
+\`\`\`
 
 ## Features Enabled
 
@@ -31,7 +31,7 @@ SENTRY_AUTH_TOKEN=your-auth-token-from-sentry
 
 ## Usage in Code
 
-```typescript
+\`\`\`typescript
 import { captureException, captureMessage } from "@/lib/monitoring/sentry"
 
 // Capture errors
@@ -43,7 +43,7 @@ try {
 
 // Capture messages
 captureMessage("User completed onboarding", "info")
-```
+\`\`\`
 
 ## Sentry Dashboard
 

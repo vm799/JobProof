@@ -11,9 +11,9 @@ The app now defaults to **`admin@getboardingpass.app`** for all sender and conta
 ### Option 1: Use Default Domain (Quick Start)
 1. Verify `getboardingpass.app` domain in Resend
 2. Set environment variable:
-   ```
+   \`\`\`
    RESEND_FROM_EMAIL=admin@getboardingpass.app
-   ```
+   \`\`\`
 3. All emails will send from this address
 
 ### Option 2: Use Your Custom Domain (Recommended for White-Label)
@@ -22,9 +22,9 @@ The app now defaults to **`admin@getboardingpass.app`** for all sender and conta
 3. Add the DNS records Resend provides (SPF, DKIM, DMARC)
 4. Wait for verification (usually 5-15 minutes)
 5. Add environment variable:
-   ```
+   \`\`\`
    RESEND_FROM_EMAIL=admin@yourdomain.com
-   ```
+   \`\`\`
 
 ### Option 3: Use Resend's Test Domain (Development Only)
 1. No additional setup needed
@@ -35,9 +35,9 @@ The app now defaults to **`admin@getboardingpass.app`** for all sender and conta
 ## Testing Email Delivery
 
 ### Check if emails are being sent:
-```bash
+\`\`\`bash
 # Check Resend logs at: https://resend.com/emails
-```
+\`\`\`
 
 ### Common issues:
 - **No emails received**: Check RESEND_API_KEY is set in environment variables
@@ -73,8 +73,8 @@ Before AppSumo launch:
 
 Add this to your Vercel project environment variables:
 
-```bash
+\`\`\`bash
 RESEND_FROM_EMAIL=admin@getboardingpass.app
-```
+\`\`\`
 
 **Where to add:** Vars section in the v0 in-chat sidebar, or directly in Vercel project settings.

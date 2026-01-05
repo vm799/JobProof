@@ -7,10 +7,10 @@
 
 All API requests require authentication using an API key in the header:
 
-```bash
+\`\`\`bash
 curl -H "X-API-Key: bp_your_api_key_here" \
   https://api.getboardingpass.app/v1/clients
-```
+\`\`\`
 
 ## Rate Limits
 
@@ -23,9 +23,9 @@ curl -H "X-API-Key: bp_your_api_key_here" \
 ### Clients
 
 #### List Clients
-```
+\`\`\`
 GET /v1/clients
-```
+\`\`\`
 
 **Parameters:**
 - `page` (integer): Page number (default: 1)
@@ -33,7 +33,7 @@ GET /v1/clients
 - `search` (string): Search by name or email
 
 **Response:**
-```json
+\`\`\`json
 {
   "data": [
     {
@@ -50,23 +50,23 @@ GET /v1/clients
     "total_pages": 5
   }
 }
-```
+\`\`\`
 
 #### Create Client
-```
+\`\`\`
 POST /v1/clients
-```
+\`\`\`
 
 **Body:**
-```json
+\`\`\`json
 {
   "name": "John Doe",
   "email": "john@example.com"
 }
-```
+\`\`\`
 
 **Response:** `201 Created`
-```json
+\`\`\`json
 {
   "data": {
     "id": "uuid",
@@ -75,22 +75,22 @@ POST /v1/clients
     "created_at": "2026-01-01T00:00:00Z"
   }
 }
-```
+\`\`\`
 
 ### Onboardings
 
 #### Create Onboarding
-```
+\`\`\`
 POST /v1/onboardings
-```
+\`\`\`
 
 **Body:**
-```json
+\`\`\`json
 {
   "client_id": "uuid",
   "flow_id": "uuid"
 }
-```
+\`\`\`
 
 **Response:** `201 Created`
 
@@ -107,7 +107,7 @@ BoardingPass can send webhooks to your URL when events occur.
 - `file.uploaded`
 
 #### Webhook Payload
-```json
+\`\`\`json
 {
   "event": "onboarding.completed",
   "data": {
@@ -118,13 +118,13 @@ BoardingPass can send webhooks to your URL when events occur.
   "timestamp": "2026-01-01T00:00:00Z",
   "workspace_id": "uuid"
 }
-```
+\`\`\`
 
 #### Webhook Security
 
 Verify webhook signatures using HMAC SHA-256:
 
-```javascript
+\`\`\`javascript
 const crypto = require('crypto');
 
 function verifyWebhook(payload, signature, secret) {
@@ -139,7 +139,7 @@ const isValid = verifyWebhook(
   req.headers['x-boardingpass-signature'],
   'your_webhook_secret'
 );
-```
+\`\`\`
 
 ## Error Codes
 

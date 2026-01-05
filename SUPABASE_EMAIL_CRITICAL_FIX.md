@@ -36,14 +36,14 @@ Users can now sign up and log in immediately without email confirmation.
 2. Scroll to **SMTP Settings**
 3. Enable **"Custom SMTP"**
 4. Configure:
-   ```
+   \`\`\`
    Host: smtp.resend.com
    Port: 465 (or 587)
    Username: resend
    Password: YOUR_RESEND_API_KEY
    Sender Email: admin@getboardingpass.app
    Sender Name: BoardingPass
-   ```
+   \`\`\`
 
 #### Step 3: Verify Domain (If using custom domain)
 - Add SPF and DKIM records to your DNS

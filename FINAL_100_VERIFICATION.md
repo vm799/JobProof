@@ -23,12 +23,12 @@ We systematically addressed ALL 10 critical vulnerabilities from the Total Annih
 - Public access for client portal properly secured
 
 **Verification:**
-```sql
+\`\`\`sql
 -- Test RLS INSERT protection
 INSERT INTO clients (workspace_id, name, email) 
 VALUES ('random-workspace-uuid', 'Hacker', 'hack@evil.com');
 -- Result: DENIED ✅
-```
+\`\`\`
 
 ---
 
@@ -68,13 +68,13 @@ VALUES ('random-workspace-uuid', 'Hacker', 'hack@evil.com');
 - Toast error messages for validation failures
 
 **Attack Prevention:**
-```typescript
+\`\`\`typescript
 // Before: XSS vulnerable
 formData.field1 = "<script>alert('hacked')</script>"
 
 // After: Sanitized
 formData.field1 = "" // All HTML stripped ✅
-```
+\`\`\`
 
 **Verification:**
 - Try submitting `<script>alert('xss')</script>` in any form field
@@ -121,7 +121,7 @@ formData.field1 = "" // All HTML stripped ✅
 - `/api/health` endpoint for uptime monitoring
 
 **Verification:**
-```bash
+\`\`\`bash
 # Test error handling
 curl https://your-app.vercel.app/api/error-test
 # Response: {"error":"Test error"}
@@ -130,7 +130,7 @@ curl https://your-app.vercel.app/api/error-test
 # Test health check
 curl https://your-app.vercel.app/api/health
 # Response: {"status":"ok","timestamp":"..."} ✅
-```
+\`\`\`
 
 ---
 

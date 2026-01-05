@@ -60,12 +60,12 @@ Completed Zero-Debt Executioner audit. Found 2 critical issues, both FIXED.
 **Layer 3 (Audit):** All actions logged to activity_logs table
 
 ### Example Secure Query Pattern
-```typescript
+\`\`\`typescript
 const { data } = await supabase
   .from("clients")
   .select("*")
   .eq("workspace_id", currentWorkspaceId) // Explicit filter
-```
+\`\`\`
 
 ### Missing Explicit Filters
 Found in 15-20 queries across:

@@ -63,30 +63,30 @@ Your app is set up to use:
 - **Auth flow**: Supabase native auth with email confirmation
 
 **Environment Variable:**
-```bash
+\`\`\`bash
 RESEND_FROM_EMAIL=admin@getboardingpass.app
-```
+\`\`\`
 
 ---
 
 ## Verification Steps
 
 ### 1. Check Supabase Auth Settings
-```
+\`\`\`
 Dashboard → Authentication → Providers → Email
 - Confirm email: Check status
 - Secure email change: Recommended ON
 - Secure password change: Recommended ON
-```
+\`\`\`
 
 ### 2. Test Signup Flow
-```
+\`\`\`
 1. Sign up with a new email
 2. Check Supabase Logs: Dashboard → Logs → Auth
 3. Look for: "signup" or "confirmation" events
 4. If no logs appear: Client-side error
 5. If logs show error: SMTP configuration issue
-```
+\`\`\`
 
 ### 3. Check Email Deliverability
 - Verify domain DNS records (SPF, DKIM) if using custom SMTP
@@ -99,13 +99,13 @@ Dashboard → Authentication → Providers → Email
 
 To verify SMTP is working, run this in Supabase SQL Editor:
 
-```sql
+\`\`\`sql
 -- Check if users are being created
 SELECT email, confirmed_at, created_at 
 FROM auth.users 
 ORDER BY created_at DESC 
 LIMIT 5;
-```
+\`\`\`
 
 **Expected Result:**
 - `confirmed_at` is NULL → Email not confirmed yet
@@ -131,6 +131,6 @@ Before launching:
 - ✅ Test signup flow with multiple email providers
 - ✅ Monitor auth logs for delivery issues
 - ✅ Rate limiting configured appropriately
-```
+\`\`\`
 
-```tsx file="" isHidden
+\`\`\`tsx file="" isHidden

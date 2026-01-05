@@ -83,7 +83,7 @@ The State-Aware Routing System eliminates blank screens by handling every user l
 
 The middleware acts as the primary Traffic Controller:
 
-```typescript
+\`\`\`typescript
 1. Check if path is public → Allow
 2. Check if portal route → Allow (GUEST state)
 3. Get user session:
@@ -95,17 +95,17 @@ The middleware acts as the primary Traffic Controller:
      - No profile → Redirect to /welcome (NEW_USER)
      - No workspace → Allow /dashboard (EXISTING_NO_WS)
      - Has workspace → Normal flow (EXISTING_WITH_WS)
-```
+\`\`\`
 
 ## State Logging
 
 All state transitions log to console with `[STATE-LOG]` prefix:
 
-```
+\`\`\`
 [STATE-LOG] Middleware - Processing path: /dashboard
 [STATE-LOG] Middleware - User authenticated: abc-123
 [STATE-LOG] Middleware - User has workspace (EXISTING_WITH_WS): workspace-456
-```
+\`\`\`
 
 ## Testing Scenarios
 
@@ -176,11 +176,11 @@ All state transitions log to console with `[STATE-LOG]` prefix:
 
 ## Environment Variables Required
 
-```env
+\`\`\`env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_SITE_URL=https://getboardingpass.app
-```
+\`\`\`
 
 ## Success Criteria
 

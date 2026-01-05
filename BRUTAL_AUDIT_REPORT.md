@@ -52,14 +52,14 @@ This is a well-designed, feature-rich **prototype** that **looks** production-re
 **File:** `components/clients-list.tsx` (Line 40-49)  
 **Issue:** ALL client filtering happens in-browser JavaScript
 
-```typescript
+\`\`\`typescript
 const filteredClients = clients.filter((client) => {
   const matchesSearch = 
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     client.email.toLowerCase().includes(searchQuery.toLowerCase())
   // ...
 })
-```
+\`\`\`
 
 **What breaks:**
 - **50 clients:** Laggy (~200ms delay)
@@ -84,7 +84,7 @@ const filteredClients = clients.filter((client) => {
 **File:** `components/clients-list.tsx`  
 **Issue:** Fetches ALL clients with ALL onboardings with ALL steps in one giant query
 
-```typescript
+\`\`\`typescript
 // This query returns EVERYTHING
 .select(`
   id, name, email, created_at,
@@ -93,7 +93,7 @@ const filteredClients = clients.filter((client) => {
     client_step_progress(id, status)
   )
 `)
-```
+\`\`\`
 
 **What breaks:**
 - **10 clients x 5 onboardings x 10 steps each = 500 rows** - Fine
@@ -127,12 +127,12 @@ const filteredClients = clients.filter((client) => {
 **File:** `components/analytics-dashboard.tsx` (Line 34-93)  
 **Issue:** ALL analytics calculated synchronously in the React component
 
-```typescript
+\`\`\`typescript
 const completedOnboardings = onboardings.filter(...)  // O(n)
 const avgTimeToComplete = completedWithTime.reduce(...) // O(n)
 const completionsByDay = last7Days.map(...) // O(n * m)
 const stepCompletionRates = activities.filter(...).reduce(...) // O(n)
-```
+\`\`\`
 
 **What breaks:**
 - **10,000 activities:** ~2s to render
@@ -150,12 +150,12 @@ const stepCompletionRates = activities.filter(...).reduce(...) // O(n)
 **Issue:** Deleted onboardings don't delete associated files from Supabase Storage
 
 **Evidence:**
-```typescript
+\`\`\`typescript
 // app/actions/clients.ts - deleteOnboarding()
 // Only deletes database records, NOT files
 await supabase.from("client_onboardings").delete().eq("id", onboardingId)
 // Files are orphaned in storage forever
-```
+\`\`\`
 
 **What breaks:**
 - Deleted data still exists in storage
@@ -174,11 +174,11 @@ await supabase.from("client_onboardings").delete().eq("id", onboardingId)
 **File:** `app/portal/[token]/page.tsx` (Line 10-28)  
 **Issue:** Client portal tokens NEVER expire
 
-```typescript
+\`\`\`typescript
 // Token authentication
 .eq("onboarding_link_token", token)
 // NO expiration check, NO rate limiting
-```
+\`\`\`
 
 **Attack Vector:**
 1. Client receives magic link in January
@@ -199,7 +199,7 @@ await supabase.from("client_onboardings").delete().eq("id", onboardingId)
 **File:** `scripts/004_add_indexes_and_constraints.sql`  
 **Missing RLS Policies:**
 
-```sql
+\`\`\`sql
 -- These tables have NO RLS policies:
 - workspaces
 - workspace_members  
@@ -208,28 +208,28 @@ await supabase.from("client_onboardings").delete().eq("id", onboardingId)
 - onboarding_steps
 - client_onboardings (CRITICAL)
 - client_step_progress (CRITICAL)
-```
+\`\`\`
 
 **Only `file_uploads` has RLS.**
 
 **Attack Vector:**
 1. Authenticated user calls Supabase directly (bypassing Next.js)
 2. Can query ANY workspace's data:
-   ```js
+   \`\`\`js
    supabase.from('client_onboardings').select('*')
    // Returns ALL onboardings from ALL workspaces
-   ```
+   \`\`\`
 3. Cross-workspace data leakage
 
 **PROOF OF CONCEPT:**
-```typescript
+\`\`\`typescript
 // Malicious user can run this in browser console:
 const { data } = await supabase
   .from('client_onboardings')
   .select('*, clients(*)')
   .neq('workspace_id', 'my-workspace-id')
 // Returns other workspaces' data
-```
+\`\`\`
 
 **Fix Required:** Add RLS policies to ALL tables checking `workspace_members`  
 **Effort:** 2-3 days  
@@ -242,13 +242,13 @@ const { data } = await supabase
 **File:** `components/file-upload.tsx` (Line 67-88)  
 **Issue:** File validation is client-side only - easily bypassed
 
-```typescript
+\`\`\`typescript
 // Client-side validation (useless for security)
 if (file.size > maxFileSize) {
   toast.error("File too large")
   return
 }
-```
+\`\`\`
 
 **Attack Vector:**
 1. User modifies browser JavaScript to bypass validation
@@ -287,12 +287,12 @@ if (file.size > maxFileSize) {
 **Claim:** "Drag-and-drop builder"  
 **Reality:** Drag handles render but do NOTHING
 
-```tsx
+\`\`\`tsx
 <div className="cursor-grab">
   <GripVertical className="h-5 w-5" />
 </div>
 {/* No drag handlers, no onDragStart, no onDrop */}
-```
+\`\`\`
 
 **Evidence:** Search codebase for `onDrag` or `@dnd-kit` - ZERO results
 
@@ -360,13 +360,13 @@ if (file.size > maxFileSize) {
 **File:** `scripts/004_add_indexes_and_constraints.sql`
 
 **Critical missing indexes:**
-```sql
+\`\`\`sql
 -- These queries will be SLOW without indexes:
 CREATE INDEX idx_client_onboardings_magic_token ON client_onboardings(onboarding_link_token);
 CREATE INDEX idx_client_onboardings_created_at ON client_onboardings(created_at);
 CREATE INDEX idx_clients_email ON clients(email);
 CREATE INDEX idx_activity_logs_type ON activity_logs(type);
-```
+\`\`\`
 
 **Impact:** Portal token lookup takes 200ms instead of 5ms (40x slower)
 
@@ -415,11 +415,11 @@ All files use TypeScript. Props.
 
 ### Error Handling: 40% ❌
 Most functions don't catch errors:
-```typescript
+\`\`\`typescript
 // Typical pattern:
 const { data } = await supabase.from('...').select('...')
 // No error handling - will crash if database is down
-```
+\`\`\`
 
 ### Testing: 0% 🔴
 ZERO tests. No Jest, no Playwright, no Cypress.

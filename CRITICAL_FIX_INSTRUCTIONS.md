@@ -30,7 +30,7 @@ The workspace creation trigger is completely broken. Users who sign up are not g
 
 If users are still stuck, you can manually create their workspace:
 
-```sql
+\`\`\`sql
 -- Replace USER_ID with the actual user ID
 INSERT INTO profiles (id, email, created_at)
 VALUES ('USER_ID', 'their@email.com', NOW())

@@ -5,7 +5,7 @@
 ### 1. Global Suspense Boundary - ROOT LAYOUT REQUIREMENT
 **The root layout MUST wrap all children in a Suspense boundary:**
 
-```tsx
+\`\`\`tsx
 // app/layout.tsx - REQUIRED PATTERN ✅
 import { Suspense } from "react"
 import ThemeProvider from "@/components/theme-provider"
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 **Why this matters:**
 - Creates a top-level boundary covering every page in the app
@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
 - `useRouter()` (from next/navigation)
 
 **Pattern to follow:**
-```tsx
+\`\`\`tsx
 // WRONG ❌
 export default function Page() {
   const searchParams = useSearchParams()
@@ -58,7 +58,7 @@ export default function Page() {
     </Suspense>
   )
 }
-```
+\`\`\`
 
 ### 3. Supabase Client/Server Separation
 **NEVER import server client in client components:**
@@ -172,7 +172,7 @@ Before every deployment:
 - ✅ Use `export const dynamic = "force-dynamic"` for data-fetching pages
 
 ### TESTING COMMANDS:
-```bash
+\`\`\`bash
 # Verify root layout has Suspense
 grep -n "Suspense" app/layout.tsx
 
@@ -187,7 +187,7 @@ ls -la pages/ src/pages/ 2>/dev/null || echo "✅ No pages directory found"
 
 # Test build
 npm run build
-```
+\`\`\`
 
 ---
 

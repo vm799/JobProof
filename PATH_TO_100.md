@@ -18,7 +18,7 @@
 
 **Specific Implementation:**
 
-```sql
+\`\`\`sql
 -- File: scripts/010_fix_rls_policies.sql
 
 -- Drop existing broken policies
@@ -93,7 +93,7 @@ ALTER TABLE onboarding_steps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE client_step_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE workspaces ENABLE ROW LEVEL SECURITY;
 ALTER TABLE licenses ENABLE ROW LEVEL SECURITY;
-```
+\`\`\`
 
 **Verification Test:**
 - Create 2 test accounts
@@ -110,7 +110,7 @@ ALTER TABLE licenses ENABLE ROW LEVEL SECURITY;
 
 **Specific Implementation:**
 
-```typescript
+\`\`\`typescript
 // File: app/portal/[token]/page.tsx
 
 import { createServerClient } from '@/lib/supabase/server'
@@ -155,9 +155,9 @@ export default async function PortalPage({ params }: { params: { token: string }
 
   return <ClientPortal onboarding={onboarding} token={params.token} />
 }
-```
+\`\`\`
 
-```sql
+\`\`\`sql
 -- File: scripts/011_add_token_expiry.sql
 
 -- Add expiry column
@@ -171,7 +171,7 @@ WHERE token_expires_at IS NULL;
 
 -- Create index for expired token cleanup
 CREATE INDEX idx_token_expiry ON client_onboardings(token_expires_at);
-```
+\`\`\`
 
 ---
 
@@ -182,7 +182,7 @@ CREATE INDEX idx_token_expiry ON client_onboardings(token_expires_at);
 
 **Specific Implementation:**
 
-```typescript
+\`\`\`typescript
 // File: app/actions/clients.ts
 
 'use server'
@@ -228,9 +228,9 @@ export async function getClientsServerSide(
     pages: Math.ceil((count || 0) / limit)
   }
 }
-```
+\`\`\`
 
-```tsx
+\`\`\`tsx
 // File: components/clients-list.tsx
 
 'use client'
@@ -284,7 +284,7 @@ export function ClientsList({ workspaceId }: { workspaceId: string }) {
     </div>
   )
 }
-```
+\`\`\`
 
 **Apply same pattern to:**
 - `components/flows-list.tsx`
@@ -301,7 +301,7 @@ export function ClientsList({ workspaceId }: { workspaceId: string }) {
 
 **Specific Implementation:**
 
-```typescript
+\`\`\`typescript
 // File: app/actions/analytics.ts
 
 'use server'
@@ -318,9 +318,9 @@ export async function getAnalyticsData(workspaceId: string) {
 
   return stats
 }
-```
+\`\`\`
 
-```sql
+\`\`\`sql
 -- File: scripts/012_analytics_functions.sql
 
 -- Create database function for analytics (10x faster than JS)
@@ -348,7 +348,7 @@ BEGIN
   RETURN result;
 END;
 $$ LANGUAGE plpgsql STABLE;
-```
+\`\`\`
 
 ---
 
@@ -359,7 +359,7 @@ $$ LANGUAGE plpgsql STABLE;
 **Impact:** Cannot debug customer issues, look unprofessional  
 **Time:** 1 hour
 
-```typescript
+\`\`\`typescript
 // File: app/error.tsx
 
 'use client'
@@ -388,13 +388,13 @@ export default function Error({
     </div>
   )
 }
-```
+\`\`\`
 
-```bash
+\`\`\`bash
 # Add Sentry (free tier: 5k errors/month)
 npm install @sentry/nextjs
 npx @sentry/wizard -i nextjs
-```
+\`\`\`
 
 ---
 
@@ -403,7 +403,7 @@ npx @sentry/wizard -i nextjs
 **Impact:** Breaking changes go unnoticed until customers complain  
 **Time:** 4 hours for critical paths
 
-```typescript
+\`\`\`typescript
 // File: __tests__/auth.test.ts
 
 import { expect, test } from '@playwright/test'
@@ -439,7 +439,7 @@ test('RLS prevents cross-workspace access', async ({ page, context }) => {
   
   expect(response).toBe(403) // Should be forbidden
 })
-```
+\`\`\`
 
 **Critical test coverage:**
 - Authentication flow (sign up, login, reset password)
@@ -473,7 +473,7 @@ These are already implemented based on previous work:
 
 ### 8. MONITORING & HEALTH CHECKS (10 points)
 
-```typescript
+\`\`\`typescript
 // File: app/api/health/route.ts
 
 export async function GET() {
@@ -490,11 +490,11 @@ export async function GET() {
     status: healthy ? 200 : 503 
   })
 }
-```
+\`\`\`
 
 ### 9. PERFORMANCE MONITORING (10 points)
 
-```typescript
+\`\`\`typescript
 // File: app/layout.tsx
 
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -511,7 +511,7 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-```
+\`\`\`
 
 ### 10. DOCUMENTATION (10 points)
 
@@ -602,7 +602,7 @@ You have built a **visually stunning, feature-rich prototype** that looks produc
 
 ## AUTOMATION SCRIPT
 
-```bash
+\`\`\`bash
 #!/bin/bash
 # File: scripts/prepare-production.sh
 
@@ -620,7 +620,7 @@ npm run test
 
 echo "✅ Production readiness: 85/100"
 echo "⚠️  Still need: Week 2 polish tasks"
-```
+\`\`\`
 
 ---
 

@@ -93,7 +93,7 @@ All 60+ Supabase queries verified with proper filtering:
 ## Pre-Launch Verification
 
 ### Database Setup
-```sql
+\`\`\`sql
 -- Run these scripts in order:
 1. scripts/001_create_workspace_on_signup.sql
 2. scripts/002_client_onboarding_schema.sql
@@ -102,10 +102,10 @@ All 60+ Supabase queries verified with proper filtering:
 5. scripts/005_create_storage_bucket.sql
 6. scripts/006_create_templates.sql
 7. scripts/019_emergency_rls_lockdown.sql
-```
+\`\`\`
 
 ### Environment Variables Required
-```
+\`\`\`
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
@@ -113,7 +113,7 @@ NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=
 RESEND_API_KEY=
 NEXT_PUBLIC_SENTRY_DSN=
 CRON_SECRET=
-```
+\`\`\`
 
 ### Smoke Test Checklist
 - [ ] Sign up with new email → workspace created → redirected to dashboard

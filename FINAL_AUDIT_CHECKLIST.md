@@ -72,9 +72,9 @@
 
 ### Database Setup Required
 **IMPORTANT**: Run this script in Supabase SQL editor BEFORE launch:
-```bash
+\`\`\`bash
 scripts/seed_templates.sql
-```
+\`\`\`
 
 This will populate your flow_templates and flow_template_steps tables with professional, detailed content that reviewers will see when testing the "SEO Onboarding" and other templates.
 

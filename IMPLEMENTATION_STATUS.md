@@ -41,7 +41,7 @@
 - `components/flows-list.tsx` (refactor)
 
 **Required changes:**
-```typescript
+\`\`\`typescript
 // Add to API route
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -77,7 +77,7 @@ export async function GET(request: Request) {
     }
   })
 }
-```
+\`\`\`
 
 ## 📋 TODO (Phase 3-6)
 

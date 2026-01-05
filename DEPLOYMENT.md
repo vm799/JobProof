@@ -30,14 +30,14 @@ Before deploying, ensure you have:
 
 1. In Supabase dashboard, go to SQL Editor
 2. Run each script in order:
-   ```
+   \`\`\`
    scripts/003_appsumo_licensing.sql
    scripts/004_add_indexes_and_constraints.sql
    scripts/006_create_templates.sql
    scripts/007_create_reminders.sql
    scripts/008_personal_connection_features.sql
    scripts/009_performance_indexes.sql
-   ```
+   \`\`\`
 3. Or use the v0 scripts runner to execute all at once
 
 ### 1.3 Enable Email Authentication
@@ -79,10 +79,10 @@ Before deploying, ensure you have:
 1. Go to Domains
 2. Add your domain: `getboardingpass.app`
 3. Add DNS records to your domain provider:
-   ```
+   \`\`\`
    TXT  _resend  [verification-code]
    MX   @        feedback-smtp.resend.com (Priority: 10)
-   ```
+   \`\`\`
 4. Wait for verification (usually 5-10 minutes)
 
 ---
@@ -101,35 +101,35 @@ Before deploying, ensure you have:
 Add these environment variables in Vercel:
 
 #### Supabase Variables
-```bash
+\`\`\`bash
 NEXT_PUBLIC_SUPABASE_URL=https://[your-project-ref].supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
 
 # For development redirects (optional)
 NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
-```
+\`\`\`
 
 #### Resend Variables
-```bash
+\`\`\`bash
 RESEND_API_KEY=re_...
-```
+\`\`\`
 
 #### Cron Secret
-```bash
+\`\`\`bash
 CRON_SECRET=[generate-random-string]
-```
+\`\`\`
 
 **Generate CRON_SECRET:**
-```bash
+\`\`\`bash
 openssl rand -base64 32
-```
+\`\`\`
 
 #### App URLs
-```bash
+\`\`\`bash
 NEXT_PUBLIC_APP_URL=https://yourdomain.com
 NEXT_PUBLIC_SITE_URL=https://yourdomain.com
-```
+\`\`\`
 
 ### 3.3 Configure Build Settings
 
@@ -152,7 +152,7 @@ NEXT_PUBLIC_SITE_URL=https://yourdomain.com
 
 Ensure `vercel.json` exists in your repo:
 
-```json
+\`\`\`json
 {
   "crons": [
     {
@@ -161,16 +161,16 @@ Ensure `vercel.json` exists in your repo:
     }
   ]
 }
-```
+\`\`\`
 
 This runs reminders daily at 10 AM UTC.
 
 ### 4.2 Test Cron Endpoint
 
-```bash
+\`\`\`bash
 curl -X GET 'https://yourdomain.com/api/cron/send-reminders' \
   -H 'Authorization: Bearer YOUR_CRON_SECRET'
-```
+\`\`\`
 
 Expected response: `{"success": true, "sent": 0}`
 
@@ -191,10 +191,10 @@ Expected response: `{"success": true, "sent": 0}`
 2. Add your domain: `getboardingpass.app`
 3. Add DNS records to your domain provider:
 
-```
+\`\`\`
 A     @    76.76.21.21
 CNAME www  cname.vercel-dns.com
-```
+\`\`\`
 
 ### 5.2 Enable HTTPS
 
@@ -206,10 +206,10 @@ CNAME www  cname.vercel-dns.com
 
 Update these variables with your custom domain:
 
-```bash
+\`\`\`bash
 NEXT_PUBLIC_APP_URL=https://getboardingpass.app
 NEXT_PUBLIC_SITE_URL=https://getboardingpass.app
-```
+\`\`\`
 
 Redeploy after updating env vars.
 
@@ -267,12 +267,12 @@ Redeploy after updating env vars.
 ### 6.3 Security Check
 
 1. Test rate limiting:
-   ```bash
+   \`\`\`bash
    # Should be rate limited after 10 requests
    for i in {1..15}; do
      curl https://yourdomain.com/api/send-onboarding-invite
    done
-   ```
+   \`\`\`
 
 2. Test authentication:
    - Try accessing `/dashboard` without login
@@ -291,13 +291,13 @@ Redeploy after updating env vars.
 1. Create Sentry account at [sentry.io](https://sentry.io)
 2. Create new project for Next.js
 3. Install Sentry:
-   ```bash
+   \`\`\`bash
    npm install @sentry/nextjs
-   ```
+   \`\`\`
 4. Run Sentry setup:
-   ```bash
+   \`\`\`bash
    npx @sentry/wizard@latest -i nextjs
-   ```
+   \`\`\`
 5. Add `SENTRY_DSN` to Vercel env vars
 6. Redeploy
 
@@ -452,10 +452,10 @@ As you scale:
    - Monitor Vercel logs for suspicious activity
 
 3. **Keep dependencies updated**
-   ```bash
+   \`\`\`bash
    npm audit
    npm update
-   ```
+   \`\`\`
 
 4. **Enable Vercel Security Headers**
    - Already configured in `vercel.json`
