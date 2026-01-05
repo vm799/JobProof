@@ -2,6 +2,18 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { createBrowserClient } from '@supabase/ssr'
+
+let client: any = null;
+export function createClient() {
+  if (client) return client; // Return the existing client if it exists
+  client = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  return client;
+}
+
 import { createClient } from "@/lib/supabase/client"
 import { StatsCards } from "@/components/stats-cards"
 import { RecentActivity } from "@/components/recent-activity"
