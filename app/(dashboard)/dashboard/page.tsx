@@ -16,7 +16,6 @@ import { RefreshCw } from "lucide-react"
 
 export default function DashboardPage() {
   const router = useRouter()
-  const hasInitialized = useRef(false)
   const isFetching = useRef(false)
 
   const [loading, setLoading] = useState(true)
@@ -30,60 +29,71 @@ export default function DashboardPage() {
     try {
       const supabase = createClient()
 
-      // 1. Auth Check using getSession (More stable for redirects)
+      // 1. Auth Check
       const { data: { session } } = await supabase.auth.getSession()
-      
       if (!session) {
         router.push("/auth/login")
         return
       }
 
-      const user = session.user
-
-      // 2. Fetch Profile and Workspace separately to avoid complex join errors
+      // 2. Fetch Profile
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id", session.user.id)
         .single()
 
-      if (profileError) throw new Error("Profile fetch failed")
-
-      let workspace = null
-      if (profile.current_workspace_id) {
-        const { data: wsData } = await supabase
-          .from("workspaces")
-          .select("*")
-          .eq("id", profile.current_workspace_id)
-          .single()
-        workspace = wsData
+      if (profileError || !profile) {
+        // If profile doesn't exist, they need to set up their account
+        router.push("/onboarding/setup-profile")
+        return
       }
 
-      // 3. Fetch Recent Activity
+      // 3. NEW USER GUIDANCE: If no workspace ID, send them to Create Workspace
+      if (!profile.current_workspace_id) {
+        console.log("No workspace found, redirecting to creator...")
+        router.push("/onboarding/create-workspace")
+        return
+      }
+
+      // 4. Fetch Workspace
+      const { data: workspace, error: wsError } = await supabase
+        .from("workspaces")
+        .select("*")
+        .eq("id", profile.current_workspace_id)
+        .single()
+
+      if (wsError || !workspace) {
+        // If workspace is missing, send to setup
+        router.push("/onboarding/create-workspace")
+        return
+      }
+
+      // 5. Fetch Activity
       const { data: activity } = await supabase
         .from("activity_logs")
         .select("*")
-        .eq("workspace_id", profile.current_workspace_id)
+        .eq("workspace_id", workspace.id)
         .order("created_at", { ascending: false })
         .limit(10)
 
+      // 6. Success: Populate Dashboard
       setData({
-        user,
+        user: session.user,
         profile,
         workspace,
         stats: { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 },
         recentActivity: activity || [],
-        shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
+        shouldShowWelcomeVideo: workspace.welcome_video_url && !profile.has_seen_welcome_video,
       })
       
       setError(null)
     } catch (err: any) {
-      console.error("Dashboard error:", err)
+      console.error("Dashboard Load Error:", err)
       setError(err.message)
     } finally {
       setLoading(false)
       isFetching.current = false
-      hasInitialized.current = true
     }
   }, [router])
 
@@ -108,8 +118,8 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <p className="text-red-500 font-medium">Error: {error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>
+        <p className="text-red-500 font-medium">Something went wrong: {error}</p>
+        <Button variant="outline" onClick={() => fetchData()}>
           <RefreshCw className="mr-2 h-4 w-4" /> Try Again
         </Button>
       </div>
@@ -130,21 +140,21 @@ export default function DashboardPage() {
 
       <div className="flex flex-col gap-6 p-4">
         <div>
-          <h1 className="text-3xl font-semibold">Dashboard</h1>
+          <h1 className="text-3xl font-semibold">{data.workspace.name}</h1>
           <p className="text-muted-foreground">
-            Welcome back, {data?.profile?.name || data?.user?.email}
+            Logged in as {data.profile.email}
           </p>
         </div>
 
-        <StatsCards stats={data?.stats} />
+        <StatsCards stats={data.stats} />
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <ClientProgressTable workspaceId={data?.profile?.current_workspace_id} />
+            <ClientProgressTable workspaceId={data.workspace.id} />
           </div>
           <div className="space-y-6">
-            <RecentActivity activities={data?.recentActivity} />
-            <QuickActions workspaceId={data?.profile?.current_workspace_id} />
+            <RecentActivity activities={data.recentActivity} />
+            <QuickActions workspaceId={data.workspace.id} />
           </div>
         </div>
       </div>
