@@ -2,18 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { createBrowserClient } from '@supabase/ssr'
-
-let client: any = null;
-export function createClient() {
-  if (client) return client; // Return the existing client if it exists
-  client = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  return client;
-}
-
 import { createClient } from "@/lib/supabase/client"
 import { StatsCards } from "@/components/stats-cards"
 import { RecentActivity } from "@/components/recent-activity"
@@ -29,28 +17,30 @@ import { RefreshCw } from "lucide-react"
 export default function DashboardPage() {
   const router = useRouter()
   const hasInitialized = useRef(false)
-  const currentUserId = useRef<string | null>(null)
   const isFetching = useRef(false)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<any>(null)
 
-const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     if (isFetching.current) return
     isFetching.current = true
 
     try {
       const supabase = createClient()
 
-      // 1. Auth Check
-      const { data: { user }, error: authError } = await supabase.auth.getUser()
-      if (authError || !user) {
+      // 1. Auth Check using getSession (More stable for redirects)
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session) {
         router.push("/auth/login")
         return
       }
 
-      // 2. Fetch Profile simply
+      const user = session.user
+
+      // 2. Fetch Profile and Workspace separately to avoid complex join errors
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
@@ -59,7 +49,6 @@ const fetchData = useCallback(async () => {
 
       if (profileError) throw new Error("Profile fetch failed")
 
-      // 3. Fetch Workspace separately using the ID from the profile
       let workspace = null
       if (profile.current_workspace_id) {
         const { data: wsData } = await supabase
@@ -70,33 +59,20 @@ const fetchData = useCallback(async () => {
         workspace = wsData
       }
 
-      // 4. Fetch Stats & Activity
-      let stats = { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 }
-      let recentActivity = []
-
-      if (workspace) {
-        const { count: clientsCount } = await supabase
-          .from("clients")
-          .select("id", { count: "exact" })
-          .eq("workspace_id", workspace.id)
-
-        const { data: activity } = await supabase
-          .from("activity_logs")
-          .select("*")
-          .eq("workspace_id", workspace.id)
-          .order("created_at", { ascending: false })
-          .limit(10)
-        
-        recentActivity = activity || []
-        stats.totalClients = clientsCount || 0
-      }
+      // 3. Fetch Recent Activity
+      const { data: activity } = await supabase
+        .from("activity_logs")
+        .select("*")
+        .eq("workspace_id", profile.current_workspace_id)
+        .order("created_at", { ascending: false })
+        .limit(10)
 
       setData({
         user,
         profile,
         workspace,
-        stats,
-        recentActivity,
+        stats: { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 },
+        recentActivity: activity || [],
         shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
       })
       
@@ -111,89 +87,14 @@ const fetchData = useCallback(async () => {
     }
   }, [router])
 
-
-  
-  // const fetchData = useCallback(async () => {
-  //   // 1. Guard: Prevent double-fetching
-  //   if (isFetching.current) return
-  //   isFetching.current = true
-
-  //   try {
-  //     const supabase = createClient()
-
-  //     // 2. Auth Check
-  //     const { data: { user }, error: authError } = await supabase.auth.getUser()
-  //     if (authError || !user) {
-  //       router.push("/auth/login")
-  //       return
-  //     }
-
-  //     currentUserId.current = user.id
-
-  //     // 3. Fetch Profile AND Workspace in one go (Optimized)
-  //     const { data: profile, error: profileError } = await supabase
-  //       .from("profiles")
-  //       .select(`
-  //         *,
-  //         workspaces!current_workspace_id (*)
-  //       `)
-  //       .eq("id", user.id)
-  //       .single()
-
-  //     if (profileError) throw new Error("Profile fetch failed")
-
-  //     const workspace = profile?.workspaces
-
-  //     // 4. Fetch Stats & Activity (Only if workspace exists)
-  //     let stats = { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 }
-  //     let recentActivity = []
-
-  //     if (workspace) {
-  //       const { count: clientsCount } = await supabase
-  //         .from("clients")
-  //         .select("id", { count: "exact" })
-  //         .eq("workspace_id", workspace.id)
-
-  //       const { data: activity } = await supabase
-  //         .from("activity_logs")
-  //         .select("*")
-  //         .eq("workspace_id", workspace.id)
-  //         .order("created_at", { ascending: false })
-  //         .limit(10)
-        
-  //       recentActivity = activity || []
-  //       stats.totalClients = clientsCount || 0
-  //     }
-
-  //     // 5. Set State ONCE
-  //     setData({
-  //       user,
-  //       profile,
-  //       workspace,
-  //       stats,
-  //       recentActivity,
-  //       shouldShowWelcomeVideo: workspace?.welcome_video_url && !profile.has_seen_welcome_video,
-  //     })
-      
-  //     setError(null)
-  //   } catch (err: any) {
-  //     console.error("Dashboard error:", err)
-  //     setError(err.message)
-  //   } finally {
-  //     setLoading(false)
-  //     isFetching.current = false
-  //     hasInitialized.current = true
-  //   }
-  // }, [router]) // REMOVED 'data' from here - this stops the infinite loop
-
   useEffect(() => {
     fetchData()
   }, [fetchData])
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-6 p-6">
-        <Skeleton className="h-12 w-1/4" />
+      <div className="flex flex-col gap-6 p-8">
+        <Skeleton className="h-10 w-48" />
         <div className="grid gap-4 md:grid-cols-3">
           <Skeleton className="h-32" />
           <Skeleton className="h-32" />
@@ -207,7 +108,7 @@ const fetchData = useCallback(async () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <p className="text-red-500 font-medium">{error}</p>
+        <p className="text-red-500 font-medium">Error: {error}</p>
         <Button variant="outline" onClick={() => window.location.reload()}>
           <RefreshCw className="mr-2 h-4 w-4" /> Try Again
         </Button>
@@ -227,11 +128,11 @@ const fetchData = useCallback(async () => {
       <OnboardingTour />
       <HelpButton />
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 p-4">
         <div>
           <h1 className="text-3xl font-semibold">Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back, {data?.profile?.email || data?.user?.email}
+            Welcome back, {data?.profile?.name || data?.user?.email}
           </p>
         </div>
 
