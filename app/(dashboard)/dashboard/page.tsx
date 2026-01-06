@@ -36,16 +36,33 @@ export default function DashboardPage() {
         return
       }
 
-      // 2. Fetch Profile
-      const { data: profile, error: profileError } = await supabase
+     
+      // 2. Fetch Profile with Retry Logic
+      let { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", session.user.id)
         .single()
 
+      // CRITICAL FIX: If profile is missing, wait 2 seconds and try one last time
+      // This solves the race condition where the user is "logged in" but the DB is still thinking
+      if (!profile) {
+        console.log("Profile not found yet, retrying in 2 seconds...")
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        
+        const { data: retryProfile, error: retryError } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single()
+        
+        profile = retryProfile
+        profileError = retryError
+      }
+
       if (profileError || !profile) {
-        // If profile doesn't exist, they need to set up their account
-        router.push("/onboarding/setup-profile")
+        console.log("Redirecting to onboarding - Profile truly missing")
+        router.push("/onboarding") // Cleaned up the path to just /onboarding
         return
       }
 
