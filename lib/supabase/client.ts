@@ -1,14 +1,26 @@
 "use client"
+import { createBrowserClient } from '@supabase/ssr'
 
-import { createBrowserClient } from "@supabase/ssr"
+// We export a constant so it's stable and unique
+export const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-let client: ReturnType<typeof createBrowserClient> | undefined
-let lastKnownUserId: string | null = null
-
+// We also keep the function for compatibility, but make it return the same instance
 export function createClient() {
-  if (typeof window === "undefined") {
-    return null as any
-  }
+  return supabase
+}
+
+// import { createBrowserClient } from "@supabase/ssr"
+
+// let client: ReturnType<typeof createBrowserClient> | undefined
+// let lastKnownUserId: string | null = null
+
+// export function createClient() {
+//   if (typeof window === "undefined") {
+//     return null as any
+//   }
 
   if (client) return client
 
