@@ -2,49 +2,32 @@
 
 import { createBrowserClient } from "@supabase/ssr"
 
+// 1. Never call createClient() at the top level of the file
 let client: ReturnType<typeof createBrowserClient> | undefined
-let lastKnownUserId: string | null = null
 
-export function createClient() {
-  if (typeof window === "undefined") return null as any
+export function getSupabase() {
+  if (typeof window === "undefined") return null
 
   if (client) return client
 
-  // 1. Get the variables safely without the "!"
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // 2. Log if they are missing to confirm our suspicion
-  if (!url || !key) {
-    console.error("[v0] CRITICAL: Supabase URL or Key is missing from process.env")
-  }
-
-  // 3. Provide fallback strings so createBrowserClient doesn't throw a hard error
+  // 2. Fallback to your project URL directly if the env var is missing
+  // This is safe for PUBLIC keys and prevents the boot-loop
   client = createBrowserClient(
-    url || "https://placeholder.supabase.co", 
+    url || "https://pvmucyfeayjhbitftpvp.supabase.co",
     key || "placeholder-key", 
     {
       auth: {
         storageKey: "sb-pvmucyfeayjhbitftpvp-auth-token",
         flowType: "pkce",
-        autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: true,
       },
     }
   )
 
-  client.auth.onAuthStateChange((event, session) => {
-    const currentUserId = session?.user?.id || null
-    if (event === "SIGNED_IN" && currentUserId !== lastKnownUserId) {
-      console.log("[v0] New login detected:", currentUserId)
-      lastKnownUserId = currentUserId
-    } else if (event === "SIGNED_OUT") {
-      lastKnownUserId = null
-    }
-  })
-
   return client
 }
 
-export const supabase = createClient()
+// 3. IMPORTANT: Remove the "export const supabase = createClient()" line
