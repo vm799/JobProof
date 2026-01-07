@@ -22,6 +22,10 @@ export async function createJobSession(data: {
 
   if (!profile?.current_workspace_id) throw new Error("No workspace")
 
+  if (!data.templateId) {
+    throw new Error("A job template/workflow is required to create a job")
+  }
+
   // 2. Create job session (reuses client_onboardings table)
   const { data: job, error: jobError } = await supabase
     .from("client_onboardings")
@@ -59,6 +63,7 @@ export async function createJobSession(data: {
 
   revalidatePath("/dashboard")
   revalidatePath("/clients")
+  revalidatePath(`/sites/${data.siteId}`)
 
   return { success: true, jobId: job.id, jobLink }
 }

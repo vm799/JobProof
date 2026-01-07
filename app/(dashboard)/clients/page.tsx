@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server"
 import { SitesList } from "@/components/sites-list"
 import { RefreshCw } from "lucide-react"
 
-// Explicitly define these as literals. Do not use variables or logic.
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
@@ -43,7 +42,6 @@ export default async function ClientsPage() {
   return <SitesList sites={clients || []} workspaceId={profile.current_workspace_id} />
 }
 
-// Keep this strictly separate from the page component
 function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">

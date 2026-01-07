@@ -99,7 +99,7 @@ export function SitesList({ sites: initialSites, workspaceId }: SitesListProps) 
                       <TableCell>{new Date(site.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/clients/${site.id}`}>View Details</Link>
+                          <Link href={`/sites/${site.id}`}>View Details</Link>
                         </Button>
                       </TableCell>
                     </TableRow>
