@@ -8,12 +8,21 @@ let lastKnownUserId: string | null = null
 export function createClient() {
   if (typeof window === "undefined") return null as any
 
-  // If the client already exists, just return it (Stops the tug-of-war)
   if (client) return client
 
+  // 1. Get the variables safely without the "!"
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // 2. Log if they are missing to confirm our suspicion
+  if (!url || !key) {
+    console.error("[v0] CRITICAL: Supabase URL or Key is missing from process.env")
+  }
+
+  // 3. Provide fallback strings so createBrowserClient doesn't throw a hard error
   client = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
+    url || "https://placeholder.supabase.co", 
+    key || "placeholder-key", 
     {
       auth: {
         storageKey: "sb-pvmucyfeayjhbitftpvp-auth-token",
@@ -25,10 +34,8 @@ export function createClient() {
     }
   )
 
-  // Listen for auth changes once
   client.auth.onAuthStateChange((event, session) => {
     const currentUserId = session?.user?.id || null
-    
     if (event === "SIGNED_IN" && currentUserId !== lastKnownUserId) {
       console.log("[v0] New login detected:", currentUserId)
       lastKnownUserId = currentUserId
@@ -40,5 +47,4 @@ export function createClient() {
   return client
 }
 
-// Export the instance directly as well for easier importing
 export const supabase = createClient()
