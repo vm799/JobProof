@@ -1,7 +1,15 @@
-import { createClient } from "@/lib/supabase/client"
+"use client"
+
+// 1. Changed import to the new stable getter
+import { getSupabase } from "@/lib/supabase/client"
 
 export async function uploadFile(file: File, onboardingId: string, stepProgressId: string, workspaceId: string) {
-  const supabase = createClient()
+  // 2. Initialize inside the function
+  const supabase = getSupabase()
+  
+  if (!supabase) {
+    throw new Error("Supabase client failed to initialize. Check environment variables.")
+  }
 
   // Generate unique file path
   const fileExt = file.name.split(".").pop()
@@ -47,7 +55,10 @@ export async function uploadFile(file: File, onboardingId: string, stepProgressI
 }
 
 export async function deleteFile(fileId: string) {
-  const supabase = createClient()
+  // 2. Initialize inside the function
+  const supabase = getSupabase()
+  
+  if (!supabase) return
 
   // Get file path
   const { data: file } = await supabase.from("file_uploads").select("storage_path").eq("id", fileId).single()
