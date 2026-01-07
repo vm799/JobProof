@@ -13,39 +13,39 @@ interface TourStep {
 
 const tourSteps: TourStep[] = [
   {
-    title: "Welcome to BoardingPass",
+    title: "Welcome to JobProof",
     description:
-      "This quick tour shows how to create flows, manage clients, and track progress. Let's walk through the platform together.",
+      "This quick tour shows how to create job templates, manage sites, and track completion. Let's walk through the platform together.",
   },
   {
-    title: "Step 1: Create Onboarding Flows",
+    title: "Step 1: Create Job Templates",
     description:
-      "Build structured intake workflows using our flow builder. Start from templates or create custom steps for your process.",
+      "Build structured job workflows using our template builder. Start from templates or create custom steps for your field operations.",
   },
   {
-    title: "Step 2: Send Client Invitations",
+    title: "Step 2: Assign Jobs to Technicians",
     description:
-      "Invite clients by email. They receive a branded portal link where they can complete onboarding at their own pace.",
+      "Assign jobs by email. They receive a secure link where they can complete the job checklist at their own pace.",
   },
   {
-    title: "Step 3: Clients Complete Their Onboarding",
+    title: "Step 3: Technicians Complete Their Jobs",
     description:
-      "Your clients see a clean, branded portal. They work through each step, upload documents, and provide information you need.",
+      "Your technicians see a clean, mobile-friendly interface. They work through each step, upload photos, and provide proof of completion.",
   },
   {
-    title: "Step 4: Track Real-Time Progress",
+    title: "Step 4: Track Job Completion",
     description:
-      "Monitor completion status in your dashboard. See which clients need follow-up and identify any bottlenecks in your flow.",
+      "Monitor job status in your dashboard. See which sites need follow-up and identify any bottlenecks in your workflow.",
   },
   {
-    title: "Step 5: Automate Follow-Ups",
+    title: "Step 5: Schedule Future Jobs",
     description:
-      "Set up automated reminder emails to keep clients moving. Configure reminder schedules based on your workflow needs.",
+      "Plan recurring jobs or schedule follow-ups. Configure job schedules based on your site needs and technician availability.",
   },
   {
-    title: "Ready to Build",
+    title: "Ready to Get Started",
     description:
-      "You now understand how BoardingPass works from both sides. Start creating your first flow or explore the dashboard.",
+      "You now understand how JobProof works from both sides. Start creating your first job or explore the dashboard.",
   },
 ]
 

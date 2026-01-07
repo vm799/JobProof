@@ -37,8 +37,8 @@ import { useState, useEffect } from "react"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Sites", href: "/clients", icon: Users },
-  { name: "Job Templates", href: "/flows", icon: Workflow },
+  { name: "Sites", href: "/sites", icon: Users },
+  { name: "Workflows", href: "/flows", icon: Workflow },
   { name: "Template Library", href: "/templates", icon: Layers },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Team", href: "/team", icon: UsersRound },

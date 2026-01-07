@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { redirect } from "next/navigation"
 
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
@@ -19,7 +20,9 @@ const steps = [
   { id: 5, name: "Review", status: "upcoming" },
 ]
 
-export default function ClientPortalPage() {
+export default function PortalPage() {
+  redirect("/dashboard")
+
   const [currentStep, setCurrentStep] = useState(3)
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({})
 

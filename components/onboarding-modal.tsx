@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
@@ -27,9 +26,8 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
-    clientName: "",
-    clientEmail: "",
-    flowId: "",
+    siteName: "",
+    siteEmail: "",
   })
   const router = useRouter()
   const supabase = createClient()
@@ -39,12 +37,12 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
   }
 
   const handleSubmit = async () => {
-    if (!formData.clientName || formData.clientName.length < 2) {
-      setError("Client name must be at least 2 characters")
+    if (!formData.siteName || formData.siteName.length < 2) {
+      setError("Site name must be at least 2 characters")
       return
     }
 
-    if (!formData.clientEmail || !isValidEmail(formData.clientEmail)) {
+    if (!formData.siteEmail || !isValidEmail(formData.siteEmail)) {
       setError("Please enter a valid email address")
       return
     }
@@ -53,52 +51,28 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
     setError(null)
 
     try {
-      const { data: client, error: clientError } = await supabase
+      const { data: site, error: siteError } = await supabase
         .from("clients")
         .insert({
-          name: formData.clientName,
-          email: formData.clientEmail,
+          name: formData.siteName,
+          email: formData.siteEmail,
           workspace_id: workspaceId,
         })
         .select()
         .single()
 
-      if (clientError) throw clientError
-
-      const token = crypto.randomUUID()
-      const { data: onboarding, error: onboardingError } = await supabase
-        .from("client_onboardings")
-        .insert({
-          client_id: client.id,
-          flow_id: formData.flowId || null,
-          status: "not_started",
-          onboarding_link_token: token,
-        })
-        .select()
-        .single()
-
-      if (onboardingError) throw onboardingError
-
-      try {
-        await fetch("/api/send-onboarding-invite", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ onboardingId: onboarding.id }),
-        })
-      } catch (emailErr) {
-        console.error("Email send failed:", emailErr)
-      }
+      if (siteError) throw siteError
 
       toast({
-        title: "Onboarding created",
-        description: `Invitation email sent to ${formData.clientEmail}`,
+        title: "Site created",
+        description: `${formData.siteName} has been added to your workspace.`,
       })
 
       onOpenChange(false)
-      setFormData({ clientName: "", clientEmail: "", flowId: "" })
+      setFormData({ siteName: "", siteEmail: "" })
       router.refresh()
     } catch (err: any) {
-      setError(err.message || "Failed to create onboarding")
+      setError(err.message || "Failed to create site")
     } finally {
       setIsLoading(false)
     }
@@ -108,10 +82,8 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-center">Create New Onboarding</DialogTitle>
-          <DialogDescription className="text-center">
-            Add client information to begin their onboarding journey
-          </DialogDescription>
+          <DialogTitle className="text-center">Create New Site</DialogTitle>
+          <DialogDescription className="text-center">Add a job site to your workspace</DialogDescription>
         </DialogHeader>
 
         {error && (
@@ -122,48 +94,36 @@ export function OnboardingModal({ open, onOpenChange, workspaceId }: OnboardingM
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="client-name">Client Name *</Label>
+            <Label htmlFor="site-name">Site Name *</Label>
             <Input
-              id="client-name"
-              placeholder="Acme Corporation"
-              value={formData.clientName}
-              onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+              id="site-name"
+              placeholder="Downtown Office Building"
+              value={formData.siteName}
+              onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}
               maxLength={100}
             />
             <p className="text-xs text-muted-foreground">Minimum 2 characters</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="client-email">Client Email *</Label>
+            <Label htmlFor="site-email">Site Email *</Label>
             <Input
-              id="client-email"
+              id="site-email"
               type="email"
-              placeholder="contact@acme.com"
-              value={formData.clientEmail}
-              onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
+              placeholder="manager@site.com"
+              value={formData.siteEmail}
+              onChange={(e) => setFormData({ ...formData, siteEmail: e.target.value })}
             />
             <p className="text-xs text-muted-foreground">Must be a valid email address</p>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="flow-type">Onboarding Flow (Optional)</Label>
-            <Select value={formData.flowId} onValueChange={(value) => setFormData({ ...formData, flowId: value })}>
-              <SelectTrigger id="flow-type">
-                <SelectValue placeholder="Select a flow or skip" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="skip">No flow - manual setup</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">You can assign a flow later from the Flows page</p>
           </div>
         </div>
 
         <DialogFooter>
           <Button
             onClick={handleSubmit}
-            disabled={!formData.clientName || !formData.clientEmail || isLoading}
+            disabled={!formData.siteName || !formData.siteEmail || isLoading}
             className="w-full"
           >
-            {isLoading ? "Creating..." : "Create Onboarding"}
+            {isLoading ? "Creating..." : "Create Site"}
           </Button>
         </DialogFooter>
       </DialogContent>

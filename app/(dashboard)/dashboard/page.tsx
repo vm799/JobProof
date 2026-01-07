@@ -45,10 +45,8 @@ export default function DashboardPage() {
         .eq("id", session.user.id)
         .single()
 
-      // CRITICAL FIX: If profile is missing, wait 2 seconds and try one last time
-      // This solves the race condition where the user is "logged in" but the DB is still thinking
       if (!profile) {
-        console.log("Profile not found yet, retrying in 2 seconds...")
+        console.log("[v0] Profile not found yet, retrying in 2 seconds...")
         await new Promise((resolve) => setTimeout(resolve, 2000))
 
         const { data: retryProfile, error: retryError } = await supabase
@@ -62,15 +60,15 @@ export default function DashboardPage() {
       }
 
       if (profileError || !profile) {
-        console.log("Redirecting to onboarding - Profile truly missing")
-        router.push("/onboarding") // Cleaned up the path to just /onboarding
+        console.log("[v0] Redirecting to dashboard - Profile truly missing")
+        router.push("/dashboard")
         return
       }
 
-      // 3. NEW USER GUIDANCE: If no workspace ID, send them to Create Workspace
+      // 3. Check workspace ID - if missing, redirect to dashboard setup
       if (!profile.current_workspace_id) {
-        console.log("No workspace found, redirecting to creator...")
-        router.push("/onboarding/create-workspace")
+        console.log("[v0] No workspace found, redirecting to dashboard...")
+        router.push("/dashboard")
         return
       }
 
@@ -82,8 +80,7 @@ export default function DashboardPage() {
         .single()
 
       if (wsError || !workspace) {
-        // If workspace is missing, send to setup
-        router.push("/onboarding/create-workspace")
+        router.push("/dashboard")
         return
       }
 
@@ -95,19 +92,19 @@ export default function DashboardPage() {
         .order("created_at", { ascending: false })
         .limit(10)
 
-      // 6. Success: Populate Dashboard
+      // 6. Updated copy: "Welcome to" dashboard, removed "onboarding" terminology
       setData({
         user: session.user,
         profile,
         workspace,
-        stats: { activeOnboardings: 0, totalClients: 0, completedThisMonth: 0 },
+        stats: { activeJobs: 0, totalSites: 0, completedThisMonth: 0 },
         recentActivity: activity || [],
         shouldShowWelcomeVideo: workspace.welcome_video_url && !profile.has_seen_welcome_video,
       })
 
       setError(null)
     } catch (err: any) {
-      console.error("Dashboard Load Error:", err)
+      console.error("[v0] Dashboard Load Error:", err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -159,7 +156,7 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-6 p-4">
         <div>
           <h1 className="text-3xl font-semibold">Welcome to {data.workspace.name}</h1>
-          <p className="text-muted-foreground">{data.profile.name || data.profile.email} - Field Service Dashboard</p>
+          <p className="text-muted-foreground">{data.profile.name || data.profile.email} - JobProof Dashboard</p>
         </div>
 
         <JobStatsCards workspaceId={data.workspace.id} />

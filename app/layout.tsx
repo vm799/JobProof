@@ -12,22 +12,22 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "BoardingPass - Client Onboarding Made Simple",
-  description: "Streamline your client onboarding process with BoardingPass",
+  title: "JobProof - Field Service Proof of Work",
+  description: "Digital proof of work for field service teams",
   generator: "v0.app",
   icons: {
     icon: [
       {
-        url: "/boardingpass-logo.png",
+        url: "/jobproof-logo.png",
         type: "image/png",
         sizes: "320x320",
       },
     ],
     apple: {
-      url: "/boardingpass-logo.png",
+      url: "/jobproof-logo.png",
       sizes: "320x320",
     },
-    shortcut: "/boardingpass-logo.png",
+    shortcut: "/jobproof-logo.png",
   },
 }
 

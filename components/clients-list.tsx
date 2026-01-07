@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Plus, Search, MoreVertical, Mail, Calendar, Users, Copy, Trash2, Briefcase } from "lucide-react"
+import { Plus, Search, MoreVertical, Mail, Calendar, Users, Trash2, Briefcase } from "lucide-react"
 import { OnboardingModal } from "@/components/onboarding-modal"
 import { CreateJobModal } from "@/components/create-job-modal"
 import { EmptyState } from "@/components/empty-state"
@@ -46,7 +46,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [clientToDelete, setClientToDelete] = useState<string | null>(null)
+  const [siteToDelete, setSiteToDelete] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showJobModal, setShowJobModal] = useState(false)
   const [selectedSite, setSelectedSite] = useState<{ id: string; name: string } | null>(null)
@@ -99,10 +99,6 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
       .join(" ")
   }
 
-  const calculateProgress = (steps: any[]) => {
-    return 0 // Will be loaded on-demand when client is clicked
-  }
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -112,62 +108,31 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
       .slice(0, 2)
   }
 
-  const handleDeleteClient = async (clientId: string) => {
-    setClientToDelete(null)
+  const handleDeleteSite = async (siteId: string) => {
+    setSiteToDelete(null)
     setIsDeleting(true)
 
     try {
-      const response = await fetch(`/api/clients/${clientId}`, {
+      const response = await fetch(`/api/clients/${siteId}`, {
         method: "DELETE",
       })
 
-      if (!response.ok) throw new Error("Failed to delete client")
+      if (!response.ok) throw new Error("Failed to delete site")
 
       toast({
-        title: "Client deleted",
-        description: "The client and their onboarding data have been removed.",
+        title: "Site deleted",
+        description: "The site and all associated job data have been removed.",
       })
 
       router.refresh()
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to delete client. Please try again.",
+        description: "Failed to delete site. Please try again.",
         variant: "destructive",
       })
     } finally {
       setIsDeleting(false)
-    }
-  }
-
-  const handleSharePortal = (client: Client) => {
-    const portalUrl = `${window.location.origin}/portal/${client.id}`
-    const subject = `Your Onboarding Portal - ${client.name}`
-    const body = `Hi ${client.name.split(" ")[0]},\n\nYour personalized onboarding portal is ready! Click the link below to get started:\n\n${portalUrl}\n\nLet me know if you have any questions.\n\nBest regards`
-
-    window.location.href = `mailto:${client.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-    toast({
-      title: "Email client opened",
-      description: "Ready to send the portal link to your client.",
-    })
-  }
-
-  const handleCopyLink = async (clientId: string, clientName: string) => {
-    const portalUrl = `${window.location.origin}/portal/${clientId}`
-
-    try {
-      await navigator.clipboard.writeText(portalUrl)
-      toast({
-        title: "Link copied!",
-        description: `Portal link for ${clientName} copied to clipboard.`,
-      })
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to copy link. Please try again.",
-        variant: "destructive",
-      })
     }
   }
 
@@ -292,23 +257,9 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleSharePortal(client)}>
-                                <Mail className="mr-2 h-4 w-4" />
-                                Email Portal Link
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleCopyLink(client.id, client.name)}>
-                                <Copy className="mr-2 h-4 w-4" />
-                                Copy Portal Link
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => router.push(`/clients/${client.id}`)}>
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => setClientToDelete(client.id)}
-                                className="text-destructive"
-                              >
+                              <DropdownMenuItem onClick={() => setSiteToDelete(client.id)} className="text-destructive">
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
+                                Delete Site
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -342,7 +293,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
         />
       )}
 
-      <AlertDialog open={clientToDelete !== null} onOpenChange={() => setClientToDelete(null)}>
+      <AlertDialog open={siteToDelete !== null} onOpenChange={() => setSiteToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Site?</AlertDialogTitle>
@@ -353,7 +304,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => clientToDelete && handleDeleteClient(clientToDelete)}
+              onClick={() => siteToDelete && handleDeleteSite(siteToDelete)}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

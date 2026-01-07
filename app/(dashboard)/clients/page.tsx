@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { SitesList } from "@/components/sites-list"
+import { ClientsList } from "@/components/clients-list"
 import { RefreshCw } from "lucide-react"
 
 export const dynamic = "force-dynamic"
@@ -36,17 +36,17 @@ export default async function ClientsPage() {
     .limit(50)
 
   if (clientsError) {
-    return <SitesList sites={[]} workspaceId={profile.current_workspace_id} />
+    return <ClientsList clients={[]} workspaceId={profile.current_workspace_id} />
   }
 
-  return <SitesList sites={clients || []} workspaceId={profile.current_workspace_id} />
+  return <ClientsList clients={clients || []} workspaceId={profile.current_workspace_id} />
 }
 
 function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
       <p className="text-muted-foreground">{message}</p>
-      <a href="/clients" className="inline-flex items-center px-4 py-2 border rounded-md hover:bg-accent">
+      <a href="/sites" className="inline-flex items-center px-4 py-2 border rounded-md hover:bg-accent">
         <RefreshCw className="mr-2 h-4 w-4" />
         Refresh Page
       </a>

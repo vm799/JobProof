@@ -22,8 +22,8 @@ export function ThemeLogo({ width = 500, height = 120, className = "", priority 
   if (!mounted) {
     return (
       <Image
-        src="/boardingpass-logo.png"
-        alt="BoardingPass"
+        src="/jobproof-logo.png"
+        alt="JobProof"
         width={width}
         height={height}
         className={className}
@@ -34,8 +34,8 @@ export function ThemeLogo({ width = 500, height = 120, className = "", priority 
 
   return (
     <Image
-      src="/boardingpass-logo.png"
-      alt="BoardingPass"
+      src="/jobproof-logo.png"
+      alt="JobProof"
       width={width}
       height={height}
       className={className}
