@@ -55,7 +55,7 @@ export default function CheckEmailPage({
 
               <Button asChild variant="ghost" className="w-full">
                 <a
-                  href="mailto:admin@getboardingpass.app?subject=Email Confirmation Issue"
+                  href="mailto:admin@jobproof.app?subject=Email Confirmation Issue"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
