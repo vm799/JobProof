@@ -1,16 +1,18 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { ClientsList } from "@/components/clients-list"
+import { SitesList } from "@/components/sites-list"
 import { RefreshCw } from "lucide-react"
 
 // Explicitly define these as literals. Do not use variables or logic.
 export const dynamic = "force-dynamic"
-export const revalidate = 0 
+export const revalidate = 0
 
 export default async function ClientsPage() {
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect("/auth/login")
 
   const { data: profile, error: profileError } = await supabase
@@ -35,10 +37,10 @@ export default async function ClientsPage() {
     .limit(50)
 
   if (clientsError) {
-    return <ClientsList clients={[]} workspaceId={profile.current_workspace_id} />
+    return <SitesList sites={[]} workspaceId={profile.current_workspace_id} />
   }
 
-  return <ClientsList clients={clients || []} workspaceId={profile.current_workspace_id} />
+  return <SitesList sites={clients || []} workspaceId={profile.current_workspace_id} />
 }
 
 // Keep this strictly separate from the page component

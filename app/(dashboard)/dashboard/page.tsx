@@ -3,9 +3,9 @@
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { StatsCards } from "@/components/stats-cards"
+import { JobStatsCards } from "@/components/job-stats-cards"
 import { RecentActivity } from "@/components/recent-activity"
-import { ClientProgressTable } from "@/components/client-progress-table"
+import { ActiveJobsTable } from "@/components/active-jobs-table"
 import { QuickActions } from "@/components/quick-actions"
 import { OnboardingTour } from "@/components/onboarding-tour"
 import { HelpButton } from "@/components/help-button"
@@ -30,13 +30,14 @@ export default function DashboardPage() {
       const supabase = createClient()
 
       // 1. Auth Check
-      const { data: { session } } = await supabase.auth.getSession()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session) {
         router.push("/auth/login")
         return
       }
 
-     
       // 2. Fetch Profile with Retry Logic
       let { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -49,13 +50,13 @@ export default function DashboardPage() {
       if (!profile) {
         console.log("Profile not found yet, retrying in 2 seconds...")
         await new Promise((resolve) => setTimeout(resolve, 2000))
-        
+
         const { data: retryProfile, error: retryError } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single()
-        
+
         profile = retryProfile
         profileError = retryError
       }
@@ -103,7 +104,7 @@ export default function DashboardPage() {
         recentActivity: activity || [],
         shouldShowWelcomeVideo: workspace.welcome_video_url && !profile.has_seen_welcome_video,
       })
-      
+
       setError(null)
     } catch (err: any) {
       console.error("Dashboard Load Error:", err)
@@ -157,17 +158,15 @@ export default function DashboardPage() {
 
       <div className="flex flex-col gap-6 p-4">
         <div>
-          <h1 className="text-3xl font-semibold">{data.workspace.name}</h1>
-          <p className="text-muted-foreground">
-            Logged in as {data.profile.email}
-          </p>
+          <h1 className="text-3xl font-semibold">Welcome to {data.workspace.name}</h1>
+          <p className="text-muted-foreground">{data.profile.name || data.profile.email} - Field Service Dashboard</p>
         </div>
 
-        <StatsCards stats={data.stats} />
+        <JobStatsCards workspaceId={data.workspace.id} />
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <ClientProgressTable workspaceId={data.workspace.id} />
+            <ActiveJobsTable workspaceId={data.workspace.id} />
           </div>
           <div className="space-y-6">
             <RecentActivity activities={data.recentActivity} />

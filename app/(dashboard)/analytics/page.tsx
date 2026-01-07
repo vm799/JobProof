@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { AnalyticsDashboard } from "@/components/analytics-dashboard"
+import { JobAnalyticsDashboard } from "@/components/job-analytics-dashboard"
 
 export const dynamic = "force-dynamic"
 
@@ -16,10 +16,7 @@ export default async function AnalyticsPage() {
     redirect("/auth/login")
   }
 
-  const { data: onboardings } = await supabase
-    .from("client_onboardings")
-    .select("*")
-    .order("created_at", { ascending: false })
+  const { data: jobs } = await supabase.from("client_onboardings").select("*").order("created_at", { ascending: false })
 
   const { data: activities } = await supabase
     .from("onboarding_activities")
@@ -30,7 +27,7 @@ export default async function AnalyticsPage() {
   return (
     <div className="p-8">
       <Suspense fallback={<div>Loading analytics...</div>}>
-        <AnalyticsDashboard onboardings={onboardings || []} activities={activities || []} />
+        <JobAnalyticsDashboard jobs={jobs || []} activities={activities || []} />
       </Suspense>
     </div>
   )

@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { TemplatesLibrary } from "@/components/templates-library"
+import { JobTemplatesLibrary } from "@/components/job-templates-library"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
@@ -57,11 +57,11 @@ export default async function TemplatesPage() {
     if (error) throw error
     templates = data || []
   } catch (error) {
-    console.error("[v0] Templates fetch failed:", error)
+    console.error("[v0] Job templates fetch failed:", error)
     templates = []
   }
 
-  return <TemplatesLibrary templates={templates} workspaceId={profile.current_workspace_id} />
+  return <JobTemplatesLibrary templates={templates} workspaceId={profile.current_workspace_id} />
 }
 
 function ErrorState({ message }: { message: string }) {

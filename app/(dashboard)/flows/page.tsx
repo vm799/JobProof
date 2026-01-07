@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { FlowsList } from "@/components/flows-list"
+import { JobTemplatesList } from "@/components/job-templates-list"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
@@ -57,7 +57,7 @@ export default async function FlowsPage() {
     flows = []
   }
 
-  return <FlowsList flows={flows} workspaceId={profile.current_workspace_id} />
+  return <JobTemplatesList templates={flows} workspaceId={profile.current_workspace_id} />
 }
 
 function ErrorState({ message }: { message: string }) {

@@ -18,7 +18,6 @@ import {
   X,
   HelpCircle,
   Shield,
-  Map,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -37,11 +36,10 @@ import { ThemeLogo } from "@/components/theme-logo"
 import { useState, useEffect } from "react"
 
 const navigation = [
-  { name: "Roadmap", href: "/roadmap", icon: Map },
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Clients", href: "/clients", icon: Users },
-  { name: "Onboarding Flows", href: "/flows", icon: Workflow },
-  { name: "Templates", href: "/templates", icon: Layers },
+  { name: "Sites", href: "/clients", icon: Users },
+  { name: "Job Templates", href: "/flows", icon: Workflow },
+  { name: "Template Library", href: "/templates", icon: Layers },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Team", href: "/team", icon: UsersRound },
   { name: "Billing", href: "/billing", icon: CreditCard },

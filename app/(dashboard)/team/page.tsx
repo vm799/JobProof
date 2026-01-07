@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { TeamManagement } from "@/components/team-management"
+import { FieldTeamManagement } from "@/components/field-team-management"
 
 export const dynamic = "force-dynamic"
 
@@ -17,8 +17,8 @@ export default async function TeamPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Team</h1>
-      <TeamManagement />
+      <h1 className="text-3xl font-bold mb-6">Field Team</h1>
+      <FieldTeamManagement />
     </div>
   )
 }
