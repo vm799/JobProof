@@ -16,7 +16,17 @@ export default async function AnalyticsPage() {
     redirect("/auth/login")
   }
 
-  const { data: jobs } = await supabase.from("client_onboardings").select("*").order("created_at", { ascending: false })
+  const { data: profile } = await supabase.from("profiles").select("current_workspace_id").eq("id", user.id).single()
+
+  if (!profile?.current_workspace_id) {
+    redirect("/dashboard")
+  }
+
+  const { data: jobs } = await supabase
+    .from("client_onboardings")
+    .select("*")
+    .eq("workspace_id", profile.current_workspace_id)
+    .order("created_at", { ascending: false })
 
   const { data: activities } = await supabase
     .from("onboarding_activities")

@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { toast } from "react-toastify"
 
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
@@ -38,6 +39,18 @@ export function AddSiteDialog({ open, onOpenChange, workspaceId, onSuccess }: Ad
     e.preventDefault()
     setLoading(true)
 
+    if (!formData.name || formData.name.trim().length < 2) {
+      toast.error("Site name must be at least 2 characters")
+      setLoading(false)
+      return
+    }
+
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error("Please enter a valid email address")
+      setLoading(false)
+      return
+    }
+
     try {
       const supabase = createClient()
       const { data, error } = await supabase
@@ -54,11 +67,12 @@ export function AddSiteDialog({ open, onOpenChange, workspaceId, onSuccess }: Ad
 
       if (error) throw error
 
+      toast.success(`Site "${formData.name}" created successfully!`)
       onSuccess(data)
       setFormData({ name: "", email: "", phone: "", address: "" })
-    } catch (error) {
-      console.error("Error adding site:", error)
-      alert("Failed to add site. Please try again.")
+    } catch (error: any) {
+      console.error("[v0] Error adding site:", error)
+      toast.error(error.message || "Failed to add site. Please try again.")
     } finally {
       setLoading(false)
     }

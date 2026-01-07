@@ -16,11 +16,11 @@ import { GuidedTour } from "@/components/guided-tour"
 import type { OnboardingFlow } from "@/types/onboarding-flow"
 
 const DEMO_FLOW: OnboardingFlow = {
-  name: "Client Onboarding Demo",
+  name: "Job Assignment Demo",
   steps: [
     {
-      title: "Welcome Aboard",
-      description: "Let's get to know you and your business.",
+      title: "Welcome to Your Job",
+      description: "Let's get the job details and your confirmation.",
       type: "form",
       fields: [
         { id: "name", label: "Full Name", type: "text", required: true },
@@ -28,23 +28,23 @@ const DEMO_FLOW: OnboardingFlow = {
       ],
     },
     {
-      title: "Tell Us About Your Project",
-      description: "Help us understand your goals and timeline.",
+      title: "Job Details & Requirements",
+      description: "Tell us about your location and what you'll be working on.",
       type: "form",
       fields: [
-        { id: "project", label: "Project Description", type: "textarea", required: true },
-        { id: "timeline", label: "Target Launch Date", type: "date", required: true },
+        { id: "project", label: "Job Description", type: "textarea", required: true },
+        { id: "timeline", label: "Expected Completion", type: "date", required: true },
       ],
     },
     {
-      title: "Upload Key Documents",
-      description: "Share any relevant files or assets.",
+      title: "Upload Proof & Documentation",
+      description: "Share photos and any relevant files as proof of work.",
       type: "upload",
       fields: [{ id: "files", label: "Upload Files", type: "file", required: false }],
     },
     {
-      title: "Schedule Kickoff Call (Coming Soon)",
-      description: "Calendar integration planned for V2 - for now, we'll reach out to schedule.",
+      title: "Schedule Completion Review",
+      description: "Calendar integration planned for V2 - for now, we'll reach out to confirm.",
       type: "calendar",
       fields: [{ id: "date", label: "Preferred Date", type: "date", required: true }],
     },
@@ -67,27 +67,27 @@ export function DemoMode() {
   const dashboardTourSteps = [
     {
       target: '[data-tour="stats"]',
-      title: "Step 1: Monitor All Onboardings",
+      title: "Step 1: Monitor All Job Assignments",
       description:
-        "BoardingPass tracks every client automatically. These real-time stats show active onboardings, completion rates, and which clients need follow-up—no manual spreadsheets required.",
+        "BoardingPass tracks every job automatically. These real-time stats show active assignments, completion rates, and which jobs need follow-up—no manual spreadsheets required.",
       position: "bottom" as const,
-      action: "See how analytics update automatically as clients progress",
+      action: "See how analytics update automatically as jobs progress",
     },
     {
       target: '[data-tour="client-list"]',
-      title: "Step 2: Manage Client Progress",
+      title: "Step 2: Manage Job Progress",
       description:
-        "Each client gets a progress percentage and status. Click any client to view detailed step completion, send reminder emails, or download their submitted information.",
+        "Each job gets a progress percentage and status. Click any job to view detailed step completion, send reminder emails, or download their submitted information.",
       position: "top" as const,
-      action: "This list updates in real-time as clients complete steps",
+      action: "This list updates in real-time as jobs complete steps",
     },
     {
       target: '[data-tour="portal-button"]',
-      title: "Step 3: Experience the Client View",
+      title: "Step 3: Experience the Job View",
       description:
-        "Now switch perspectives. You'll see the actual onboarding portal your clients interact with—professional, branded, and zero friction.",
+        "Now switch perspectives. You'll see the actual job assignment portal your clients interact with—professional, branded, and zero friction.",
       position: "top" as const,
-      action: "Click to switch to the client portal experience",
+      action: "Click to switch to the job assignment portal experience",
       onShow: () => {
         setTimeout(() => {
           setView("portal")
@@ -162,7 +162,7 @@ export function DemoMode() {
           </div>
           <h1 className="mb-2 text-balance text-3xl font-semibold tracking-tight">All Done!</h1>
           <p className="text-muted-foreground mb-6">
-            You've completed the demo onboarding. This is how smooth it is for your clients!
+            You've completed the demo job assignment. This is how smooth it is for your clients!
           </p>
           <ProgressBadge progress={100} />
           <div className="mt-8">
@@ -358,7 +358,7 @@ export function DemoMode() {
             </div>
             <h2 className="text-3xl font-bold mb-4">Demo Complete</h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              You just experienced the full onboarding flow. Your clients get this same smooth, professional
+              You just experienced the full job assignment flow. Your clients get this same smooth, professional
               experience—no technical setup required.
             </p>
 
@@ -383,7 +383,7 @@ export function DemoMode() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <span>Analytics dashboard to monitor all client progress</span>
+                  <span>Analytics dashboard to monitor all job progress</span>
                 </li>
               </ul>
             </div>
@@ -497,7 +497,7 @@ export function DemoMode() {
                 }
               }}
             >
-              Interactive Client Portal
+              Interactive Job Portal
             </Button>
           </div>
         </div>
@@ -508,13 +508,13 @@ export function DemoMode() {
           <div className="space-y-6">
             <div>
               <h2 className="text-3xl font-bold mb-2">Dashboard Overview</h2>
-              <p className="text-muted-foreground">Track all your client onboardings in one place</p>
+              <p className="text-muted-foreground">Track all your job assignments in one place</p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-3" data-tour="stats">
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-medium text-muted-foreground">Active Onboardings</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">Active Assignments</h3>
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-3xl font-bold mb-1">12</div>
@@ -541,7 +541,7 @@ export function DemoMode() {
             </div>
 
             <Card className="p-6" data-tour="client-list">
-              <h3 className="text-lg font-semibold mb-4">Recent Clients</h3>
+              <h3 className="text-lg font-semibold mb-4">Recent Jobs</h3>
               <div className="space-y-4">
                 {[
                   { name: "Acme Corp", email: "contact@acme.com", progress: 75, status: "active" },
@@ -570,7 +570,7 @@ export function DemoMode() {
 
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-4">
-                This is demo data. Switch to "Interactive Client Portal" to experience the flow!
+                This is demo data. Switch to "Interactive Job Portal" to experience the flow!
               </p>
               <Button size="lg" className="gap-2 mr-2" onClick={() => setView("portal")} data-tour="portal-button">
                 Try Interactive Demo

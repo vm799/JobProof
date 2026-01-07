@@ -30,8 +30,18 @@ export function CreateJobModal({ open, onClose, site, templates }: CreateJobModa
 
     console.log("[v0] Create Job Modal - Form submitted", { templateId, dueDate, technicianEmail })
 
-    if (!templateId || !dueDate || !technicianEmail) {
-      toast.error("Please fill in all fields")
+    if (!templateId) {
+      toast.error("Please select a job template")
+      return
+    }
+
+    if (!dueDate) {
+      toast.error("Please select a due date")
+      return
+    }
+
+    if (!technicianEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(technicianEmail)) {
+      toast.error("Please enter a valid technician email address")
       return
     }
 
@@ -63,7 +73,7 @@ export function CreateJobModal({ open, onClose, site, templates }: CreateJobModa
       setTechnicianEmail("")
     } catch (error: any) {
       console.error("[v0] Job creation error:", error)
-      toast.error(error.message || "Failed to create job")
+      toast.error(error.message || "Failed to create job. Please try again.")
     } finally {
       setLoading(false)
     }

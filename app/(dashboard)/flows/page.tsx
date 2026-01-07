@@ -1,7 +1,6 @@
 "use client"
-
-import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { JobTemplatesList } from "@/components/job-templates-list"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
@@ -30,7 +29,7 @@ export default async function FlowsPage() {
   }
 
   if (!profile?.current_workspace_id) {
-    redirect("/onboarding")
+    redirect("/dashboard")
   }
 
   let flows: any[] = []

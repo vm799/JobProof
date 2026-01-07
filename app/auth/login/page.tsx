@@ -63,7 +63,7 @@ function LoginContent() {
         (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
 
       const productionUrl =
-        process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://getboardingpass.app"
+        process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://jobproof.app"
       const redirectUrl = isLocalhost
         ? process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || "http://localhost:3000/auth/callback"
         : `${productionUrl}/auth/callback`
@@ -151,8 +151,8 @@ function LoginContent() {
             <CardHeader className="text-center">
               <div className="mb-4 flex justify-center">
                 <Image
-                  src="/boardingpass-logo.png"
-                  alt="BoardingPass"
+                  src="/jobproof-logo.png"
+                  alt="JobProof"
                   width={450}
                   height={120}
                   className="h-30 w-auto"
@@ -194,8 +194,8 @@ function LoginContent() {
           <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
               <Image
-                src="/boardingpass-logo.png"
-                alt="BoardingPass"
+                src="/jobproof-logo.png"
+                alt="JobProof"
                 width={450}
                 height={120}
                 className="h-30 w-auto"
@@ -203,7 +203,7 @@ function LoginContent() {
               />
             </div>
             <CardTitle className="text-2xl font-semibold">Welcome back</CardTitle>
-            <CardDescription>Sign in to your BoardingPass account</CardDescription>
+            <CardDescription>Sign in to your JobProof account</CardDescription>
           </CardHeader>
           <CardContent>
             {infoMessage && (

@@ -5,8 +5,9 @@ import Link from "next/link"
 import { Sparkles, MousePointer, Eye, Zap, CheckCircle2 } from "lucide-react"
 
 export const metadata = {
-  title: "Try Demo - BoardingPass",
-  description: "Experience BoardingPass with interactive demo data",
+  /* Updated from "BoardingPass" to "JobProof" */
+  title: "Try Demo - JobProof",
+  description: "Experience JobProof with interactive demo data",
 }
 
 export default function DemoPage() {
@@ -21,12 +22,12 @@ export default function DemoPage() {
 
           <div className="mb-8">
             <p className="text-xl text-muted-foreground mb-4">
-              BoardingPass automates client onboarding with professional intake forms, file uploads, and progress
-              tracking.
+              JobProof automates field service job management with proof of work tracking, photo verification, and
+              real-time progress monitoring.
             </p>
             <p className="text-lg text-muted-foreground">
-              This demo lets you experience both sides: the internal dashboard where you manage clients, and the
-              client-facing portal they complete. No login required.
+              This demo lets you experience both sides: the internal dashboard where you manage jobs, and the field
+              worker view they use to complete jobs. No login required.
             </p>
           </div>
 
@@ -39,13 +40,14 @@ export default function DemoPage() {
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <span>
-                  <strong>Dashboard view:</strong> See real-time analytics and client progress tracking
+                  <strong>Dashboard view:</strong> See real-time analytics and job progress tracking
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <span>
-                  <strong>Client portal:</strong> Complete a 4-step onboarding with forms, file uploads, and scheduling
+                  <strong>Field worker view:</strong> Complete a job with forms, photo uploads, and checklist
+                  verification
                 </span>
               </li>
               <li className="flex items-start gap-2">
@@ -56,18 +58,17 @@ export default function DemoPage() {
               </li>
             </ul>
           </div>
-          {/* </CHANGE> */}
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
             <Card className="p-4 bg-background/50">
               <MousePointer className="h-6 w-6 text-primary mb-2" />
               <h3 className="font-semibold mb-1">Fully Interactive</h3>
-              <p className="text-sm text-muted-foreground">Fill forms, upload files, and complete steps</p>
+              <p className="text-sm text-muted-foreground">Fill forms, upload photos, and complete job steps</p>
             </Card>
             <Card className="p-4 bg-background/50">
               <Eye className="h-6 w-6 text-primary mb-2" />
-              <h3 className="font-semibold mb-1">Client View</h3>
-              <p className="text-sm text-muted-foreground">See exactly what your clients experience</p>
+              <h3 className="font-semibold mb-1">Field Worker View</h3>
+              <p className="text-sm text-muted-foreground">See exactly what your team experiences</p>
             </Card>
             <Card className="p-4 bg-background/50">
               <Zap className="h-6 w-6 text-primary mb-2" />

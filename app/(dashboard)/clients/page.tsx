@@ -25,7 +25,7 @@ export default async function ClientsPage() {
     return <ErrorState message="Workspace access required." />
   }
 
-  const { data: clients, error: clientsError } = await supabase
+  const { data: sites, error: sitesError } = await supabase
     .from("clients")
     .select(`
       id, name, email, created_at,
@@ -35,11 +35,11 @@ export default async function ClientsPage() {
     .order("created_at", { ascending: false })
     .limit(50)
 
-  if (clientsError) {
-    return <ClientsList clients={[]} workspaceId={profile.current_workspace_id} />
+  if (sitesError) {
+    return <ClientsList sites={[]} workspaceId={profile.current_workspace_id} />
   }
 
-  return <ClientsList clients={clients || []} workspaceId={profile.current_workspace_id} />
+  return <ClientsList sites={sites || []} workspaceId={profile.current_workspace_id} />
 }
 
 function ErrorState({ message }: { message: string }) {

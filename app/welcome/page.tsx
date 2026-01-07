@@ -85,17 +85,17 @@ export default function WelcomePage() {
         <CardHeader className="text-center">
           <div className="mb-6 flex justify-center">
             <Image
-              src="/boardingpass-logo.png"
-              alt="BoardingPass"
+              src="/jobproof-logo.png"
+              alt="JobProof"
               width={120}
               height={120}
               className="h-24 w-24 object-contain"
               priority
             />
           </div>
-          <CardTitle className="text-3xl font-bold">Welcome to BoardingPass!</CardTitle>
+          <CardTitle className="text-3xl font-bold">Welcome to JobProof!</CardTitle>
           <CardDescription className="text-base mt-2">
-            Let's set up your workspace and start onboarding clients seamlessly.
+            Let's set up your workspace and start managing field service jobs seamlessly.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -104,19 +104,19 @@ export default function WelcomePage() {
               <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-xs font-semibold text-primary">1</span>
               </div>
-              <p>Create custom onboarding flows for your clients</p>
+              <p>Create custom job workflows for your field teams</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-xs font-semibold text-primary">2</span>
               </div>
-              <p>Send branded portals and track progress in real-time</p>
+              <p>Send branded job assignments and track proof of work in real-time</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-xs font-semibold text-primary">3</span>
               </div>
-              <p>Automate reminders and communications</p>
+              <p>Automate reminders and completion notifications</p>
             </div>
           </div>
 

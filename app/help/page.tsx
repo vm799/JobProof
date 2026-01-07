@@ -11,8 +11,8 @@ export default function HelpPage() {
   const [searchQuery, setSearchQuery] = useState("")
 
   const allArticles = [
-    { title: "Create your first onboarding flow", category: "Getting Started", href: "/faq#create-flow" },
-    { title: "Invite your first client", category: "Getting Started", href: "/faq#invite-client" },
+    { title: "Create your first job workflow", category: "Getting Started", href: "/faq#create-flow" },
+    { title: "Assign your first job", category: "Getting Started", href: "/faq#assign-job" },
     { title: "Customize your workspace branding", category: "Getting Started", href: "/faq#branding" },
     {
       title: "Set up email notifications",
@@ -20,7 +20,7 @@ export default function HelpPage() {
       href: "/faq#email-notifications",
       keywords: "email notification smtp setup configure",
     },
-    { title: "Using flow templates", category: "Advanced", href: "/faq#templates" },
+    { title: "Using job templates", category: "Advanced", href: "/faq#templates" },
     { title: "Setting up automated reminders", category: "Advanced", href: "/faq#reminders" },
     { title: "Understanding analytics and insights", category: "Advanced", href: "/analytics" },
     { title: "Team collaboration and permissions", category: "Advanced", href: "/team" },
@@ -31,7 +31,7 @@ export default function HelpPage() {
       keywords: "email smtp resend configuration delivery not working",
     },
     {
-      title: "Troubleshooting signup emails",
+      title: "Troubleshooting job notifications",
       category: "Troubleshooting",
       href: "/faq#email-troubleshooting",
       keywords: "email not received spam confirmation signup",
@@ -78,7 +78,8 @@ export default function HelpPage() {
                 {
                   icon: Sparkles,
                   title: "Getting Started",
-                  desc: "Learn the basics of BoardingPass",
+                  /* Updated from "with BoardingPass" to "with JobProof" */
+                  desc: "Learn the basics of JobProof",
                   articles: 4,
                   href: "/faq",
                 },
@@ -94,7 +95,7 @@ export default function HelpPage() {
                   title: "Contact Support",
                   desc: "Get help from our team",
                   articles: null,
-                  href: "mailto:admin@getboardingpass.app?subject=Support Request",
+                  href: "mailto:admin@jobproof.app?subject=Support Request",
                 },
               ].map((topic, i) => {
                 const Icon = topic.icon
@@ -148,7 +149,7 @@ export default function HelpPage() {
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground mb-4">No articles found. Try different keywords.</p>
-                    <a href="mailto:admin@getboardingpass.app?subject=Help Request" rel="noopener noreferrer">
+                    <a href="mailto:admin@jobproof.app?subject=Help Request" rel="noopener noreferrer">
                       <Button>Contact Support</Button>
                     </a>
                   </div>
@@ -257,7 +258,7 @@ export default function HelpPage() {
                   Our support team typically responds within 2 hours during business hours
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="mailto:admin@getboardingpass.app?subject=Support Request" rel="noopener noreferrer">
+                  <a href="mailto:admin@jobproof.app?subject=Support Request" rel="noopener noreferrer">
                     <Button className="w-full sm:w-auto">Email Support</Button>
                   </a>
                   <Link href="/faq">
