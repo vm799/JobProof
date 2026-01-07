@@ -1,13 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Plus, Search, MoreVertical, Mail, Calendar, Users, Copy, Trash2 } from "lucide-react"
+import { Plus, Search, MoreVertical, Mail, Calendar, Users, Copy, Trash2, Briefcase } from "lucide-react"
 import { OnboardingModal } from "@/components/onboarding-modal"
+import { CreateJobModal } from "@/components/create-job-modal"
 import { EmptyState } from "@/components/empty-state"
 import { formatDistanceToNow } from "date-fns"
 import {
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
 
 interface Client {
   id: string
@@ -46,7 +48,25 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [clientToDelete, setClientToDelete] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [showJobModal, setShowJobModal] = useState(false)
+  const [selectedSite, setSelectedSite] = useState<{ id: string; name: string } | null>(null)
+  const [templates, setTemplates] = useState<Array<{ id: string; name: string }>>([])
   const router = useRouter()
+
+  useEffect(() => {
+    async function fetchTemplates() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from("onboarding_flows")
+        .select("id, name")
+        .eq("workspace_id", workspaceId)
+        .eq("status", "active")
+
+      setTemplates(data || [])
+      console.log("[v0] Loaded job templates:", data?.length || 0)
+    }
+    fetchTemplates()
+  }, [workspaceId])
 
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
@@ -151,21 +171,27 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
     }
   }
 
+  const handleCreateJob = (siteId: string, siteName: string) => {
+    console.log("[v0] Creating job for site:", siteName)
+    setSelectedSite({ id: siteId, name: siteName })
+    setShowJobModal(true)
+  }
+
   if (clients.length === 0) {
     return (
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-balance text-3xl font-semibold tracking-tight">Clients</h1>
-            <p className="mt-1 text-muted-foreground">Manage all your client onboardings</p>
+            <h1 className="text-balance text-3xl font-semibold tracking-tight">Sites</h1>
+            <p className="mt-1 text-muted-foreground">Manage your job sites and assignments</p>
           </div>
         </div>
         <EmptyState
           icon={Users}
-          title="No clients yet"
-          description="Add your first client to start tracking their onboarding progress."
+          title="No sites yet"
+          description="Add your first site to start creating job assignments."
           action={{
-            label: "Add Client",
+            label: "Add Site",
             onClick: () => setIsModalOpen(true),
           }}
         />
@@ -179,12 +205,12 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-balance text-3xl font-semibold tracking-tight">Clients</h1>
-            <p className="mt-1 text-muted-foreground">Manage all your client onboardings</p>
+            <h1 className="text-balance text-3xl font-semibold tracking-tight">Sites</h1>
+            <p className="mt-1 text-muted-foreground">Manage your job sites and assignments</p>
           </div>
           <Button className="gap-2" onClick={() => setIsModalOpen(true)}>
             <Plus className="h-4 w-4" />
-            Add Client
+            Add Site
           </Button>
         </div>
 
@@ -192,7 +218,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search clients..."
+              placeholder="Search sites..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -206,7 +232,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
               <DropdownMenuItem onClick={() => setStatusFilter(null)}>All Statuses</DropdownMenuItem>
               <DropdownMenuItem onClick={() => setStatusFilter("in_progress")}>In Progress</DropdownMenuItem>
               <DropdownMenuItem onClick={() => setStatusFilter("completed")}>Completed</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("not_started")}>Not Started</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setStatusFilter("pending")}>Pending</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -216,8 +242,8 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
             <Card className="p-12 text-center">
               <p className="text-muted-foreground">
                 {searchQuery || statusFilter
-                  ? "No clients match your filters. Try adjusting your search or filter."
-                  : "No clients found. Add your first client to get started."}
+                  ? "No sites match your filters. Try adjusting your search or filter."
+                  : "No sites found. Add your first site to get started."}
               </p>
             </Card>
           ) : (
@@ -250,6 +276,15 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge variant={getStatusVariant(status)}>{getStatusLabel(status)}</Badge>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleCreateJob(client.id, client.name)}
+                            className="gap-1.5"
+                          >
+                            <Briefcase className="h-3.5 w-3.5" />
+                            Create Job
+                          </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -298,12 +333,21 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
 
       <OnboardingModal open={isModalOpen} onOpenChange={setIsModalOpen} workspaceId={workspaceId} />
 
+      {showJobModal && selectedSite && (
+        <CreateJobModal
+          open={showJobModal}
+          onClose={() => setShowJobModal(false)}
+          site={selectedSite}
+          templates={templates}
+        />
+      )}
+
       <AlertDialog open={clientToDelete !== null} onOpenChange={() => setClientToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Client?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Site?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this client and all their onboarding data. This action cannot be undone.
+              This will permanently delete this site and all associated job data. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -313,7 +357,7 @@ export function ClientsList({ clients, workspaceId }: ClientsListProps) {
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Deleting..." : "Delete Client"}
+              {isDeleting ? "Deleting..." : "Delete Site"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
