@@ -1,44 +1,24 @@
 "use client"
 
-import { createBrowserClient } from "@supabase/ssr"
+import { getSupabaseBrowser } from "./browser"
 
-let client: ReturnType<typeof createBrowserClient> | undefined
-let lastKnownUserId: string | null = null
+let authListenerSetup = false
 
-export function createClient() {
-  if (typeof window === "undefined") return null as any
+export function initAuthListener() {
+  if (authListenerSetup) return
+  authListenerSetup = true
 
-  // If the client already exists, just return it (Stops the tug-of-war)
-  if (client) return client
-
-  client = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
-    {
-      auth: {
-        storageKey: "sb-pvmucyfeayjhbitftpvp-auth-token",
-        flowType: "pkce",
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-      },
-    }
-  )
-
-  // Listen for auth changes once
-  client.auth.onAuthStateChange((event, session) => {
-    const currentUserId = session?.user?.id || null
-    
-    if (event === "SIGNED_IN" && currentUserId !== lastKnownUserId) {
-      console.log("[v0] New login detected:", currentUserId)
-      lastKnownUserId = currentUserId
+  const supabase = getSupabaseBrowser()
+  supabase.auth.onAuthStateChange((event, session) => {
+    const userId = session?.user?.id
+    if (event === "SIGNED_IN" && userId) {
+      console.log("[v0] Auth: User signed in:", userId)
     } else if (event === "SIGNED_OUT") {
-      lastKnownUserId = null
+      console.log("[v0] Auth: User signed out")
     }
   })
-
-  return client
 }
 
-// Export the instance directly as well for easier importing
-export const supabase = createClient()
+export function createClient() {
+  return getSupabaseBrowser()
+}

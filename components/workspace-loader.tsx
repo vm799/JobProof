@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { getSupabaseBrowser } from "@/lib/supabase/browser"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
@@ -13,11 +13,11 @@ export function WorkspaceLoader() {
   const [isCreating, setIsCreating] = useState(false)
   const [attempts, setAttempts] = useState(0)
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = getSupabaseBrowser()
 
   useEffect(() => {
     let pollCount = 0
-    const maxPolls = 10 // Reduced from 30 to 10 (5 seconds)
+    const maxPolls = 10
     let mounted = true
 
     const createWorkspace = async (userId: string, userEmail: string) => {
@@ -44,7 +44,6 @@ export function WorkspaceLoader() {
 
         console.log("[v0] WorkspaceLoader - Workspace created:", newWorkspace.id)
 
-        // Create workspace member
         const { error: memberError } = await supabase.from("workspace_members").insert({
           workspace_id: newWorkspace.id,
           user_id: userId,
@@ -55,7 +54,6 @@ export function WorkspaceLoader() {
           console.error("[v0] WorkspaceLoader - Failed to create member:", memberError)
         }
 
-        // Update profile
         const { error: profileError } = await supabase
           .from("profiles")
           .update({ current_workspace_id: newWorkspace.id })
@@ -68,7 +66,6 @@ export function WorkspaceLoader() {
 
         console.log("[v0] WorkspaceLoader - Workspace setup complete! Redirecting...")
 
-        // Force clean redirect
         window.location.href = "/dashboard"
       } catch (err) {
         console.error("[v0] WorkspaceLoader - Error creating workspace:", err)
@@ -106,10 +103,8 @@ export function WorkspaceLoader() {
           console.error("[v0] WorkspaceLoader - Profile error:", profileError.message)
 
           if (profileError.code === "PGRST116") {
-            // Profile doesn't exist - create it and a workspace
             console.log("[v0] WorkspaceLoader - No profile found, creating workspace...")
 
-            // First create profile
             const { error: createProfileError } = await supabase.from("profiles").insert({
               id: user.id,
               email: user.email,
@@ -171,8 +166,8 @@ export function WorkspaceLoader() {
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
             <Image
-              src="/boardingpass-logo.png"
-              alt="BoardingPass"
+              src="/jobproof-logo.png"
+              alt="JobProof"
               width={120}
               height={120}
               className="h-24 w-24 object-contain"
@@ -200,10 +195,10 @@ export function WorkspaceLoader() {
               <p className="text-xs text-muted-foreground mt-4">
                 Need help? Contact{" "}
                 <a
-                  href="mailto:admin@getboardingpass.app?subject=Workspace Setup Failed"
+                  href="mailto:support@jobproof.app?subject=Workspace Setup Failed"
                   className="text-primary hover:underline"
                 >
-                  admin@getboardingpass.app
+                  support@jobproof.app
                 </a>
               </p>
             </>

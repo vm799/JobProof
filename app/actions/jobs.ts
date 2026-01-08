@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { requireRole } from "@/lib/rbac"
+import { enforceLimit, incrementUsageCounter } from "@/lib/billing"
 
 export async function createJobSession(data: {
   siteId: string
@@ -16,7 +18,6 @@ export async function createJobSession(data: {
     throw new Error("A job template/workflow is required to create a job")
   }
 
-  // 1. Get current user & workspace
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -25,6 +26,10 @@ export async function createJobSession(data: {
   const { data: profile } = await supabase.from("profiles").select("current_workspace_id").eq("id", user.id).single()
 
   if (!profile?.current_workspace_id) throw new Error("No workspace")
+
+  await requireRole(["admin", "manager"], profile.current_workspace_id)
+
+  await enforceLimit(profile.current_workspace_id, "jobs")
 
   // 2. Create job session (reuses client_onboardings table)
   const { data: job, error: jobError } = await supabase
@@ -61,6 +66,8 @@ export async function createJobSession(data: {
     }),
   })
 
+  await incrementUsageCounter(profile.current_workspace_id, "jobs")
+
   revalidatePath("/dashboard")
   revalidatePath("/sites")
   revalidatePath(`/sites/${data.siteId}`)
@@ -70,6 +77,19 @@ export async function createJobSession(data: {
 
 export async function completeJob(jobId: string) {
   const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error("Not authenticated")
+
+  // Get job workspace
+  const { data: job } = await supabase.from("client_onboardings").select("workspace_id").eq("id", jobId).single()
+
+  if (!job) throw new Error("Job not found")
+
+  // Field workers can only complete assigned jobs
+  await requireRole(["admin", "manager", "field_worker"], job.workspace_id)
 
   const { data, error } = await supabase
     .from("client_onboardings")

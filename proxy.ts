@@ -20,7 +20,7 @@ export async function proxy(request: NextRequest) {
     "/privacy",
     "/terms",
     "/portal",
-    "/features", // Added public marketing pages
+    "/features",
     "/pricing",
     "/about",
     "/blog",
@@ -30,7 +30,9 @@ export async function proxy(request: NextRequest) {
 
   // Allow public paths and portal routes
   if (publicPaths.some((publicPath) => path.startsWith(publicPath))) {
-    console.log("[STATE-LOG] Proxy - Public path allowed:", path)
+    if (process.env.NODE_ENV === "development") {
+      console.log("[STATE-LOG] Proxy - Public path allowed:", path)
+    }
     return NextResponse.next()
   }
 

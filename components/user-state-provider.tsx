@@ -1,7 +1,8 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { getSupabaseBrowser } from "@/lib/supabase/browser"
+import { initAuthListener } from "@/lib/supabase/client"
 import type { UserStateData } from "@/lib/types/user-state"
 
 const UserStateContext = createContext<UserStateData | null>(null)
@@ -11,19 +12,10 @@ export function UserStateProvider({ children }: { children: ReactNode }) {
     state: "LOADING",
   })
 
-  const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null)
+  const supabase = getSupabaseBrowser()
 
   useEffect(() => {
-    if (typeof window === "undefined") return
-
-    const client = createClient()
-    if (!client) return
-
-    setSupabase(client)
-  }, [])
-
-  useEffect(() => {
-    if (!supabase) return
+    initAuthListener()
 
     const checkUserState = async () => {
       console.log("[STATE-LOG] Checking user state...")
