@@ -13,13 +13,18 @@ export async function proxy(request: NextRequest) {
     "/auth/sign-up",
     "/auth/check-email",
     "/auth/callback",
-    "/auth/reset-password", // Added password reset to public paths
-    "/welcome", // Added welcome page for new users
+    "/auth/reset-password",
+    "/welcome",
     "/onboarding",
     "/faq",
     "/privacy",
     "/terms",
-    "/portal", // Allow all portal routes (including expired)
+    "/portal",
+    "/features", // Added public marketing pages
+    "/pricing",
+    "/about",
+    "/blog",
+    "/contact",
   ]
   const path = request.nextUrl.pathname
 
