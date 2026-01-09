@@ -6,7 +6,7 @@ import { requireRole } from "@/lib/rbac"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, ExternalLink } from "lucide-react"
 
 export const metadata = {
   title: "Billing - JobProof (Demo)",
@@ -188,6 +188,34 @@ export default async function BillingPage() {
               </p>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Stripe Payment Link section for test checkout */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Test Checkout</CardTitle>
+          <CardDescription>Try the Stripe test payment flow</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-gray-700">
+            Click the button below to open a Stripe test checkout in a new window. This is a demonstration only—no
+            actual payment will be processed, and no data will be stored in this application.
+          </p>
+          <div className="flex gap-3">
+            <a
+              href="https://buy.stripe.com/test_9B6bJ33Aj2ZoegK4hNaVa00"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Open Stripe Checkout (Test)
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Opens Stripe test checkout in a new window. No data is stored in this app.
+          </p>
         </CardContent>
       </Card>
 
