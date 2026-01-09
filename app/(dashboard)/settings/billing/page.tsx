@@ -4,9 +4,14 @@ import { redirect } from "next/navigation"
 import { getBillingStatus } from "@/lib/billing"
 import { requireRole } from "@/lib/rbac"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { AlertCircle } from "lucide-react"
+
+export const metadata = {
+  title: "Billing - JobProof (Demo)",
+  robots: "noindex",
+}
 
 export default async function BillingPage() {
   const cookieStore = await cookies()
@@ -78,16 +83,26 @@ export default async function BillingPage() {
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+        <AlertCircle className="w-5 h-5 text-yellow-600" />
+        <div>
+          <h2 className="font-semibold text-yellow-900">Demo Mode</h2>
+          <p className="text-sm text-yellow-800">
+            Payment flows are not active in this demonstration. Plan features are for reference only.
+          </p>
+        </div>
+      </div>
+
       <div>
         <h1 className="text-3xl font-bold">Billing & Plan</h1>
-        <p className="text-gray-600 mt-2">Manage your subscription and usage</p>
+        <p className="text-gray-600 mt-2">View your demo plan and usage</p>
       </div>
 
       {/* Current Plan */}
       <Card>
         <CardHeader>
           <CardTitle>Current Plan</CardTitle>
-          <CardDescription>Your active subscription</CardDescription>
+          <CardDescription>Your demo plan assignment</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className={`p-6 rounded-lg ${currentPlan.color}`}>
@@ -105,7 +120,7 @@ export default async function BillingPage() {
 
           {/* Plan limits */}
           <div className="space-y-4">
-            <h4 className="font-semibold">Your Limits</h4>
+            <h4 className="font-semibold">Your Demo Limits</h4>
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between mb-2">
@@ -155,25 +170,18 @@ export default async function BillingPage() {
       {/* Billing Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Billing Information</CardTitle>
-          <CardDescription>Email and subscription details</CardDescription>
+          <CardTitle>Demo Account Information</CardTitle>
+          <CardDescription>Demo account details</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium">Billing Email</label>
+            <label className="text-sm font-medium">Account Email</label>
             <p className="text-gray-700">{billing.billing_email || "Not set"}</p>
           </div>
 
-          {billing.stripe_subscription_id && (
-            <div>
-              <label className="text-sm font-medium">Subscription ID</label>
-              <p className="text-gray-700 font-mono text-sm break-all">{billing.stripe_subscription_id}</p>
-            </div>
-          )}
-
           {billing.current_period_start && billing.current_period_end && (
             <div>
-              <label className="text-sm font-medium">Billing Period</label>
+              <label className="text-sm font-medium">Demo Period</label>
               <p className="text-gray-700">
                 {new Date(billing.current_period_start).toLocaleDateString()} -{" "}
                 {new Date(billing.current_period_end).toLocaleDateString()}
@@ -183,40 +191,18 @@ export default async function BillingPage() {
         </CardContent>
       </Card>
 
-      {/* Plan Comparison & Actions */}
-      <Card>
+      {/* Information about demo mode */}
+      <Card className="bg-blue-50 border-blue-200">
         <CardHeader>
-          <CardTitle>Plan Options</CardTitle>
-          <CardDescription>Upgrade or change your plan</CardDescription>
+          <CardTitle className="text-blue-900">About This Demo</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {billingStatus.plan !== "pro" && (
-            <div className="border rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Upgrade to Pro</h4>
-              <p className="text-sm text-gray-600 mb-4">Get 50 sites, 500 jobs/month, and priority support</p>
-              <Button className="w-full">Upgrade to Pro - $49/month</Button>
-            </div>
-          )}
-
-          {billingStatus.plan !== "enterprise" && (
-            <div className="border rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Enterprise</h4>
-              <p className="text-sm text-gray-600 mb-4">Unlimited sites, jobs, and dedicated support</p>
-              <Button variant="outline" className="w-full bg-transparent">
-                Contact Sales
-              </Button>
-            </div>
-          )}
-
-          {billingStatus.plan !== "free" && (
-            <div className="border rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Downgrade to Free</h4>
-              <p className="text-sm text-gray-600 mb-4">5 sites, 50 jobs/month</p>
-              <Button variant="outline" className="w-full text-red-600 bg-transparent">
-                Downgrade
-              </Button>
-            </div>
-          )}
+        <CardContent className="text-sm text-blue-900 space-y-3">
+          <p>This is a demonstration environment for evaluating JobProof features.</p>
+          <p>
+            Payment flows, upgrades, and downgrades are not functional in the demo. To explore full capabilities or
+            discuss pricing, contact our team.
+          </p>
+          <p className="font-medium">Demo data may be reset at any time. Do not store production data here.</p>
         </CardContent>
       </Card>
     </div>

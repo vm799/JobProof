@@ -1,10 +1,11 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { ThemeLogo } from "@/components/theme-logo"
+import { AlertCircle } from "lucide-react"
 
 export const metadata = {
-  title: "About - JobProof",
-  description: "Learn about JobProof and our mission to transform field service accountability",
+  title: "About - JobProof (Internal Demo)",
+  description: "Internal demonstration environment - not for external use",
+  robots: "noindex, nofollow",
 }
 
 export default function AboutPage() {
@@ -16,78 +17,72 @@ export default function AboutPage() {
           <Link href="/" className="flex items-center gap-2">
             <ThemeLogo width={200} height={50} />
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
-            <Link href="/auth/sign-up">
-              <Button className="bg-blue-600 hover:bg-blue-700">Get Started</Button>
-            </Link>
-          </div>
         </div>
       </nav>
 
+      {/* Demo Banner */}
+      <div className="bg-yellow-50 border-b-2 border-yellow-300 px-4 py-3">
+        <p className="text-center text-sm font-semibold text-yellow-900">
+          ⚠️ INTERNAL DEMO MODE - Not for external use or data storage
+        </p>
+      </div>
+
       {/* About Section */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-12">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+          <AlertCircle className="w-5 h-5 text-yellow-600" />
+          <div>
+            <h2 className="font-semibold text-yellow-900">Internal Demo Only</h2>
+            <p className="text-sm text-yellow-800">
+              This is a demonstration environment. Statistics and claims shown are for evaluation purposes only.
+            </p>
+          </div>
+        </div>
+
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold">About JobProof</h1>
           <p className="text-xl text-muted-foreground">
-            We're transforming how field service teams capture and verify their work
+            Demonstration of how field service teams can capture and verify their work
           </p>
         </div>
 
         <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
           <p>
-            JobProof was built to solve a real problem: field service teams have no easy way to prove they completed
-            their work. Customers dispute invoices. Teams waste time documenting job completion manually. Managers have
-            no visibility into what's happening on job sites.
+            JobProof is designed to address field service challenges: teams need a way to prove they completed their
+            work, reduce customer disputes, and provide visibility into job site activities.
           </p>
 
           <p>
-            We created JobProof to bring accountability and transparency to field service operations. With timestamped
-            photos, automatic location tracking, and team management tools, every job is documented and verifiable.
+            This demonstration showcases how JobProof features like timestamped photos, location tracking, and team
+            management tools can help document and verify job completion.
           </p>
 
           <p>
-            Today, hundreds of field service businesses use JobProof to reduce disputes, improve efficiency, and scale
-            their operations with confidence.
+            This is an internal demo environment for evaluation purposes only. For production use, contact our team.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 my-12">
+        <div className="grid md:grid-cols-3 gap-8 my-12 p-4 bg-blue-50 rounded-lg">
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
-            <p className="text-muted-foreground">Active Teams</p>
+            <div className="text-4xl font-bold text-blue-600 mb-2">Demo</div>
+            <p className="text-muted-foreground">Evaluation Environment</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">50k+</div>
-            <p className="text-muted-foreground">Jobs Completed</p>
+            <div className="text-4xl font-bold text-blue-600 mb-2">Features</div>
+            <p className="text-muted-foreground">For Demonstration</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">99.9%</div>
-            <p className="text-muted-foreground">Uptime</p>
+            <div className="text-4xl font-bold text-blue-600 mb-2">Feedback</div>
+            <p className="text-muted-foreground">Contact Support</p>
           </div>
         </div>
 
         <div className="bg-card p-8 rounded-lg border space-y-4">
-          <h2 className="text-2xl font-bold">Our Mission</h2>
+          <h2 className="text-2xl font-bold">Our Demo Goal</h2>
           <p className="text-muted-foreground">
-            To empower field service teams with the tools they need to operate with complete transparency, efficiency,
-            and accountability. We believe that proof of work should be simple, automatic, and undisputable.
+            To showcase how JobProof features can help field service teams with transparent job documentation and team
+            accountability. This is not a production environment.
           </p>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-blue-600 text-white py-16 mt-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-3xl font-bold">Join hundreds of field service teams</h2>
-          <p className="text-lg opacity-90">Start your free trial today and see the JobProof difference</p>
-          <Link href="/auth/sign-up">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              Get Started Free
-            </Button>
-          </Link>
         </div>
       </section>
     </div>

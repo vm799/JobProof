@@ -10,7 +10,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Check, X } from "lucide-react"
+import { Check, X, AlertCircle } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
@@ -174,6 +174,11 @@ export default function SignUpPage() {
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
       <div className="w-full max-w-sm">
         <Card>
+          <div className="flex items-center gap-2 p-3 bg-yellow-50 border-b border-yellow-200">
+            <AlertCircle className="w-4 h-4 text-yellow-600" />
+            <p className="text-xs text-yellow-800 font-medium">INTERNAL DEMO ONLY</p>
+          </div>
+
           <CardHeader className="text-center">
             <div className="mb-4 flex justify-center">
               <Image
@@ -185,8 +190,8 @@ export default function SignUpPage() {
                 priority
               />
             </div>
-            <CardTitle className="text-2xl font-semibold">Create your account</CardTitle>
-            <CardDescription>Get started with JobProof today</CardDescription>
+            <CardTitle className="text-2xl font-semibold">Demo Access</CardTitle>
+            <CardDescription>Enter the demo environment</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSignUp} className="space-y-4">
@@ -270,21 +275,21 @@ export default function SignUpPage() {
               </div>
               {error && <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
               <Button type="submit" className="w-full" disabled={isLoading || !isPasswordValid}>
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoading ? "Entering demo..." : "Enter Demo"}
               </Button>
             </form>
             <div className="mt-4 text-center text-xs text-muted-foreground">
-              By creating an account, you agree to our{" "}
+              By entering the demo, you agree to our{" "}
               <Link href="/terms" className="text-primary underline-offset-4 hover:underline">
-                Terms of Service
+                Demo Terms
               </Link>{" "}
               and{" "}
               <Link href="/privacy" className="text-primary underline-offset-4 hover:underline">
-                Privacy Policy
+                Privacy Notice
               </Link>
             </div>
             <div className="mt-4 text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
+              Already have a demo account?{" "}
               <Link href="/auth/login" className="text-primary underline-offset-4 hover:underline">
                 Sign in
               </Link>

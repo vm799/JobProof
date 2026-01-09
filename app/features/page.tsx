@@ -1,11 +1,12 @@
 import { CheckCircle2, BarChart3, Users, Zap, Lock, Clock } from "lucide-react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { ThemeLogo } from "@/components/theme-logo"
+import { AlertCircle } from "lucide-react"
 
 export const metadata = {
-  title: "Features - JobProof",
-  description: "Discover JobProof's powerful features for field service proof-of-work",
+  title: "Features - JobProof (Internal Demo)",
+  description: "Internal demonstration of JobProof features - not for external use",
+  robots: "noindex, nofollow",
 }
 
 export default function FeaturesPage() {
@@ -31,13 +32,13 @@ export default function FeaturesPage() {
       icon: BarChart3,
     },
     {
-      name: "Enterprise Security",
-      description: "Row-level security, encryption at rest, SOC2 compliance, and audit logs for every action",
+      name: "Enterprise Architecture",
+      description: "Row-level security, encryption at rest, workspace isolation, and audit logs for every action",
       icon: Lock,
     },
     {
       name: "Mobile-First Design",
-      description: "Native mobile app for field teams to complete jobs offline with automatic sync",
+      description: "Responsive interface for field teams to complete jobs with automatic data sync",
       icon: Zap,
     },
   ]
@@ -50,23 +51,35 @@ export default function FeaturesPage() {
           <Link href="/" className="flex items-center gap-2">
             <ThemeLogo width={200} height={50} />
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
-            <Link href="/auth/sign-up">
-              <Button className="bg-blue-600 hover:bg-blue-700">Get Started</Button>
-            </Link>
-          </div>
         </div>
       </nav>
+
+      {/* Demo Banner */}
+      <div className="bg-yellow-50 border-b-2 border-yellow-300 px-4 py-3">
+        <p className="text-center text-sm font-semibold text-yellow-900">
+          ⚠️ INTERNAL DEMO MODE - Not for external use or data storage
+        </p>
+      </div>
+
+      {/* Demo Disclaimer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+          <AlertCircle className="w-5 h-5 text-yellow-600" />
+          <div>
+            <h2 className="font-semibold text-yellow-900">Internal Demo Only</h2>
+            <p className="text-sm text-yellow-800">
+              These features are for demonstration purposes. This is not a production environment.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center space-y-6 mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold">Powerful Features Built for Field Service</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">JobProof Demo Features</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything your team needs to capture, verify, and report job completion
+            See how JobProof can help field service teams capture and verify job completion
           </p>
         </div>
 
@@ -84,15 +97,16 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-blue-600 text-white py-16">
+      <section className="bg-blue-50 border-t-2 border-blue-200 py-16 mt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-3xl font-bold">Ready to get started?</h2>
-          <Link href="/auth/sign-up">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              Start Your Free Trial
-            </Button>
-          </Link>
+          <h2 className="text-2xl font-bold text-blue-900">Explore the Demo</h2>
+          <p className="text-lg text-blue-800">
+            This demo showcases JobProof capabilities in a sandbox environment. For production inquiries or feature
+            questions, contact our team.
+          </p>
+          <p className="text-sm text-blue-700">
+            Demo data may be reset at any time. Please do not store sensitive information here.
+          </p>
         </div>
       </section>
     </div>

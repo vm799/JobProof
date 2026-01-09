@@ -6,7 +6,12 @@ import { RefreshCw } from "lucide-react"
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-export default async function ClientsPage() {
+export const metadata = {
+  title: "Demo Accounts - JobProof",
+  robots: "noindex, nofollow",
+}
+
+export default async function DemoAccountsPage() {
   const supabase = await createClient()
 
   const {
@@ -26,10 +31,10 @@ export default async function ClientsPage() {
   }
 
   const { data: sites, error: sitesError } = await supabase
-    .from("clients")
+    .from("sites")
     .select(`
-      id, name, email, created_at,
-      client_onboardings(id, status, created_at)
+      id, name, address, created_at,
+      onboarding_flows(id, status, created_at)
     `)
     .eq("workspace_id", profile.current_workspace_id)
     .order("created_at", { ascending: false })

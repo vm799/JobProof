@@ -1,114 +1,55 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ThemeLogo } from "@/components/theme-logo"
-import { Check } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { AlertCircle } from "lucide-react"
 
 export const metadata = {
-  title: "Pricing - JobProof",
-  description: "Simple, transparent pricing for field service proof-of-work",
+  title: "Pricing - JobProof (Internal Demo)",
+  description: "Internal demonstration only - not for external use",
+  robots: "noindex, nofollow",
 }
 
 export default function PricingPage() {
-  const plans = [
-    {
-      name: "Starter",
-      price: "$99",
-      period: "/month",
-      description: "Perfect for small teams",
-      features: ["Up to 5 team members", "50 jobs/month", "Basic analytics", "Email support"],
-    },
-    {
-      name: "Professional",
-      price: "$299",
-      period: "/month",
-      description: "For growing businesses",
-      features: [
-        "Up to 20 team members",
-        "Unlimited jobs",
-        "Advanced analytics",
-        "Priority support",
-        "Custom branding",
-      ],
-      highlighted: true,
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      period: "pricing",
-      description: "For large organizations",
-      features: ["Unlimited team members", "Unlimited jobs", "API access", "Dedicated support", "Custom integrations"],
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
-      {/* Header */}
-      <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <ThemeLogo width={200} height={50} />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/auth/login">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
-            <Link href="/auth/sign-up">
-              <Button className="bg-blue-600 hover:bg-blue-700">Get Started</Button>
-            </Link>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+          <AlertCircle className="w-5 h-5 text-yellow-600" />
+          <div>
+            <h2 className="font-semibold text-yellow-900">Internal Demo Only</h2>
+            <p className="text-sm text-yellow-800">
+              This is an internal demonstration of JobProof. Pricing information is for reference only and not available
+              for external purchase.
+            </p>
           </div>
         </div>
-      </nav>
 
-      {/* Pricing Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center space-y-6 mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that fits your business needs
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`rounded-lg border p-8 flex flex-col ${
-                plan.highlighted ? "bg-blue-50 border-blue-200 ring-2 ring-blue-600" : "bg-card"
-              }`}
-            >
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <p className="text-muted-foreground mb-4">{plan.description}</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-muted-foreground ml-2">{plan.period}</span>
-              </div>
-              <Button className={plan.highlighted ? "bg-blue-600 hover:bg-blue-700 mb-6" : "mb-6"} asChild>
-                <Link href="/auth/sign-up">Get Started</Link>
-              </Button>
-              <ul className="space-y-3 flex-1">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-green-600" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+        <Card className="p-6">
+          <h1 className="text-3xl font-bold mb-4">JobProof Pricing (Reference)</h1>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Free Plan</h3>
+              <p className="text-muted-foreground">5 sites • 50 jobs/month • Basic features</p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Pro Plan</h3>
+              <p className="text-muted-foreground">50 sites • 500 jobs/month • Advanced analytics</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Enterprise Plan</h3>
+              <p className="text-muted-foreground">Unlimited sites • Unlimited jobs • Custom integrations</p>
+            </div>
+          </div>
+        </Card>
 
-      {/* FAQ CTA */}
-      <section className="bg-muted py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-2xl font-bold">Have questions about pricing?</h2>
-          <Link href="/contact">
-            <Button variant="outline" size="lg">
-              Contact our sales team
-            </Button>
-          </Link>
-        </div>
-      </section>
+        <Card className="p-6 bg-blue-50 border-blue-200">
+          <p className="text-sm text-blue-900">
+            To explore features in the live demo environment, visit the{" "}
+            <a href="/dashboard" className="font-semibold underline">
+              dashboard
+            </a>
+            . Payment flows are not active in this demonstration.
+          </p>
+        </Card>
+      </div>
     </div>
   )
 }
