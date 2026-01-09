@@ -19,7 +19,7 @@ import {
   HelpCircle,
   Shield,
 } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
+import { getSupabaseBrowser } from "@/lib/supabase/browser"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -49,7 +49,7 @@ const navigation = [
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = getSupabaseBrowser()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
