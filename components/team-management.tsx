@@ -63,7 +63,7 @@ export function TeamManagement() {
             <Users className="mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">No team members yet</h3>
             <p className="mb-4 text-sm text-muted-foreground">
-              Invite team members to collaborate on client onboardings
+              Invite team members to collaborate on jobs
             </p>
             <Button onClick={() => setShowInviteModal(true)} className="gap-2">
               <UserPlus className="h-4 w-4" />

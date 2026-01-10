@@ -2,8 +2,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "Link Expired | BoardingPass",
-  description: "This onboarding link has expired for security reasons.",
+  title: "Link Expired | JobProof",
+  description: "This job link has expired for security reasons.",
 }
 
 export default function PortalExpiredPage() {
@@ -20,7 +20,7 @@ export default function PortalExpiredPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">BoardingPass</h1>
+          <h1 className="text-3xl font-bold tracking-tight">JobProof</h1>
         </div>
 
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 mb-4">
@@ -37,7 +37,7 @@ export default function PortalExpiredPage() {
 
         <div className="space-y-3 text-muted-foreground">
           <p>
-            For your security, onboarding portal links automatically expire after <strong>7 days</strong>.
+            For your security, job portal links automatically expire after <strong>7 days</strong>.
           </p>
           <p>This ensures that your sensitive information remains protected and prevents unauthorized access.</p>
         </div>
@@ -45,7 +45,7 @@ export default function PortalExpiredPage() {
         <div className="bg-muted/50 rounded-lg p-6 mt-6">
           <h3 className="font-semibold mb-2">What to do next:</h3>
           <p className="text-sm text-muted-foreground">
-            Please contact the agency that sent you this link to request a new onboarding invitation. They can generate
+            Please contact the company that sent you this link to request a new job link. They can generate
             a fresh link for you in seconds.
           </p>
         </div>

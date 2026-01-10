@@ -2,7 +2,7 @@
 
 *Automatically synced with your [v0.app](https://v0.app) deployments*
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/vm799s-projects/v0-client-onboarding-portal)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/vm799s-projects/jobproof)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/m5bcOMMSA1W)
 
 ## Overview
@@ -59,7 +59,7 @@ See `JOBPROOF_MVP_BLUEPRINT.md` for complete backend-to-frontend mapping.
 - `clients` - Sites/customers
 - `onboarding_flows` - Job templates (reusable checklists)
 - `onboarding_steps` - Template step definitions
-- `client_onboardings` - Job sessions (assigned to technicians)
+- `jobs` - Job sessions (assigned to technicians)
 - `client_step_progress` - Job completion tracking
 - `file_uploads` - Photos/signatures (proof-of-work)
 
@@ -88,7 +88,7 @@ npm run build
 
 Your project is live at:
 
-**[https://vercel.com/vm799s-projects/v0-client-onboarding-portal](https://vercel.com/vm799s-projects/v0-client-onboarding-portal)**
+**[https://vercel.com/vm799s-projects/jobproof](https://vercel.com/vm799s-projects/jobproof)**
 
 ## Implementation Status
 

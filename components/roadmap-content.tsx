@@ -109,7 +109,7 @@ const roadmapData = {
     {
       title: "White-Label Support",
       icon: Eye,
-      description: "Total removal of 'Powered by BoardingPass' for a 100% Ghost agency experience",
+      description: "Total removal of 'Powered by JobProof' for a 100% white-label experience",
     },
     {
       title: "Automated Chasing",
@@ -119,7 +119,7 @@ const roadmapData = {
     {
       title: "API & Zapier Integration",
       icon: Link2,
-      description: "Connect BoardingPass to 5,000+ apps like GoHighLevel, ClickUp, and Monday.com",
+      description: "Connect JobProof to 5,000+ apps like GoHighLevel, ClickUp, and Monday.com",
     },
     {
       title: "Client Messaging",
@@ -311,7 +311,7 @@ export function RoadmapContent() {
           <DialogHeader>
             <DialogTitle>Suggest a Feature</DialogTitle>
             <DialogDescription>
-              Tell us what you'd like to see in BoardingPass. We review every suggestion.
+              Tell us what you'd like to see in JobProof. We review every suggestion.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">

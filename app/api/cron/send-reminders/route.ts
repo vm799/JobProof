@@ -94,7 +94,7 @@ export async function GET() {
                     <p>Best regards,<br>${workspace.name} Team</p>
                   </div>
                   <div class="footer">
-                    <p>Powered by BoardingPass | getboardingpass.app</p>
+                    <p>Powered by JobProof | jobproof.app</p>
                   </div>
                 </div>
               </body>
