@@ -63,6 +63,14 @@ All blockers from the pre-production audit have been resolved.
 ### Project Configuration Added
 - ✅ `claude.md` - Project guidelines for Claude Code
 
+### Conflicting Files Removed (FIXED - 2026-01-10)
+Removed root-level files from accidental upload (different project):
+- ✅ Removed `App.tsx` - Vite/React app entry (caused build failure)
+- ✅ Removed `CameraView.tsx`, `Dashboard.tsx`, `JobDetail.tsx`, `JobList.tsx`
+- ✅ Removed `LandingPage.tsx`, `Navigation.tsx`, `ReviewQueue.tsx`, `SignIn.tsx`
+- ✅ Removed `index.tsx`, `types.ts`, `vite.config.ts`, `index.html`
+- ✅ Restored proper `README.md` for JobProof Next.js project
+
 ---
 
 ## All Issues Resolved
