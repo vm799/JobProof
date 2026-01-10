@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { email, jobLink, siteName } = await req.json()
 
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "noreply@getboardingpass.app",
+      from: process.env.RESEND_FROM_EMAIL || "noreply@jobproof.app",
       to: email,
       subject: `New Job Assigned: ${siteName}`,
       html: `

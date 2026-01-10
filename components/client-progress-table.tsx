@@ -55,10 +55,10 @@ export async function ClientProgressTable({ workspaceId }: ClientProgressTablePr
     return (
       <EmptyState
         icon={TrendingUp}
-        title="No active onboardings"
-        description="Create your first client onboarding to track progress here."
+        title="No active jobs"
+        description="Create your first job to track progress here."
         action={{
-          label: "Create Onboarding",
+          label: "Create Job",
           onClick: () => {},
         }}
       />

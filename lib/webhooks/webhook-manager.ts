@@ -89,9 +89,9 @@ async function deliverWebhook(webhookId: string, url: string, secret: string, pa
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-BoardingPass-Signature": signature,
-        "X-BoardingPass-Event": payload.event,
-        "X-BoardingPass-Timestamp": payload.timestamp,
+        "X-JobProof-Signature": signature,
+        "X-JobProof-Event": payload.event,
+        "X-JobProof-Timestamp": payload.timestamp,
       },
       body: payloadString,
     })

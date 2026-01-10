@@ -69,7 +69,7 @@ export function DemoMode() {
       target: '[data-tour="stats"]',
       title: "Step 1: Monitor All Job Assignments",
       description:
-        "BoardingPass tracks every job automatically. These real-time stats show active assignments, completion rates, and which jobs need follow-up—no manual spreadsheets required.",
+        "JobProof tracks every job automatically. These real-time stats show active assignments, completion rates, and which jobs need follow-up—no manual spreadsheets required.",
       position: "bottom" as const,
       action: "See how analytics update automatically as jobs progress",
     },

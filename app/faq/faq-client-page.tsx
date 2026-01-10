@@ -178,7 +178,7 @@ export default function FAQClientPage() {
             <li>Restart your app - emails will now send automatically</li>
           </ol>
           <p className="mt-2">
-            <strong>For BoardingPass Cloud:</strong> Email is preconfigured - no setup needed.
+            <strong>For JobProof Cloud:</strong> Email is preconfigured - no setup needed.
           </p>
         </>
       ),
@@ -379,7 +379,7 @@ export default function FAQClientPage() {
               <p className="text-muted-foreground">
                 No results found. Try different keywords or{" "}
                 <a
-                  href="mailto:admin@getboardingpass.app"
+                  href="mailto:admin@jobproof.app"
                   className="text-primary hover:underline"
                   rel="noopener noreferrer"
                 >
@@ -395,11 +395,11 @@ export default function FAQClientPage() {
         <Card className="mt-12 p-8 text-center bg-primary/5">
           <h2 className="text-2xl font-bold mb-2">Still have questions?</h2>
           <p className="text-muted-foreground mb-6">
-            Email us at admin@getboardingpass.app - we respond within 24 hours.
+            Email us at admin@jobproof.app - we respond within 24 hours.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button asChild>
-              <a href="mailto:admin@getboardingpass.app" rel="noopener noreferrer">
+              <a href="mailto:admin@jobproof.app" rel="noopener noreferrer">
                 Contact Support
               </a>
             </Button>

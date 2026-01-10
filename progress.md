@@ -1,8 +1,8 @@
-# Pre-Production Audit Progress
+# Pre-Production Audit & Remediation Progress
 
 ## Status: COMPLETE
 **Started:** 2026-01-09
-**Completed:** 2026-01-09
+**Completed:** 2026-01-10
 **Auditor:** Claude (Principal Engineer + Security Reviewer)
 
 ---
@@ -18,48 +18,59 @@
 | 5. Security & Governance Audit | ✅ Complete | 2026-01-09 | 2026-01-09 |
 | 6. FAQ & Support Coverage | ✅ Complete | 2026-01-09 | 2026-01-09 |
 | 7. Production-Readiness Checklist | ✅ Complete | 2026-01-09 | 2026-01-09 |
+| 8. Remediation (Branding + References) | ✅ Complete | 2026-01-10 | 2026-01-10 |
 
 ---
 
-## Final Verdict: CONDITIONAL GO
+## Final Verdict: CONDITIONAL GO → IN PROGRESS
 
-The application is architecturally sound with proper security controls, but cannot go to production until critical branding and broken link issues are resolved.
+### Remediation Applied (2026-01-10)
+
+The following issues from the audit have been **FIXED**:
+
+#### BoardingPass → JobProof Branding (FIXED)
+- ✅ `app/portal/expired/page.tsx` - Updated to JobProof
+- ✅ `lib/email/templates.tsx` - All templates updated to JobProof
+- ✅ `components/billing-content.tsx` - Updated subscription text
+- ✅ `components/settings-content.tsx` - Updated branding labels
+- ✅ `components/roadmap-content.tsx` - Updated references
+- ✅ `components/demo-mode.tsx` - Updated tour text
+- ✅ `components/help-button.tsx` - Updated email
+- ✅ `app/auth/reset-password/page.tsx` - Updated logo reference
+- ✅ `lib/webhooks/webhook-manager.ts` - X-JobProof headers
+
+#### Email Addresses (FIXED)
+- ✅ All `admin@getboardingpass.app` → `admin@jobproof.app`
+- ✅ All `noreply@getboardingpass.app` → `noreply@jobproof.app`
+- ✅ API routes updated with correct fallback emails
+
+#### Client Onboarding References Removed (FIXED)
+- ✅ `components/invite-member-modal.tsx` - "collaborate on jobs"
+- ✅ `components/team-content.tsx` - "collaborate on jobs"
+- ✅ `components/team-management.tsx` - "collaborate on jobs"
+- ✅ `components/client-progress-table.tsx` - "No active jobs"
+- ✅ `tests/e2e/onboarding-flow.spec.ts` - "Job Completion Flow"
+- ✅ `README.md` - Updated deployment links
+
+#### Project Configuration Added
+- ✅ `claude.md` - Project guidelines for Claude Code
+
+---
+
+## Remaining Items (Not Fixed - Still Open)
+
+### 3 Broken Footer Links
+- `/blog`, `/contact`, `/docs` - pages do not exist
+- Location: `app/page.tsx:164-189`
+- **Action Required:** Remove links OR create placeholder pages
+
+---
 
 ## Codebase Summary
 - **Framework:** Next.js 16.0.10 (App Router)
 - **Routes:** 45+ public/protected routes
 - **API Endpoints:** 20+ endpoints
 - **Components:** 140+ components total
-
----
-
-## Critical Issues Found
-
-### HIGH Severity Blockers (5)
-
-1. **3 Broken Footer Links**
-   - `/blog`, `/contact`, `/docs` - pages do not exist
-   - Location: `app/page.tsx:164-189`
-
-2. **BoardingPass Branding in Portal Expired Page**
-   - Location: `app/portal/expired/page.tsx`
-
-3. **BoardingPass in All Email Templates**
-   - Location: `lib/email/templates.tsx`
-
-4. **Incorrect Support Email Addresses**
-   - `admin@getboardingpass.app` used instead of `admin@jobproof.app`
-   - 5+ locations
-
-5. **Billing Page Wrong Branding**
-   - Location: `components/billing-content.tsx:133`
-
-### MEDIUM Severity Issues (5)
-- Settings page branding references
-- Roadmap content branding
-- Demo mode copy
-- Webhook headers
-- API route fallback emails
 
 ---
 
@@ -84,5 +95,5 @@ See `PRE_PRODUCTION_AUDIT_REPORT.md` for the complete detailed audit with tables
 ---
 
 ## Notes
-- Audit only - no fixes implemented
-- UI-only / frontend-first architecture assumed
+- claude.md added for project guidelines
+- Database schema table names intentionally unchanged for stability

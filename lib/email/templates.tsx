@@ -1,6 +1,6 @@
 export function getWelcomeEmail(name: string) {
   return {
-    subject: "Welcome to BoardingPass! 🎉",
+    subject: "Welcome to JobProof!",
     html: `
       <!DOCTYPE html>
       <html>
@@ -17,24 +17,24 @@ export function getWelcomeEmail(name: string) {
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0;">Welcome to BoardingPass!</h1>
+              <h1 style="margin: 0;">Welcome to JobProof!</h1>
             </div>
             <div class="content">
               <p>Hi ${name},</p>
-              <p>Thanks for signing up! We're excited to help you streamline your client onboarding process.</p>
-              
+              <p>Thanks for signing up! We're excited to help you streamline your field service operations.</p>
+
               <h3>Quick Start Guide:</h3>
               <ol>
-                <li><strong>Create your first flow</strong> - Build a custom onboarding workflow or use a template</li>
-                <li><strong>Add your clients</strong> - Invite clients and assign them to flows</li>
-                <li><strong>Share their portal</strong> - Send clients their personalized onboarding link</li>
+                <li><strong>Create your first workflow</strong> - Build a custom job template or use an existing one</li>
+                <li><strong>Add your sites</strong> - Set up job locations</li>
+                <li><strong>Assign jobs</strong> - Send job links to your field workers</li>
                 <li><strong>Track progress</strong> - Monitor completion in real-time from your dashboard</li>
               </ol>
 
-              <p>Need help getting started? Check out our <a href="https://getboardingpass.app/help">Help Center</a> or <a href="https://getboardingpass.app/faq">FAQ</a>.</p>
+              <p>Need help getting started? Check out our <a href="https://jobproof.app/help">Help Center</a> or <a href="https://jobproof.app/faq">FAQ</a>.</p>
 
               <div style="text-align: center;">
-                <a href="https://getboardingpass.app/dashboard" class="button">Go to Dashboard</a>
+                <a href="https://jobproof.app/dashboard" class="button">Go to Dashboard</a>
               </div>
 
               <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
@@ -42,8 +42,8 @@ export function getWelcomeEmail(name: string) {
               </p>
             </div>
             <div class="footer">
-              <p>BoardingPass - Client Onboarding Made Simple</p>
-              <p><a href="https://getboardingpass.app" style="color: #667eea;">getboardingpass.app</a></p>
+              <p>JobProof - Field Service Proof of Work</p>
+              <p><a href="https://jobproof.app" style="color: #667eea;">jobproof.app</a></p>
             </div>
           </div>
         </body>
@@ -54,7 +54,7 @@ export function getWelcomeEmail(name: string) {
 
 export function getOnboardingInviteEmail(clientName: string, portalLink: string, workspaceName: string) {
   return {
-    subject: `${workspaceName} - Your Onboarding Portal is Ready`,
+    subject: `${workspaceName} - Your Job Portal is Ready`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -71,22 +71,22 @@ export function getOnboardingInviteEmail(clientName: string, portalLink: string,
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0;">Welcome, ${clientName}!</h1>
+              <h1 style="margin: 0;">Job Assignment: ${clientName}</h1>
             </div>
             <div class="content">
-              <p>Hi ${clientName},</p>
-              <p>We've created a personalized onboarding portal for you at <strong>${workspaceName}</strong>.</p>
-              
-              <p>Your portal includes:</p>
+              <p>Hi,</p>
+              <p>You have a new job assignment from <strong>${workspaceName}</strong>.</p>
+
+              <p>Your job portal includes:</p>
               <ul>
-                <li>✅ Step-by-step guidance</li>
-                <li>📋 All required tasks and documents</li>
-                <li>📆 Clear timelines and due dates</li>
-                <li>✨ Real-time progress tracking</li>
+                <li>Step-by-step instructions</li>
+                <li>Required tasks and documentation</li>
+                <li>Photo upload for proof of work</li>
+                <li>Real-time progress tracking</li>
               </ul>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${portalLink}" class="button">Access Your Portal</a>
+                <a href="${portalLink}" class="button">Start Job</a>
               </div>
 
               <p style="color: #6b7280; font-size: 14px;">
@@ -94,12 +94,12 @@ export function getOnboardingInviteEmail(clientName: string, portalLink: string,
               </p>
 
               <p style="margin-top: 30px;">
-                Questions? Just reply to this email - we're here to help!
+                Questions? Contact your supervisor or reply to this email.
               </p>
             </div>
             <div class="footer">
               <p>${workspaceName}</p>
-              <p style="font-size: 12px; color: #9ca3af;">Powered by BoardingPass</p>
+              <p style="font-size: 12px; color: #9ca3af;">Powered by JobProof</p>
             </div>
           </div>
         </body>
@@ -110,7 +110,7 @@ export function getOnboardingInviteEmail(clientName: string, portalLink: string,
 
 export function getStepCompletedEmail(clientName: string, stepTitle: string, workspaceName: string) {
   return {
-    subject: `✅ ${clientName} completed: ${stepTitle}`,
+    subject: `${clientName} completed: ${stepTitle}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -128,28 +128,28 @@ export function getStepCompletedEmail(clientName: string, stepTitle: string, wor
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0;">🎉 Step Completed!</h1>
+              <h1 style="margin: 0;">Step Completed</h1>
             </div>
             <div class="content">
               <div style="text-align: center; margin-bottom: 20px;">
                 <span class="success-badge">Progress Update</span>
               </div>
-              
-              <p><strong>${clientName}</strong> has completed a step in their onboarding:</p>
-              
+
+              <p><strong>${clientName}</strong> has completed a step in their job:</p>
+
               <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <h3 style="margin: 0; color: #374151;">${stepTitle}</h3>
               </div>
 
-              <p>Great progress! Check your dashboard to see their overall completion status and next steps.</p>
+              <p>Check your dashboard to see their overall completion status and next steps.</p>
 
               <div style="text-align: center;">
-                <a href="https://getboardingpass.app/dashboard" class="button">View Dashboard</a>
+                <a href="https://jobproof.app/dashboard" class="button">View Dashboard</a>
               </div>
             </div>
             <div class="footer">
               <p>${workspaceName}</p>
-              <p style="font-size: 12px; color: #9ca3af;">Powered by BoardingPass</p>
+              <p style="font-size: 12px; color: #9ca3af;">Powered by JobProof</p>
             </div>
           </div>
         </body>
@@ -160,7 +160,7 @@ export function getStepCompletedEmail(clientName: string, stepTitle: string, wor
 
 export function getOnboardingCompletedEmail(clientName: string, workspaceName: string) {
   return {
-    subject: `🎊 ${clientName} completed their onboarding!`,
+    subject: `${clientName} completed their job!`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -178,33 +178,33 @@ export function getOnboardingCompletedEmail(clientName: string, workspaceName: s
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0;">Onboarding Complete! 🎊</h1>
+              <h1 style="margin: 0;">Job Complete!</h1>
             </div>
             <div class="content">
-              <div class="celebration">🎉 🎊 ✨</div>
-              
-              <p><strong>${clientName}</strong> has successfully completed their entire onboarding process!</p>
-              
+              <div class="celebration">✓</div>
+
+              <p><strong>${clientName}</strong> has successfully completed their job!</p>
+
               <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 4px;">
                 <p style="margin: 0; color: #92400e;">
-                  <strong>All steps completed!</strong> Your client is now fully onboarded and ready to go.
+                  <strong>All steps completed!</strong> The job is now ready for review.
                 </p>
               </div>
 
               <p>Next steps:</p>
               <ul>
-                <li>Review their completed information</li>
-                <li>Send a follow-up thank you message</li>
-                <li>Mark them as active in your system</li>
+                <li>Review their submitted proof of work</li>
+                <li>Verify uploaded photos and documentation</li>
+                <li>Mark job as verified if satisfactory</li>
               </ul>
 
               <div style="text-align: center;">
-                <a href="https://getboardingpass.app/clients" class="button">View Client Details</a>
+                <a href="https://jobproof.app/sites" class="button">View Job Details</a>
               </div>
             </div>
             <div class="footer">
               <p>${workspaceName}</p>
-              <p style="font-size: 12px; color: #9ca3af;">Powered by BoardingPass</p>
+              <p style="font-size: 12px; color: #9ca3af;">Powered by JobProof</p>
             </div>
           </div>
         </body>

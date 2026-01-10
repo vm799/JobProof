@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test"
 
-test.describe("Client Onboarding Flow", () => {
-  test("complete onboarding flow end-to-end", async ({ page }) => {
-    // Test the full client onboarding journey
+test.describe("Job Completion Flow", () => {
+  test("complete job flow end-to-end", async ({ page }) => {
+    // Test the full job completion journey
     await page.goto("/demo")
 
     // Start the demo

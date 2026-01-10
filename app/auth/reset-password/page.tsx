@@ -72,8 +72,8 @@ export default function ResetPasswordPage() {
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
             <Image
-              src="/boardingpass-logo.png"
-              alt="BoardingPass"
+              src="/jobproof-logo.png"
+              alt="JobProof"
               width={100}
               height={100}
               className="h-20 w-20 object-contain"

@@ -95,7 +95,7 @@ export function InviteMemberModal({ open, onOpenChange, workspaceId }: InviteMem
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Invite Team Member</DialogTitle>
-          <DialogDescription>Add a team member to collaborate on client onboardings</DialogDescription>
+          <DialogDescription>Add a team member to collaborate on jobs</DialogDescription>
         </DialogHeader>
 
         {error && <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}

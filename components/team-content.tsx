@@ -94,7 +94,7 @@ export function TeamContent({ workspaceId, members: initialMembers, currentUserI
             <div className="text-center">
               <h3 className="mb-2 text-lg font-semibold">No team members yet</h3>
               <p className="mb-4 text-sm text-muted-foreground">
-                Invite team members to collaborate on client onboardings
+                Invite team members to collaborate on jobs
               </p>
               <Button onClick={() => setInviteOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />

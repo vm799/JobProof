@@ -130,7 +130,7 @@ export function BillingContent({ subscription, usage, workspaceId }: BillingCont
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-balance text-3xl font-semibold tracking-tight">AppSumo Licensing</h1>
-        <p className="mt-1 text-muted-foreground">Manage your BoardingPass subscription</p>
+        <p className="mt-1 text-muted-foreground">Manage your JobProof subscription</p>
       </div>
 
       <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 p-6">

@@ -42,8 +42,8 @@ export async function POST(request: Request) {
     // Send email to admin
     try {
       await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || "onboarding@getboardingpass.app",
-        to: "admin@getboardingpass.app",
+        from: process.env.RESEND_FROM_EMAIL || "noreply@jobproof.app",
+        to: "admin@jobproof.app",
         subject: `Feature Request: ${title}`,
         html: `
           <h2>New Feature Suggestion</h2>
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
           <h3>${title}</h3>
           <p>${description || "No additional description provided."}</p>
           <hr />
-          <p style="color: #666; font-size: 12px;">Submitted from BoardingPass Roadmap</p>
+          <p style="color: #666; font-size: 12px;">Submitted from JobProof Roadmap</p>
         `,
       })
 

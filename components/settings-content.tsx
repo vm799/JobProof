@@ -139,8 +139,8 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
             </div>
             <div className="flex items-center justify-between pt-2">
               <div className="space-y-0.5">
-                <Label>Remove BoardingPass Branding</Label>
-                <p className="text-sm text-muted-foreground">Hide "Powered by BoardingPass" footer</p>
+                <Label>Remove JobProof Branding</Label>
+                <p className="text-sm text-muted-foreground">Hide "Powered by JobProof" footer</p>
               </div>
               <Switch checked={removeBranding} onCheckedChange={setRemoveBranding} />
             </div>
@@ -177,7 +177,7 @@ export function SettingsContent({ workspace: initialWorkspace }: SettingsContent
                   Continue
                 </Button>
                 {!removeBranding && (
-                  <p className="text-xs text-center text-muted-foreground">Powered by BoardingPass</p>
+                  <p className="text-xs text-center text-muted-foreground">Powered by JobProof</p>
                 )}
               </div>
             </Card>
