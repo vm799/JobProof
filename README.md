@@ -59,7 +59,7 @@ See `JOBPROOF_MVP_BLUEPRINT.md` for complete backend-to-frontend mapping.
 - `clients` - Sites/customers
 - `onboarding_flows` - Job templates (reusable checklists)
 - `onboarding_steps` - Template step definitions
-- `jobs` - Job sessions (assigned to technicians)
+- `client_onboardings` - Job sessions (assigned to technicians)
 - `client_step_progress` - Job completion tracking
 - `file_uploads` - Photos/signatures (proof-of-work)
 
@@ -99,15 +99,15 @@ See `JOBPROOF_MVP_BLUEPRINT.md` for the complete 14-day implementation checklist
 - ✅ Navigation labels updated (Clients → Sites, Flows → Job Templates)
 - ✅ Neutral branding applied
 
-**Phase 2 (In Progress):**
-- [ ] Job session assignment flow
-- [ ] Token-based job links
-- [ ] Email notifications to technicians
+**Phase 2 (Complete):**
+- ✅ Job session assignment flow
+- ✅ Token-based job links
+- ✅ Email notifications to technicians
 
-**Phase 3 (Planned):**
-- [ ] Portal rebrand for technicians
-- [ ] Photo compression before upload
-- [ ] Proof-of-work report generation
+**Phase 3 (Complete):**
+- ✅ Portal rebrand for technicians
+- ✅ Photo compression before upload
+- ✅ Proof-of-work report generation
 
 ## Contributing
 

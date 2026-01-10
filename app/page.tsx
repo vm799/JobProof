@@ -160,16 +160,6 @@ export default function LandingPage() {
                     About
                   </Link>
                 </li>
-                <li>
-                  <Link href="/blog" className="hover:text-foreground">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-foreground">
-                    Contact
-                  </Link>
-                </li>
               </ul>
             </div>
             <div>
@@ -178,11 +168,6 @@ export default function LandingPage() {
                 <li>
                   <Link href="/help" className="hover:text-foreground">
                     Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/docs" className="hover:text-foreground">
-                    Documentation
                   </Link>
                 </li>
                 <li>

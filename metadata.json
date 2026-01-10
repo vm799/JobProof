@@ -1,0 +1,8 @@
+{
+  "name": "JobProof",
+  "description": "Enterprise field-service proof-of-work platform for eliminating disputes and automating verification.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
